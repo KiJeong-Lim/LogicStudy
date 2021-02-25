@@ -1610,8 +1610,8 @@
         이때 세 논리식 $F_1$, $F_2$와 $F_3$를 개체 변수 $v_1$, $v_2$와 $v_3$만이 자유롭게 나타나도록 다음과 같이 정의하자:
         \begin{align*}
           F_1 & : \equiv \forall v_4 \left( F_f \left[ v_2 := v_4 \right] \rightarrow F_g \left[ v_1 := v_4 \right] \right) \\
-          F_2 & : \equiv \forall v_4 \left( F_f \left[ v_2 := v_4 \right] \rightarrow F_g \left[ v_2 := v_4 \right] \right) \\
-          F_3 & : \equiv \forall v_4 \left( F_g \left[ v_3 := v_4 \right] \rightarrow F_f \left[ v_1 := v_4 \right] \right)
+          F_2 & : \equiv \forall v_4 \left( F_f \left[ v_2 := v_4 \right] \left[ v_1 := v_2 \right] \rightarrow F_g \left[ v_2 := v_4 \right] \right) \\
+          F_3 & : \equiv \forall v_4 \left( F_g \left[ v_3 := v_4 \right] \rightarrow F_f \left[ v_1 := v_4 \right] \left[ v_2 := v_3 \right] \right)
         \end{align*}
         그러면, 함수 $\left( x , y \right) \mapsto g \left( f \left( x \right) , y \right) : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$은 $F_1$에 의하여 표현되고
         함수 $\left( x , y \right) \mapsto g \left( x , f \left( y \right) \right) : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$는 $F_2$에 의하여 표현되고
