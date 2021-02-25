@@ -1293,7 +1293,8 @@
     그것은 우리가 자연수의 이름을 선택한 특정 방식에 달려있다.)
   \end{context}
 
-  당연히, 기호들에게 다음과 같은 괴델 수를 부여함으로써, 13 대신 10을 괴델 넘버링의 기저로 둘 \textit{수 있었고}, $$ \begin{matrix}
+  당연히, 기호들에게 다음과 같은 괴델 수를 부여함으로써, 13 대신 10을 괴델 넘버링의 기저로 취할 \textit{수 있었고},
+  $$ \begin{matrix}
     0 \\
     1
   \end{matrix} \quad
@@ -1370,8 +1371,9 @@
   1단원에서처럼, 집합 $A \subseteq \mathbb{N}$에 대하여
   $X$가 참이고 그것의 괴델 수가 $A$에 속하거나 $X$가 거짓이고 그것의 괴델 수가 $A$에 속하지 않을 때
   문장 $X$을 $A$에 대한 \underline{괴델 문장}(\textit{G\"odel sentence})이라고 하겠다.
-  이제 임의의 싼술적인 집합 $A \subseteq \mathbb{N}$에 대하여
-  (Tarski의 정리가 쉽게 따라오도록) $A$에 대한 괴델 문장이 있음을 보이는 데 초점을 맞추겠다.
+  이제 (Tarski의 정리가 쉽게 따라오도록)
+  임의의 싼술적인 집합 $A \subseteq \mathbb{N}$에 대하여
+  $A$에 대한 괴델 문장이 있음을 보이는 데 초점을 맞추겠다.
 
   거의 모든 책이 괴델 문장을 구성하는 여러 가지 영리한 방법으로 쓰여질 수 있다.
   G\"odel의 원래 방법은 임의의 논리식 $F$와 $G$ 그리고 임의의 수 $n$에 대하여,
@@ -1637,7 +1639,7 @@
       \end{align*}
       를 얻는다. $k := 899265322653$로 놓자.
       \begin{itemize}
-        \item[(a)] 이제 모든 짝수들의 집합을 $A$라고 하자.
+        \item[(1)] 이제 모든 짝수들의 집합을 $A$라고 하자.
         임의의 $x \in \mathbb{N}$에 대하여
         \begin{align*}
           x \in A^{*}
@@ -1645,24 +1647,24 @@
           & \iff \left( \exists y \in \mathbb{N} \right) \left[ k *_{10} 10^{x} *_{10} 89 *_{10} x *_{10} 3 = y \land \left( \exists z \in \mathbb{N} \right) \left[ y = 2 z \right] \right]
         \end{align*}
         이므로,
-        논리식 $$ \exists v_2 \left( \overline{k} *_{10} \overline{10}^{v_1} *_{10} \overline{89} *_{10} v_1 *_{10} \overline{3} = v_2 \land \exists v_3 \left( v_2 = \overline{2} \times v_3 \right) \right) $$은 집합 $A^{*}$를 표현한다.
-        이 논리식의 괴델 수를 $h$라 하자.
-        그러면 $$ \forall v_1 \left( v_1 = \overline{h} \rightarrow \exists v_2 \left( \overline{k} *_{10} \overline{10}^{v_1} *_{10} \overline{89} *_{10} v_1 *_{10} \overline{3} = v_2 \land \exists v_3 \left( v_2 = \overline{2} \times v_3 \right) \right) \right) $$은 $A$의 괴델 문장이다.
-        $\overline{k} *_{10} \overline{10}^{\overline{h}} *_{10} \overline{89} *_{10} \overline{h} *_{10} \overline{3}$가 짝수일 때 그리고 그럴 때에만 이 문장이 참인데,
-        이 수의 $10$진 표기의 마지막 숫자는 $3$이므로 그것은 참이지 않음을 알 수 있다.
-        \item[(b)] 이제 모든 홀수들의 집합을 $A$라고 하자.
+        논리식 $$ H_A : \equiv \exists v_2 \left( \overline{k} *_{10} \overline{10}^{v_1} *_{10} \overline{89} *_{10} v_1 *_{10} \overline{3} = v_2 \land \exists v_3 \left( v_2 = \overline{2} \times v_3 \right) \right) $$은 집합 $A^{*}$를 표현한다.
+        이때 $H_A$의 괴델 수를 $h_A$라 하자.
+        그러면 $ H_A \left( h_A \right) $은 $A$의 괴델 문장이 된다.
+        한편, $\overline{k} *_{10} \overline{10}^{\overline{h_A}} *_{10} \overline{89} *_{10} \overline{h_A} *_{10} \overline{3}$가 짝수일 때 그리고 그럴 때에만 이 문장이 참인데,
+        이 수의 $10$진 표기의 마지막 숫자는 $3$이므로 $H_A \left( h_A \right)$는 거짓임을 알 수 있다.
+        \item[(2)] 이제 모든 홀수들의 집합을 $B$라고 하자.
         임의의 $x \in \mathbb{N}$에 대하여
         \begin{align*}
-          x \in A^{*}
-          & \iff \left( \exists y \in \mathbb{N} \right) \left[ d \left( x \right) = y \land y \in A \right] \\
+          x \in B^{*}
+          & \iff \left( \exists y \in \mathbb{N} \right) \left[ d \left( x \right) = y \land y \in B \right] \\
           & \iff \left( \exists y \in \mathbb{N} \right) \left[ k *_{10} 10^{x} *_{10} 89 *_{10} x *_{10} 3 = y \land \left( \forall z \in \mathbb{N} \right) \left[ y \neq 2 z \right] \right]
         \end{align*}
         이므로,
-        논리식 $$ \exists v_2 \left( \overline{k} *_{10} \overline{10}^{v_1} *_{10} \overline{89} *_{10} v_1 *_{10} \overline{3} = v_2 \land \forall v_3 \lnot \left( v_2 = \overline{2} \times v_3 \right) \right) $$은 집합 $A^{*}$를 표현한다.
-        이 논리식의 괴델 수를 $h$라 하자.
-        그러면 $$ \forall v_1 \left( v_1 = \overline{h} \rightarrow \exists v_2 \left( \overline{k} *_{10} \overline{10}^{v_1} *_{10} \overline{89} *_{10} v_1 *_{10} \overline{3} = v_2 \land \forall v_3 \lnot \left( v_2 = \overline{2} \times v_3 \right) \right) \right) $$은 $A$의 괴델 문장이다.
-        $\overline{k} *_{10} \overline{10}^{\overline{h}} *_{10} \overline{89} *_{10} \overline{h} *_{10} \overline{3}$가 홀수일 때 그리고 그럴 때에만 이 문장이 참인데,
-        이 수의 $10$진 표기의 마지막 숫자는 $3$이므로 그것은 참임을 알 수 있다.
+        논리식 $$ H_B : \equiv \exists v_2 \left( \overline{k} *_{10} \overline{10}^{v_1} *_{10} \overline{89} *_{10} v_1 *_{10} \overline{3} = v_2 \land \forall v_3 \lnot \left( v_2 = \overline{2} \times v_3 \right) \right) $$은 집합 $B^{*}$를 표현한다.
+        이때 $H_B$의 괴델 수를 $h_B$라 하자.
+        그러면 $H_B \left( h_B \right)$은 $B$의 괴델 문장이 된다.
+        한편, $\overline{k} *_{10} \overline{10}^{\overline{h_B}} *_{10} \overline{89} *_{10} \overline{h_B} *_{10} \overline{3}$가 홀수일 때 그리고 그럴 때에만 이 문장이 참인데,
+        이 수의 $10$진 표기의 마지막 숫자는 $3$이므로 $H_B \left( h_B \right)$은 참임을 알 수 있다.
       \end{itemize}
 
       \item 먼저 대각 함수 $d$는 싼술적이므로,
