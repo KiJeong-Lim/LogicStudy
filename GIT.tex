@@ -954,7 +954,7 @@
       \exists v_{i} F & : \equiv \lnot \forall v_{i} \lnot F \\
       t_{1} \neq t_{2} & : \equiv \lnot t_{1} = t_{2} \\
       t_{1} < t_{2} & : \equiv \left( t_{1} \leq t_{2} \land t_{1} \neq t_{2} \right) \\
-      \left( t_{1}^{t_{2}} \right) & : \equiv \left( t_{1} \mathop{\mathbf{E}} t_{2} \right) \\
+      t_{1}^{t_{2}} & : \equiv \left( t_{1} \mathop{\mathbf{E}} t_{2} \right) \\
       \left( \forall v_{i} \leq t \right) F & : \equiv \forall v_{i} \left( v_{i} \leq t \rightarrow F \right) \\
       \left( \exists v_{i} \leq t \right) F & : \equiv \lnot \left( \forall v_{i} \leq t \right) \lnot F
     \end{align*}
@@ -1686,7 +1686,7 @@
       그러면 개체 변수 $v_1$만이 자유롭게 나타나는 어떤 두 논리식 $F_A$와 $F_B$가 존재하여
       $$ \left( \forall n \in \mathbb{N} \right) \left[ F_A \left[ v_1 := \overline{n} \right] \in \mathcal{T} \leftrightarrow n \in A \right]$$와
       $$ \left( \forall n \in \mathbb{N} \right) \left[ F_B \left[ v_1 := \overline{n} \right] \in \mathcal{T} \leftrightarrow n \in B \right]$$가 성립한다.
-      표현식 $E$에 대하여 각 $x \in \mathbb{N}$와 각 $y \in \mathbb{N}$마다 $$E \left( x , y \right) : \equiv \forall v_1 \forall v_2 \left( v_1 = \overline{x} \rightarrow \left( v_2 = \overline{y} \rightarrow E \right) \right)$$라고 표기하자.
+      각각의 표현식 $E$에 대하여 각 $x \in \mathbb{N}$와 각 $y \in \mathbb{N}$마다 $$E \left( x , y \right) : \equiv \forall v_1 \forall v_2 \left( v_1 = \overline{x} \rightarrow \left( v_2 = \overline{y} \rightarrow E \right) \right)$$라고 표기하자.
       그리고 함수 $\mathrm{fst} : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$와 $\mathrm{snd} : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$을
       각각 $$ \mathrm{fst} \left( x , y \right) := g \left( E_x \left( x , y \right) \right)$$와
       $$\mathrm{snd} \left( x , y \right) := g \left( E_y \left( x , y \right) \right)$$로 두자.
@@ -1695,10 +1695,27 @@
       $$ \left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left( \forall z \in \mathbb{N} \right) \left[ \mathrm{Fst} \left[ v_1 := \overline{x} , v_2 := \overline{y} , v_3 := \overline{z} \right] \in \mathcal{T} \leftrightarrow \mathrm{fst} \left( x , y \right) = z \right] $$와
       $$ \left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left( \forall z \in \mathbb{N} \right) \left[ \mathrm{Snd} \left[ v_1 := \overline{x} , v_2 := \overline{y} , v_3 := \overline{z} \right] \in \mathcal{T} \leftrightarrow \mathrm{snd} \left( x , y \right) = z \right] $$가 성립한다.
       이제 논리식 $F_1$과 $F_2$를 각각 $$F_1 : \equiv \forall v_3 \left( \mathrm{Snd} \rightarrow F_A \left[ v_1 := v_3 \right] \right)$$와 $$F_2 : \equiv \forall v_3 \left( \mathrm{Fst} \rightarrow F_B \left[ v_1 := v_3 \right] \right)$$로 놓자.
-      그러면 $$F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \in \mathcal{T} \leftrightarrow F_A \left[ v_1 := \overline{g \left( F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \right)} \right] \in \mathcal{T}$$이고
-      $$F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \in \mathcal{T} \leftrightarrow F_B \left[ v_1 := \overline{g \left( F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \right)} \right] \in \mathcal{T}$$이다.
+      그러면, $F_1$과 $F_2$에는 개체 변수 $v_1$와 $v_2$만이 자유롭게 나타나며, $$F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \in \mathcal{T} \iff F_A \left[ v_1 := \overline{g \left( F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \right)} \right] \in \mathcal{T}$$이고
+      $$F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \in \mathcal{T} \iff F_B \left[ v_1 := \overline{g \left( F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \right)} \right] \in \mathcal{T}$$이다.
       이때 $X : \equiv F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right)$와 $Y : \equiv F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right)$를 취하자.
-      그러면 $$X \in \mathcal{T} \iff g \left( Y \right) \in A$$이고 $$Y \in \mathcal{T} \iff g \left( X \right) \in B$$이다.
+      그러면,
+      \begin{align*}
+        X \in \mathcal{T}
+        & \iff F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \in \mathcal{T} \\
+        & \iff F_A \left[ v_1 := \overline{g \left( F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \right)} \right] \in \mathcal{T} \\
+        & \iff g \left( F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \right) \in A \\
+        & \iff g \left( Y \right) \in A
+      \end{align*}
+      이고,
+      \begin{align*}
+        Y \in \mathcal{T}
+        & \iff F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \in \mathcal{T} \\
+        & \iff F_B \left[ v_1 := \overline{g \left( F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \right)} \right] \in \mathcal{T} \\
+        & \iff g \left( F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \right) \in B \\
+        & \iff g \left( X \right) \in B
+      \end{align*}
+      이다.
+      이로써 $$X \in \mathcal{T} \leftrightarrow g \left( Y \right) \in A$$와 $$Y \in \mathcal{T} \leftrightarrow g \left( X \right) \in B$$가 성립함을 알 수 있다.
     \end{enumerate}
   \end{context}
 
