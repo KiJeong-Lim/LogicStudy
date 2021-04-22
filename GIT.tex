@@ -1583,7 +1583,7 @@
       \item
       \begin{itemize}
         \item[(a)] 논리식 $\exists v_3 v_2 = \left( v_1 \times v_3 \right)$이 ``$x$가 $y$의 약수이다''라는 관계를 표현하기 때문이다.
-        \item[(b)] 논리식 $v_1 \neq \overline{1} \left( \forall v_2 \forall v_3 \left( \left( v_1 = v_2 \times v_3 \right) \rightarrow \left( v_2 = \overline{1} \lor v_2 = v_1 \right) \right) \right)$이 모든 소수들의 집합을 표현하기 때문이다.
+        \item[(b)] 논리식 $\left( v_1 \neq \overline{1} \land \left( \forall v_2 \forall v_3 \left( \left( v_1 = v_2 \times v_3 \right) \rightarrow \left( v_2 = \overline{1} \lor v_2 = v_1 \right) \right) \right) \right)$이 모든 소수들의 집합을 표현하기 때문이다.
       \end{itemize}
 
       \item 집합 $A \subseteq \mathbb{N}$과 함수 $f : \mathbb{N} \to \mathbb{N}$가 싼술적이라고 하자.
@@ -1697,7 +1697,7 @@
       이제 논리식 $F_1$과 $F_2$를 각각 $$F_1 : \equiv \forall v_3 \left( \mathrm{Snd} \rightarrow F_A \left[ v_1 := v_3 \right] \right)$$와 $$F_2 : \equiv \forall v_3 \left( \mathrm{Fst} \rightarrow F_B \left[ v_1 := v_3 \right] \right)$$로 놓자.
       그러면, $F_1$과 $F_2$에는 개체 변수 $v_1$와 $v_2$만이 자유롭게 나타나며, $$F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \in \mathcal{T} \iff F_A \left[ v_1 := \overline{g \left( F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \right)} \right] \in \mathcal{T}$$이고
       $$F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \in \mathcal{T} \iff F_B \left[ v_1 := \overline{g \left( F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \right)} \right] \in \mathcal{T}$$이다.
-      이때 $X : \equiv F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right)$와 $Y : \equiv F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right)$를 취하자.
+      이때 $$X : \equiv F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right)$$와 $$Y : \equiv F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right)$$를 취하자.
       그러면,
       \begin{align*}
         X \in \mathcal{T}
