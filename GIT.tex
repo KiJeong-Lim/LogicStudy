@@ -9,6 +9,8 @@
 \usepackage{amssymb}
 \usepackage{setspace}
 
+\newcommand{\gnum}{ \mathfrak{g} }
+
 \title{``괴델의 불완전성 정리들'' 해설}
 
 \author{임기정}
@@ -254,13 +256,13 @@
   \end{context}
 
   \begin{context}[G\"odel Numbering and Diagonalization]
-    $g$를 각 $E \in \mathcal{E}$에게 \underline{괴델 수}(\textit{G\"odel number})라고 불리는 자연수 $g \left( E \right)$를 부여하는 단사 함수라고 하자.
-    이 단원의 나머지 부분에서 $g$는 고정될 것이다.\footnote
+    $\gnum$를 각 $E \in \mathcal{E}$에게 \underline{괴델 수}(\textit{G\"odel number})라고 불리는 자연수 $\gnum \left( E \right)$를 부여하는 단사 함수라고 하자.
+    이 단원의 나머지 부분에서 $\gnum$는 고정될 것이다.\footnote
     {
       뒷 단원들에서 공부할 구체적인 체계에서는 특정 괴델 넘버링이 주어질 것이다.
       지금 다루는 순수하게 추상적인 논의에서는 임의의 괴델 넘버링에 대하여 적용될 수 있다.
     }
-    $g$가 전사함수라고 가정하는 것이 기술적으로 편리할 것이다.\footnote
+    $\gnum$가 전사함수라고 가정하는 것이 기술적으로 편리할 것이다.\footnote
     {
       괴델의 원래 넘버링은 이러한 성질이 없지만,
       뒷 단원들에서 사용할 괴델 넘버링은 이러한 성질을 가진다.
@@ -270,7 +272,7 @@
     }
     이제 각각의 수 $n$마다 $n$을 괴델 수로 하는 표현식이 유일하다고 가정하고,
     그 유일한 표현식을 $E_{n}$이라 하겠다.
-    즉, 임의의 $n \in \mathbb{N}$에 대하여 $g \left( E_{n} \right) = n$이다.
+    즉, 임의의 $n \in \mathbb{N}$에 대하여 $\gnum \left( E_{n} \right) = n$이다.
 
     $E_{n}$의 대각화란, 표현식 $E_{n} \left( n \right)$을 의미한다.
     $E_{n}$이 술어라면, 그것의 대각화는 당연히 문장이다;
@@ -281,7 +283,7 @@
     $d$를 그 체계의 \underline{대각 함수}(\textit{diagonal function})라고 부른다.
 
     각각의 $A \subseteq \mathbb{N}$마다, $A^{*} := \left\{ n \in \mathbb{N} : d \left( n \right) \in A \right\} $로 놓자.
-    즉, $A^{*}$의 정의에 의하여 동등성 $$ \left( \forall n \in \mathbb{N} \right) \left[ n \in A^{*} \leftrightarrow g \left( E_{n} \left( n \right) \right) \in A \right] $$이 성립한다.\footnote
+    즉, $A^{*}$의 정의에 의하여 동등성 $$ \left( \forall n \in \mathbb{N} \right) \left[ n \in A^{*} \leftrightarrow \gnum \left( E_{n} \left( n \right) \right) \in A \right] $$이 성립한다.\footnote
     {
       $A^{*}$은 대각 함수 $d$ 아래의 $A$의 역상이기 때문에 $d^{-1} \left[ A \right]$로도 쓰일 수 있다.
     }
@@ -345,7 +347,7 @@
     이것은 곧 다룰 Tarski의 정리와도 밀접한 관련이 있다.
 
     $A \subseteq \mathbb{N}$와 $X \in \mathcal{S}$에 대하여,
-    $$X \in \mathcal{T} \leftrightarrow g \left( X \right) \in A$$가 성립하면,
+    $$X \in \mathcal{T} \leftrightarrow \gnum \left( X \right) \in A$$가 성립하면,
     $X$를 $A$에 대한 괴델 문장이라고 부른다.\footnote
     {
       비형식적으로, $A$에 대한 괴델 문장은 그 자신의 괴델 수가 $A$에 속한다고 선언하는 문장으로 볼 수 있다.
@@ -373,7 +375,7 @@
       따라서, $H \left( h \right)$가 참일 때 그리고 그럴 때에만 $h \in A^{*}$이다.
       그런데 $d \left( h \right) \in A \leftrightarrow h^{*} \in A$가 성립하므로,
       $H \left( h \right)$가 참일 때 그리고 그럴 때에만 $d \left( h \right) \in A$이다.
-      그런데 $g \left( H \left( h \right) \right) = d \left( h \right)$이므로,
+      그런데 $\gnum \left( H \left( h \right) \right) = d \left( h \right)$이므로,
       $H \left( h \right)$가 $A$에 대한 괴델 문장임을 알 수 있다.
       
       \item[(b)] (a)에 의하여 즉각적으로 따라온다.
@@ -584,8 +586,8 @@
   \end{context}
 
   \begin{context}[Exercise 5]
-    괴델 넘버링 $g$가 전사 함수가 아닌 경우를 고려하자.
-    이때 $$ \left( \forall E \in \mathcal{E} \right) \left( \forall e \in \mathbb{N} \right) \left[ g \left( E \right) = e \rightarrow g \left( \Phi \left( E , e \right) \right) = d \left( e \right) \right] $$를
+    괴델 넘버링 $\gnum$가 전사 함수가 아닌 경우를 고려하자.
+    이때 $$ \left( \forall E \in \mathcal{E} \right) \left( \forall e \in \mathbb{N} \right) \left[ \gnum \left( E \right) = e \rightarrow \gnum \left( \Phi \left( E , e \right) \right) = d \left( e \right) \right] $$를
     만족시키는 함수 $d : \mathbb{N} \to \mathbb{N}$를 한 대각 함수로 보자.
     대각 함수 $d$가 주어졌을 때, 임의의 $A \subseteq \mathbb{N}$에 대하여 $d^{-1} \left[ A \right]$가 $\mathcal{L}$에서 표현될 수 있다면 $A$에 대한 괴델 문장이 존재한다는 것을 보여라.
   \end{context}
@@ -622,7 +624,7 @@
       먼저, 조건 1에 의하여, 어떤 술어 $H$가 $\mathcal{L}$에서 $P^{*}$를 표현하는 것을 알 수 있다. --
       즉, $$ \left( \forall n \in \mathbb{N} \right) \left[ H \left( n \right) \in \mathcal{T} \leftrightarrow n \in P^{*} \right] $$이 성립한다.
       또한, 조건 2에 의하여, 어떤 술어 $H^{\prime}$이 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ H^{\prime} \left( n \right) \in \mathcal{P} \leftrightarrow H \left( n \right) \in \mathcal{R} \right] $$이 성립한다.
-      이제, $h^{\prime} := g \left( H^{\prime} \right)$에 대하여, $H \left( h^{\prime} \right)$이 $\mathcal{L}$에서 증명도 반증도 가능하지 않다는 것을 보일 것이다.
+      이제, $h^{\prime} := \gnum \left( H^{\prime} \right)$에 대하여, $H \left( h^{\prime} \right)$이 $\mathcal{L}$에서 증명도 반증도 가능하지 않다는 것을 보일 것이다.
       먼저, $H \left( h^{\prime} \right)$이 $\mathcal{L}$에서 증명 가능한 경우,
       \begin{align*}
         H \left( h^{\prime} \right) \in \mathcal{P}
@@ -645,7 +647,7 @@
       \item[{2.}] 모든 전제 조건들을 가정하자.
       $R^{*}$를 $\mathcal{L}$에서 나타낼 수 있으므로,
       어떤 술어 $K$가 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ K \left( n \right) \in \mathcal{P} \leftrightarrow n \in R^{*} \right] $$이 성립한다.
-      이제, $k := g \left( K \right)$에 대하여, $K \left( k \right)$가 $\mathcal{L}$에서 증명도 반증도 가능하지 않다는 것을 보일 것이다.
+      이제, $k := \gnum \left( K \right)$에 대하여, $K \left( k \right)$가 $\mathcal{L}$에서 증명도 반증도 가능하지 않다는 것을 보일 것이다.
       먼저, $K \left( k \right)$가 증명 가능한 경우,
       \begin{align*}
         K \left( k \right) \in \mathcal{P}
@@ -665,7 +667,7 @@
       \item[{3.}] 전제 조건들을 가정하자.
       $A$를 $\mathcal{L}$에서 나타낼 수 있으므로,
       어떤 술어 $K$가 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ K \left( n \right) \in \mathcal{P} \leftrightarrow n \in A \right] $$이 성립한다.
-      이제, $k := g \left( K \right)$에 대하여, $K \left( k \right)$가 $\mathcal{L}$에서 증명도 반증도 가능하지 않다는 것을 보일 것이다.
+      이제, $k := \gnum \left( K \right)$에 대하여, $K \left( k \right)$가 $\mathcal{L}$에서 증명도 반증도 가능하지 않다는 것을 보일 것이다.
       먼저, $K \left( k \right)$가 증명 가능하다고 가정하자.
       그러면, $$ K \left( k \right) \in \mathcal{P} \implies k \in P^{*} $$이고 $$ K \left( k \right) \in \mathcal{P} \implies k \in A $$인데,
       이는 $P^{*}$가 $A$와 서로소 집합이라는 가정에 모순이다.
@@ -690,7 +692,7 @@
       \item[{4.}] 전제 조건들을 가정하자.
       $P^{*}$를 $\mathcal{L}$에서 거꾸로 나타낼 수 있으므로,
       어떤 술어 $K$가 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ K \left( n \right) \in \mathcal{R} \leftrightarrow n \in P^{*} \right] $$이 성립한다.
-      이제, $k := g \left( K \right)$에 대하여, 문장 $K \left( k \right)$가 $\mathcal{L}$에서 결정 불가능함을 보이겠다.
+      이제, $k := \gnum \left( K \right)$에 대하여, 문장 $K \left( k \right)$가 $\mathcal{L}$에서 결정 불가능함을 보이겠다.
       먼저, $K \left( k \right)$를 $\mathcal{L}$에서 증명 가능한 경우,
       \begin{align*}
         K \left( k \right) \in \mathcal{P}
@@ -710,8 +712,8 @@
       \item[{5.}] 대각 함수 $d$와 집합 $A$이 주어졌다고 하고,
       $d^{-1} \left[ A \right]$가 $\mathcal{L}$에서 표현될 수 있다고 하자.
       그러면 어떤 술어 $H$가 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ H \left( n \right) \in \mathcal{T} \leftrightarrow n \in d^{-1} \left[ A \right] \right]$$이 성립한다.
-      이제, $h := g \left( H \right)$에 대하여, $H \left( h \right)$가 $A$에 대한 괴델 문장이라는 것을 보일 것이다.
-      먼저, $h = g \left( H \right)$이므로,
+      이제, $h := \gnum \left( H \right)$에 대하여, $H \left( h \right)$가 $A$에 대한 괴델 문장이라는 것을 보일 것이다.
+      먼저, $h = \gnum \left( H \right)$이므로,
       대각 함수의 제약 조건 $$ \left( \forall E \in \mathcal{E} \right) \left( \forall e \in \mathbb{N} \right) \left[ g \left( E \right) = e \rightarrow g \left( E \left( e \right) \right) = d \left( e \right) \right] $$로부터,
       $ g \left( H \left( h \right) \right) = d \left( h \right) $를 얻는다.
       그러면,
@@ -719,7 +721,7 @@
         H \left( h \right) \in \mathcal{T}
         & \iff h \in d^{-1} \left[ A \right] \\
         & \iff d \left( h \right) \in A \\
-        & \iff g \left( H \left( h \right) \right) \in A
+        & \iff \gnum \left( H \left( h \right) \right) \in A
       \end{align*}
       의 동등성을 얻는데,
       이는 $H \left( h \right)$가 $A$에 대한 괴델 문장 중 하나라는 것을 의미한다.
@@ -753,7 +755,7 @@
           & \iff 66 \in \widetilde{P^{*}} \\
           & \iff 66 \notin P^{*} \\
           & \iff d \left( 66 \right) \notin P^{*} \\
-          & \iff g \left( E_{66} \left( 66 \right) \right) \notin P \\
+          & \iff \gnum \left( E_{66} \left( 66 \right) \right) \notin P \\
           & \iff E_{66} \left( 66 \right) \notin \mathcal{P}
         \end{align*}
         인데, $\mathcal{L}$의 정확성을 가정하였으므로,
@@ -768,8 +770,8 @@
           E_{a_{n}} \left( b_{n} \right) \in \mathcal{T}
           & \iff b_{n} \in \tilde{P}^{*} \\
           & \iff d \left( b_{n} \right) \in \tilde{P} \\
-          & \iff g \left( E_{a_{n}} \left( b_{n} \right) \right) \in \tilde{P} \\
-          & \iff g \left( E_{a_{n}} \left( b_{n} \right) \right) \notin P \\
+          & \iff \gnum \left( E_{a_{n}} \left( b_{n} \right) \right) \in \tilde{P} \\
+          & \iff \gnum \left( E_{a_{n}} \left( b_{n} \right) \right) \notin P \\
           & \iff E_{a_{n}} \left( b_{n} \right) \notin \mathcal{P}
         \end{align*}
         인데, $\mathcal{L}$의 정확성에 의하여,
@@ -789,7 +791,7 @@
           E_{31} \left( 31 \right) \in \mathcal{T}
           & \iff 31 \in A^{*} \\
           & \iff d \left( 31 \right) \in A \\
-          & \iff g \left( E_{31} \left( 31 \right) \right) \in A
+          & \iff \gnum \left( E_{31} \left( 31 \right) \right) \in A
         \end{align*}
         인데,
         이는 $E_{31} \left( 31 \right)$이 $A$에 대한 괴델 문장이라는 것을 의미한다.
@@ -1274,17 +1276,17 @@
 
   $0$을 악센트 기호의 괴델 수로 택한 까닭은 다음과 같다:
   임의의 $n \in \mathbb{N}$에 대하여, (다른 표현식들과 마찬가지로) 숫자 $\overline{n}$은 괴델 수를 가진다.
-  이때 함수 $n \mapsto g \left( \overline{n} \right) : \mathbb{N} \to \mathbb{N}$이 싼술적이기를 원한다.
+  이때 함수 $n \mapsto \gnum \left( \overline{n} \right) : \mathbb{N} \to \mathbb{N}$이 싼술적이기를 원한다.
   당연히, $\overline{n}$은 ``$0$'' 뒤에 $n$개의 악센트 기호가 붙은 것이므로,
   그것의 괴델 수를 13진법으로 표기하면 ``$1$'' 뒤에 ``$0$''이 $n$번 나타나는 문자열과 같다.
-  따라서 $g \left( \overline{n} \right) = 13^{n}$이다.
+  따라서 $\gnum \left( \overline{n} \right) = 13^{n}$이다.
 
   \begin{context}[Discussion]
     실제로, 이 단원과 다음 두 단원의 모든 결과들은 다음 두 성질을 가지는 임의의 괴델 수에 대하여 통한다:
     \begin{enumerate}
       \item 싼술적인 함수 $\left( x , y \right) \mapsto x \bullet y : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$가 존재하여,
       $$ \left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left( \forall z \in \mathbb{N} \right) \left[ E_x E_y \equiv E_z \rightarrow x \bullet y = z \right] $$가 성립한다.
-      \item 함수 $n \mapsto g \left( \overline{n} \right) : \mathbb{N} \to \mathbb{N}$가 싼술적이다.
+      \item 함수 $n \mapsto \gnum \left( \overline{n} \right) : \mathbb{N} \to \mathbb{N}$가 싼술적이다.
     \end{enumerate}
 
     저 두 성질을 최대한 빨리 달성하기 위하여 저러한 특정 괴델 넘버링을 택하였다.
@@ -1363,7 +1365,7 @@
 
   \noindent \textbf{\S 6. 대각화와 괴델 문장}
 
-  집합 $T \subseteq \mathbb{N}$을 $T := \left\{ g \left( X \right) : X \in \mathcal{T} \right\}$으로 놓자.
+  집합 $T \subseteq \mathbb{N}$을 $T := \left\{ \gnum \left( X \right) : X \in \mathcal{T} \right\}$으로 놓자.
   이 $T$라는 집합은 완벽하게 정의된 [자연수들의 집합]이다.
   그런데 이것이 싼술적일까?
   우리는 그렇지 않다는 것을 보일 것이다 -- Tarski의 정리.
@@ -1377,7 +1379,7 @@
 
   거의 모든 책이 괴델 문장을 구성하는 여러 가지 영리한 방법으로 쓰여질 수 있다.
   G\"odel의 원래 방법은 임의의 논리식 $F$와 $G$ 그리고 임의의 수 $n$에 대하여,
-  $$F \left[ v_1 := \overline{n} \right] \equiv G \rightarrow \mathrm{sub} \left( g \left( F \right) , n \right) = g \left( G \right)$$
+  $$F \left[ v_1 := \overline{n} \right] \equiv G \rightarrow \mathrm{sub} \left( \gnum \left( F \right) , n \right) = \gnum \left( G \right)$$
   만족시키는 싼술적인 함수 $\mathrm{sub} : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$의 존재를 보이는 것을 수반한다.
   이것을 수행하는 것은 개체 변수를 숫자로 치환하는 연산을 산술화하는 것과 관련되어 있는데,
   이것은 꽤나 복잡한 일이다.
@@ -1403,7 +1405,7 @@
   $E$가 변수 $v_1$만이 자유롭게 나타나는 논리식인 경우 당연히 $E \left( n \right)$은 문장이나,
   이 모든 경우에서 $E \left( n \right)$은 잘 정의된 논리식이다.
 
-  함수 $r : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$을 $$ r \left( x , y \right) := g \left( E_x \left( y \right) \right) $$으로 정의하자.
+  함수 $r : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$을 $$ r \left( x , y \right) := \gnum \left( E_x \left( y \right) \right) $$으로 정의하자.
   즉, 임의의 $e \in \mathbb{N}$과 임의의 $n \in \mathbb{N}$에 대하여,
   $e$를 괴델 수로 받은 표현식을 $E$라 하면, $r \left( e , n \right)$은 표현식 $E \left( n \right)$의 괴델 수이다.
   $r$은 이 책에서 매우 중요한 역할을 하는 함수이며, 우리는 곧 이 함수가 싼술적임을 보이겠다.
@@ -1434,7 +1436,7 @@
     함수 $d : \mathbb{N} \to \mathbb{N}$를 $$d \left( x \right) := r \left( x , x \right) \quad \mathop{\mathrm{for}} x \in \mathbb{N} $$으로 정의하고
     이것을 \underline{대각}(\textit{diagonal})함수라고 부르겠다.
     $r$이 싼술적이었기 때문에 $d$ 또한 싼술적이다.
-    임의의 $n \in \mathbb{N}$에 대하여 $d \left( n \right) = g \left( E_{n} \left( n \right) \right)$이다.
+    임의의 $n \in \mathbb{N}$에 대하여 $d \left( n \right) = \gnum \left( E_{n} \left( n \right) \right)$이다.
   \end{context}
 
   집합 $A \subseteq \mathbb{N}$에 대하여 $A^{*} := \left\{ n \in \mathbb{N} : d \left( n \right) \in A \right\}$로 정의하자.\footnote
@@ -1620,20 +1622,20 @@
         함수 $\left( x , y \right) \mapsto f \left( g \left( x , y \right) \right)$는 $F_3$에 의하여 표현되므로, 모두 싼술적이다.
       \end{itemize}
 
-      \item $A$가 싼술적이므로, 개체 변수 $v_1$만이 자유롭게 나타나는 논리식 $F_A$가 존재하여
+      \item[(b)] $A$가 싼술적이므로, 개체 변수 $v_1$만이 자유롭게 나타나는 논리식 $F_A$가 존재하여
       $$ \left( \forall n \in \mathbb{N} \right) \left[ F_A \left[ v_1 := \overline{n} \right] \leftrightarrow n \in A \right] $$이 성립한다.
       이때 논리식 $$\left( \left( F_A \left[ v_1 := v_2 \right] \land v_1 < v_2 \right) \land \forall v_3 \left( \left( F_A \left[ v_1 := v_3 \right] \land v_1 < v_3 \right) \rightarrow v_2 \leq v_3 \right) \right)$$을 고려하자.
       이것은 관계 $ \left( y \in A \land x < y \right) \land \left( \forall z \in \mathbb{N} \right) \left[ \left( z \in A \land x < z \right) \rightarrow y \leq z \right] $를 표현하는데,
       임의의 $x \in \mathbb{N}$와 임의의 $y \in \mathbb{N}$에 대하여 이 관계가 $x$와 $y$에 대하여 성립할 때 그리고 그럴 때에만 $R \left( x , y \right)$이므로, 관계 $R \subseteq \mathbb{N}^{2}$은 싼술적이다.
 
-      \item 문제를 풀기에 앞서, 괴델 넘버링의 기저를 $10$으로 취했을 때의 대각 함수 $d$를 계산해 보자.
+      \item[(c)] 문제를 풀기에 앞서, 괴델 넘버링의 기저를 $10$으로 취했을 때의 대각 함수 $d$를 계산해 보자.
       임의의 $x \in \mathbb{N}$에 대하여,
-      $g \left( \overline{x} \right) = 10^{x}$임과 $$ g \left( v_1 \right) = g \left( \left( v \circ \right) \right) = 2 *_{10} 6 *_{10} 5 *_{10} 3 = 2653 $$임에 주목하면,
+      $\gnum \left( \overline{x} \right) = 10^{x}$임과 $$ \gnum \left( v_1 \right) = \gnum \left( \left( v \circ \right) \right) = 2 *_{10} 6 *_{10} 5 *_{10} 3 = 2653 $$임에 주목하면,
       \begin{align*}
         d \left( x \right)
         & = r \left( x , x \right) \\
-        & = g \left( \forall v_1 \left( v_1 = \overline{x} \rightarrow E_x \right) \right) \\
-        & = g \left( \forall \right) *_{10} g \left( v_1 \right) *_{10} g \left( ( \right) *_{10} g \left( v_1 \right) *_{10} g \left( = \right) *_{10} g \left( \overline{x} \right) *_{10} g \left( \rightarrow \right) *_{10} g \left( E_x \right) * g \left( ) \right) \\
+        & = \gnum \left( \forall v_1 \left( v_1 = \overline{x} \rightarrow E_x \right) \right) \\
+        & = \gnum \left( \forall \right) *_{10} \gnum \left( v_1 \right) *_{10} \gnum \left( ( \right) *_{10} \gnum \left( v_1 \right) *_{10} \gnum \left( = \right) *_{10} \gnum \left( \overline{x} \right) *_{10} \gnum \left( \rightarrow \right) *_{10} \gnum \left( E_x \right) * \gnum \left( ) \right) \\
         & = 899 *_{10} 2653 *_{10} 2 *_{10} 2653 *_{10} 10^{x} *_{10} 89 *_{10} x *_{10} 3 \\
         & = 899265322653 *_{10} 10^{x} *_{10} 89 *_{10} x *_{10} 3
       \end{align*}
@@ -1676,8 +1678,8 @@
       임의의 $n \in \mathbb{N}$에 대하여,
       표현식 $E_{n}$이 자유롭게 나타나는 개체 변수가 $v_1$ 뿐인 논리식일 때,
       논리식 $$ F : \equiv \exists v_2 \left( D \land \forall v_1 \left( v_1 = v_2 \rightarrow E_{n} \right) \right) $$에 대하여
-      $F \left( g \left( F \right) \right)$은 $E_{n}$이 표현하는 집합의 괴델 문장이다.
-      그러므로 $$ f \left( n \right) := g \left( \forall v_1 \left( v_1 = \overline{g \left( F \right)} \rightarrow F \right) \right) $$로 두자.
+      $F \left( \gnum \left( F \right) \right)$은 $E_{n}$이 표현하는 집합의 괴델 문장이다.
+      그러므로 $$ f \left( n \right) := \gnum \left( \forall v_1 \left( v_1 = \overline{\gnum \left( F \right)} \rightarrow F \right) \right) $$로 두자.
       그러면 $f$는 싼술적이므로 원하는 답을 얻었다.
 
       \item \textbf{다음은 \underline{전한울}님의 풀이임을 밝힙니다:}
@@ -1688,34 +1690,34 @@
       $$ \left( \forall n \in \mathbb{N} \right) \left[ F_B \left[ v_1 := \overline{n} \right] \in \mathcal{T} \leftrightarrow n \in B \right]$$가 성립한다.
       각각의 표현식 $E$에 대하여 각 $x \in \mathbb{N}$와 각 $y \in \mathbb{N}$마다 $$E \left( x , y \right) : \equiv \forall v_1 \forall v_2 \left( v_1 = \overline{x} \rightarrow \left( v_2 = \overline{y} \rightarrow E \right) \right)$$라고 표기하자.
       그리고 함수 $\mathrm{fst} : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$와 $\mathrm{snd} : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$을
-      각각 $$ \mathrm{fst} \left( x , y \right) := g \left( E_x \left( x , y \right) \right)$$와
-      $$\mathrm{snd} \left( x , y \right) := g \left( E_y \left( x , y \right) \right)$$로 두자.
+      각각 $$ \mathrm{fst} \left( x , y \right) := \gnum \left( E_x \left( x , y \right) \right)$$와
+      $$\mathrm{snd} \left( x , y \right) := \gnum \left( E_y \left( x , y \right) \right)$$로 두자.
       그런데 $\mathrm{fst}$와 $\mathrm{snd}$는 모두 싼술적인 함수이므로,
       개체 변수 $v_1$, $v_2$와 $v_3$만이 자유롭게 나타나는 어떤 두 논리식 $\mathrm{Fst}$와 $\mathrm{Snd}$가 존재하여
       $$ \left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left( \forall z \in \mathbb{N} \right) \left[ \mathrm{Fst} \left[ v_1 := \overline{x} , v_2 := \overline{y} , v_3 := \overline{z} \right] \in \mathcal{T} \leftrightarrow \mathrm{fst} \left( x , y \right) = z \right] $$와
       $$ \left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left( \forall z \in \mathbb{N} \right) \left[ \mathrm{Snd} \left[ v_1 := \overline{x} , v_2 := \overline{y} , v_3 := \overline{z} \right] \in \mathcal{T} \leftrightarrow \mathrm{snd} \left( x , y \right) = z \right] $$가 성립한다.
       이제 논리식 $F_1$과 $F_2$를 각각 $$F_1 : \equiv \forall v_3 \left( \mathrm{Snd} \rightarrow F_A \left[ v_1 := v_3 \right] \right)$$와 $$F_2 : \equiv \forall v_3 \left( \mathrm{Fst} \rightarrow F_B \left[ v_1 := v_3 \right] \right)$$로 놓자.
-      그러면, $F_1$과 $F_2$에는 개체 변수 $v_1$와 $v_2$만이 자유롭게 나타나며, $$F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \in \mathcal{T} \iff F_A \left[ v_1 := \overline{g \left( F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \right)} \right] \in \mathcal{T}$$이고
-      $$F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \in \mathcal{T} \iff F_B \left[ v_1 := \overline{g \left( F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \right)} \right] \in \mathcal{T}$$이다.
-      이때 $$X : \equiv F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right)$$와 $$Y : \equiv F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right)$$를 취하자.
+      그러면, $F_1$과 $F_2$에는 개체 변수 $v_1$와 $v_2$만이 자유롭게 나타나며, $$F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \in \mathcal{T} \iff F_A \left[ v_1 := \overline{\gnum \left( F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right)} \right] \in \mathcal{T}$$이고
+      $$F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \in \mathcal{T} \iff F_B \left[ v_1 := \overline{\gnum \left( F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right)} \right] \in \mathcal{T}$$이다.
+      이때 $$X : \equiv F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right)$$와 $$Y : \equiv F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right)$$를 취하자.
       그러면,
       \begin{align*}
         X \in \mathcal{T}
-        & \iff F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \in \mathcal{T} \\
-        & \iff F_A \left[ v_1 := \overline{g \left( F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \right)} \right] \in \mathcal{T} \\
-        & \iff g \left( F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \right) \in A \\
-        & \iff g \left( Y \right) \in A
+        & \iff F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \in \mathcal{T} \\
+        & \iff F_A \left[ v_1 := \overline{\gnum \left( F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right)} \right] \in \mathcal{T} \\
+        & \iff \gnum \left( F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right) \in A \\
+        & \iff \gnum \left( Y \right) \in A
       \end{align*}
       이고,
       \begin{align*}
         Y \in \mathcal{T}
-        & \iff F_2 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \in \mathcal{T} \\
-        & \iff F_B \left[ v_1 := \overline{g \left( F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \right)} \right] \in \mathcal{T} \\
-        & \iff g \left( F_1 \left( g \left( F_1 \right) , g \left( F_2 \right) \right) \right) \in B \\
-        & \iff g \left( X \right) \in B
+        & \iff F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \in \mathcal{T} \\
+        & \iff F_B \left[ v_1 := \overline{\gnum \left( F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right)} \right] \in \mathcal{T} \\
+        & \iff \gnum \left( F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right) \in B \\
+        & \iff \gnum \left( X \right) \in B
       \end{align*}
       이다.
-      이로써 $$X \in \mathcal{T} \leftrightarrow g \left( Y \right) \in A$$와 $$Y \in \mathcal{T} \leftrightarrow g \left( X \right) \in B$$가 성립함을 알 수 있다.
+      이로써 $$X \in \mathcal{T} \leftrightarrow \gnum \left( Y \right) \in A$$와 $$Y \in \mathcal{T} \leftrightarrow \gnum \left( X \right) \in B$$가 성립함을 알 수 있다.
     \end{enumerate}
   \end{context}
 
