@@ -35,6 +35,7 @@
     , Fixpoint
     , forall
     , From
+    , fun
     , if
     , in
     , Import
@@ -1760,8 +1761,7 @@
   \begin{context}[Comments]
     이 장의 내용을 Coq으로 형식화해보자.
 
-    \begin{enumerate}
-      \item requirements:
+    \S1. Requirements:
 \begin{lstlisting}[frame=single]
 From Coq.Bool Require Export Bool.
 From Coq.micromega Require Export Lia.
@@ -1769,7 +1769,7 @@ From Coq.Lists Require Export List.
 From Coq.Arith Require Export PeanoNat.
 \end{lstlisting}
 
-    \item utility:
+    \S2. Utilities:
 \begin{lstlisting}[frame=single]
 Import ListNotations.
 Lemma forallb_true_iff {A : Type} (f : A -> bool) :
@@ -1825,7 +1825,7 @@ Proof.
 Qed.
 \end{lstlisting}
 
-    \item term, formula:
+    \S3. Term, Formula:
 \begin{lstlisting}[frame=single]
 Definition vr : Set :=
   nat
@@ -1847,7 +1847,7 @@ Inductive form : Set :=
 .
 \end{lstlisting}
 
-    \item free occurrence:
+    \S4. Free-occurrence:
 \begin{lstlisting}[frame=single]
 Lemma vr_eq_dec :
   forall x1 : vr,
@@ -1952,7 +1952,7 @@ Proof.
 Qed.
 \end{lstlisting}
 
-    \item designation:
+    \S5. Designation:
 \begin{lstlisting}[frame=single]
 Definition value_assignment : Set :=
   vr -> nat
@@ -2082,6 +2082,7 @@ Proof.
 Qed.
 \end{lstlisting}
 
+    \S6. Substitution:
 \begin{lstlisting}[frame=single]
 Definition substitution : Set :=
   list (vr * tm)
@@ -2245,8 +2246,6 @@ Proof.
     }
 Qed.
 \end{lstlisting}
-
-    \end{enumerate}
   \end{context}
 
   \section{제곱 연산이 있는 페아노 산술의 불완전성}

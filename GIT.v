@@ -3,7 +3,6 @@ From Coq.micromega Require Export Lia.
 From Coq.Lists Require Export List.
 From Coq.Arith Require Export PeanoNat.
 
-
 Section Chapter2.
 
 Import ListNotations.
