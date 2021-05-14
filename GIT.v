@@ -3,10 +3,10 @@ From Coq.micromega Require Export Lia.
 From Coq.Lists Require Export List.
 From Coq.Arith Require Export PeanoNat.
 
-Import ListNotations.
 
 Section Chapter2.
 
+Import ListNotations.
 Lemma forallb_true_iff {A : Type} (f : A -> bool) :
   forall xs : list A,
   forallb f xs = true <-> (forall x : A, In x xs -> f x = true).
