@@ -1,3 +1,4 @@
+(* My formalization of ``Goedel's Incompleteness Theorems'' written by Raymond M. Smullyan *)
 From Coq.Bool Require Export Bool.
 From Coq.micromega Require Export Lia.
 From Coq.Lists Require Export List.
@@ -535,6 +536,7 @@ Proof.
 Qed.
 Ltac eval_vr_eq_dec := repeat (rewrite vr_eq_dec_is_Nat_eq_dec; simpl).
 Ltac eval_in_vr_eq_dec H := repeat (rewrite vr_eq_dec_is_Nat_eq_dec in H; simpl in H).
+Ltac auto_show_it_is_sentence := tryif (apply orb_false_iff; constructor) then auto_show_it_is_sentence else (eval_vr_eq_dec; simplify_make_numeral).
 Fixpoint relation_of_arity (n : nat) : Type :=
   match n with
   | 0 => Prop
@@ -569,10 +571,8 @@ Fixpoint express_relation (n : nat) : form -> relation_of_arity n -> Prop :=
 Example express_relation_example1 :
   express_relation 2 (leq_form (ivar_tm 0) (ivar_tm 1)) (fun x0 : nat => fun x1 : nat => x0 <= x1).
 Proof.
-  simpl; intros val1 val2; constructor.
-  - intros x; apply orb_false_iff; constructor.
-    + eval_vr_eq_dec; simplify_make_numeral.
-    + eval_vr_eq_dec; simplify_make_numeral.
+  simpl; intros val1 val0; constructor.
+  - intros x; auto_show_it_is_sentence.
   - constructor.
     + intros H va.
       eval_vr_eq_dec; simpl_eval_tm_make_numeral; tauto.
@@ -617,14 +617,7 @@ Example express_function_example1 :
   express_function 3 (eqn_form (ivar_tm 0) (plus_tm (ivar_tm 1) (plus_tm (ivar_tm 2) (ivar_tm 3)))) (fun x1 : nat => fun x2 : nat => fun x3 : nat => x1 + (x2 + x3)).
 Proof.
   simpl; intros val3 val2 val1 val0; constructor.
-  - intros x.
-    apply orb_false_iff; constructor.
-    eval_vr_eq_dec; simplify_make_numeral.
-    apply orb_false_iff; constructor.
-    eval_vr_eq_dec; simplify_make_numeral.
-    apply orb_false_iff; constructor.
-    eval_vr_eq_dec; simplify_make_numeral.
-    eval_vr_eq_dec; simplify_make_numeral.
+  - intros x; auto_show_it_is_sentence.
   - constructor.
     + intros H va.
       eval_vr_eq_dec; simpl_eval_tm_make_numeral; tauto.

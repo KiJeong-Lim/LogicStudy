@@ -2073,6 +2073,9 @@ Ltac eval_vr_eq_dec :=
 Ltac eval_in_vr_eq_dec H :=
   repeat (rewrite vr_eq_dec_is_Nat_eq_dec in H; simpl in H)
 .
+Ltac auto_show_it_is_sentence :=
+  tryif (apply orb_false_iff; constructor) then auto_show_it_is_sentence else (eval_vr_eq_dec; simplify_make_numeral)
+.
 Fixpoint relation_of_arity (n : nat) : Type :=
   match n with
   | 0 => Prop
