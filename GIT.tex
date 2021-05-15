@@ -2062,7 +2062,9 @@ Lemma occursFreeIn_tm_make_numeral :
   forall x : vr,
   occursFreeIn_tm x (make_numeral val) = false
 .
-Ltac simplify_make_numeral := repeat (rewrite substitute_tm_make_numeral); repeat (apply occursFreeIn_tm_make_numeral).
+Ltac simplify_make_numeral :=
+  repeat (rewrite substitute_tm_make_numeral); repeat (apply occursFreeIn_tm_make_numeral)
+.
 Lemma vr_eq_dec_is_Nat_eq_dec {A : Type} :
   forall x1 : A,
   forall x2 : A,
