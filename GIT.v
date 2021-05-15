@@ -57,6 +57,41 @@ Proof.
   - simpl; intros n; lia.
   - simpl; intros n; rewrite IHns1; lia.
 Qed.
+Definition ensemble (A : Type) : Type :=
+  A -> Prop
+.
+Definition member {A : Type} (x : A) (xs : ensemble A) : Prop :=
+  xs x
+.
+Inductive singletone {A : Type} : A -> ensemble A :=
+| In_singletone :
+  forall x : A,
+  forall xs : ensemble A,
+  member x (singletone x)
+.
+Inductive union {A : Type} : ensemble A -> ensemble A -> ensemble A :=
+| In_union_left :
+  forall x : A,
+  forall xs1 : ensemble A,
+  forall xs2 : ensemble A,
+  member x xs1 ->
+  member x (union xs1 xs2)
+| In_union_right :
+  forall x : A,
+  forall xs1 : ensemble A,
+  forall xs2 : ensemble A,
+  member x xs2 ->
+  member x (union xs1 xs2)
+.
+Definition insert {A : Type} (x1 : A) (xs2 : ensemble A) : ensemble A :=
+  union xs2 (singletone x1)
+.
+Definition difference {A : Type} (xs1 : ensemble A) (xs2 : ensemble A) : ensemble A :=
+  fun x : A => member x xs1 /\ ~ member x xs2
+.
+Definition delete {A : Type} (x1 : A) (xs2 : ensemble A) : ensemble A :=
+  difference xs2 (singletone x1)
+.
 
 Definition vr : Set :=
   nat
@@ -201,10 +236,8 @@ Lemma eval_tm_extensionality :
 Proof.
   intros t; induction t.
   - simpl; intros va1 va2 H; apply H; destruct (vr_eq_dec v v).
-    { reflexivity.
-    }
-    { contradiction.
-    }
+    + reflexivity.
+    + contradiction.
   - simpl; intros va1 va2 H.
     reflexivity.
   - simpl; intros va1 va2 H.
@@ -236,7 +269,7 @@ Fixpoint eval_form (va : value_assignment) (f : form) : Prop :=
   | leq_form t1 t2 => eval_tm va t1 <= eval_tm va t2
   | neg_form f1 => ~ eval_form va f1
   | imp_form f1 f2 => eval_form va f1 -> eval_form va f2
-  | all_form x f1 => forall n : nat, eval_form (fun z : vr => if vr_eq_dec x z then n else va z) f1
+  | all_form x f1 => forall val : nat, eval_form (fun z : vr => if vr_eq_dec x z then val else va z) f1
   end
 .
 Lemma eval_form_extensionality :
@@ -312,10 +345,7 @@ Definition substitution : Set :=
 Fixpoint substitute_vr (sigma : substitution) (x : vr) : tm :=
   match sigma with
   | [] => ivar_tm x
-  | (x1, tm1) :: sigma' =>
-    if vr_eq_dec x x1
-    then tm1
-    else substitute_vr sigma' x
+  | (x1, tm1) :: sigma' => if vr_eq_dec x x1 then tm1 else substitute_vr sigma' x
   end
 .
 Fixpoint substitute_tm (sigma : substitution) (t : tm) : tm :=
@@ -452,7 +482,7 @@ Proof.
       - contradiction n0; rewrite e; reflexivity.
       - apply eval_tm_extensionality.
         intros x' H0; destruct (vr_eq_dec (chi sigma (all_form v f)) x').
-        { subst.
+        + subst.
           assert (isFreshVarIn_substitute_form sigma (chi sigma (all_form v f)) (all_form v f)).
             apply the_rule_of_chi.
           unfold isFreshVarIn_substitute_form in H1; rewrite forallb_true_iff in H1.
@@ -462,10 +492,141 @@ Proof.
             - tauto. 
           }
           rewrite H0 in H2; inversion H2.
-        }
-        { reflexivity.
-        }
+        + reflexivity.
     }
+Qed.
+Lemma substitute_tm_make_numeral :
+  forall n : nat,
+  forall sigma : substitution,
+  substitute_tm sigma (make_numeral n) = make_numeral n.
+Proof.
+  intros n; induction n.
+  - intros sigma; simpl; reflexivity.
+  - intros sigma; simpl; rewrite (IHn sigma); reflexivity.
+Qed.
+
+Lemma occursFreeIn_tm_make_numeral :
+  forall val : nat,
+  forall x : vr,
+  occursFreeIn_tm x (make_numeral val) = false.
+Proof.
+  intros val; induction val.
+  - intros x; simpl; reflexivity.
+  - intros x; simpl; rewrite (IHval x); reflexivity.
+Qed.
+Lemma vr_eq_dec_is_Nat_eq_dec {A : Type} :
+  forall x1 : A,
+  forall x2 : A,
+  forall z1 : vr,
+  forall z2 : vr,
+  (if vr_eq_dec z1 z2 then x1 else x2) = (if Nat.eq_dec z1 z2 then x1 else x2).
+Proof.
+  intros x1 x2 z1 z2.
+  destruct (vr_eq_dec z1 z2).
+  - destruct (Nat.eq_dec z1 z2).
+    + reflexivity.
+    + contradiction.
+  - destruct (Nat.eq_dec z1 z2).
+    + contradiction.
+    + reflexivity.
+Qed.
+Fixpoint relation_of_arity (n : nat) : Type :=
+  match n with
+  | 0 => Prop
+  | S n' => nat -> relation_of_arity n'
+  end
+.
+Fixpoint lift_relation (n : nat) : relation_of_arity (S n) -> nat -> relation_of_arity n :=
+  match n as n0 return relation_of_arity (S n0) -> nat -> relation_of_arity n0 with
+  | 0 =>
+    fun pred : nat -> Prop =>
+    fun val : nat =>
+    pred val
+  | S n' =>
+    fun pred : nat -> nat -> relation_of_arity n' =>
+    fun val : nat =>
+    fun val' : nat =>
+    lift_relation n' (pred val') val 
+  end
+.
+Fixpoint express_relation (n : nat) : form -> relation_of_arity n -> Prop :=
+  match n as n0 return form -> relation_of_arity n0 -> Prop with
+  | 0 =>
+    fun f : form =>
+    fun pred : Prop =>
+    (forall x : vr, occursFreeIn_form x f = false) /\ (pred <-> forall va : value_assignment, eval_form va f)
+  | S n' =>
+    fun f : form =>
+    fun pred : nat -> relation_of_arity n' =>
+    forall val : nat, express_relation n' (substitute_form [(n', make_numeral val)] f) (lift_relation n' pred val)
+  end
+.
+Example express_relation_example1 :
+  express_relation 2 (leq_form (ivar_tm 0) (ivar_tm 1)) (fun x0 : nat => fun x1 : nat => x0 <= x1).
+Proof.
+  simpl; intros val1 val2; constructor.
+  - intros x; apply orb_false_iff; constructor.
+    + rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; apply occursFreeIn_tm_make_numeral.
+    + rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite substitute_tm_make_numeral; apply occursFreeIn_tm_make_numeral.
+  - constructor.
+    + intros H va; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite substitute_tm_make_numeral; rewrite eval_tm_make_numeral; rewrite eval_tm_make_numeral; apply H.
+    + intros H.
+      assert (H0 := H (fun _ : vr => 0)).
+      rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite substitute_tm_make_numeral in H0; rewrite eval_tm_make_numeral in H0; rewrite eval_tm_make_numeral in H0; apply H0.
+Qed.
+Fixpoint function_of_arity (n : nat) : Type :=
+  match n with
+  | 0 => nat
+  | S n' => nat -> function_of_arity n'
+  end
+.
+Fixpoint lift_function (n : nat) : function_of_arity (S n) -> nat -> function_of_arity n :=
+  match n as n0 return function_of_arity (S n0) -> nat -> function_of_arity n0 with
+  | 0 =>
+    fun func : nat -> nat =>
+    fun val : nat =>
+    func val
+  | S n' =>
+    fun func : nat -> nat -> function_of_arity n' =>
+    fun val : nat =>
+    fun val' : nat =>
+    lift_function n' (func val') val 
+  end
+.
+Fixpoint express_function (n : nat) : form -> function_of_arity n -> Prop :=
+  match n as n0 return form -> function_of_arity n0 -> Prop with
+  | 0 =>
+    fun f : form =>
+    fun func : nat =>
+    forall val : nat,
+    let f' : form := substitute_form [(0, make_numeral val)] f in
+    (forall x : vr, occursFreeIn_form x f' = false) /\ (val = func <-> forall va : value_assignment, eval_form va f')
+  | S n' =>
+    fun f : form =>
+    fun func : nat -> function_of_arity n' =>
+    forall val : nat, express_function n' (substitute_form [(n, make_numeral val)] f) (lift_function n' func val)
+  end
+.
+Example express_function_example1 :
+  express_function 2 (eqn_form (ivar_tm 0) (plus_tm (ivar_tm 1) (ivar_tm 2))) (fun x1 : nat => fun x2 : nat => x1 + x2).
+Proof.
+  simpl; intros val2 val1 val0; constructor.
+  - intros x.
+    apply orb_false_iff; constructor.
+    { rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; apply occursFreeIn_tm_make_numeral.
+    }
+    { apply orb_false_iff; constructor.
+      { rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite substitute_tm_make_numeral; apply occursFreeIn_tm_make_numeral.
+      }
+      { rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite substitute_tm_make_numeral; rewrite substitute_tm_make_numeral; apply occursFreeIn_tm_make_numeral.
+      }
+    }
+  - constructor.
+    + intros H va.
+      rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite substitute_tm_make_numeral; rewrite substitute_tm_make_numeral; rewrite substitute_tm_make_numeral; rewrite eval_tm_make_numeral; rewrite eval_tm_make_numeral; rewrite eval_tm_make_numeral; apply H.
+    + intros H.
+      assert (H0 := H (fun _ : vr => 0)).
+      rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite substitute_tm_make_numeral in H0; rewrite substitute_tm_make_numeral in H0; rewrite substitute_tm_make_numeral in H0; rewrite eval_tm_make_numeral in H0; rewrite eval_tm_make_numeral in H0; rewrite eval_tm_make_numeral in H0; apply H0.
 Qed.
 
 End Chapter2.
