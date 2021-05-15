@@ -49,6 +49,7 @@
     , Inductive
     , Lemma
     , let
+    , Ltac
     , match
     , Proof
     , Prop
@@ -2047,17 +2048,30 @@ Theorem substitute_form_preserves_eval_form :
 
     \S7. Expressibility:
     \begin{coqcode}
+Ltac simpl_eval_tm_make_numeral :=
+  repeat (rewrite substitute_tm_make_numeral); repeat (rewrite eval_tm_make_numeral)
+.
+Ltac simpl_in_eval_tm_make_numeral H :=
+  repeat (rewrite substitute_tm_make_numeral in H); repeat (rewrite eval_tm_make_numeral in H)
+.
 Lemma occursFreeIn_tm_make_numeral :
   forall val : nat,
   forall x : vr,
   occursFreeIn_tm x (make_numeral val) = false
 .
+Ltac simplify_make_numeral := repeat (rewrite substitute_tm_make_numeral); repeat (apply occursFreeIn_tm_make_numeral).
 Lemma vr_eq_dec_is_Nat_eq_dec {A : Type} :
   forall x1 : A,
   forall x2 : A,
   forall z1 : vr,
   forall z2 : vr,
   (if vr_eq_dec z1 z2 then x1 else x2) = (if Nat.eq_dec z1 z2 then x1 else x2)
+.
+Ltac eval_vr_eq_dec :=
+  repeat (rewrite vr_eq_dec_is_Nat_eq_dec; simpl)
+.
+Ltac eval_in_vr_eq_dec H :=
+  repeat (rewrite vr_eq_dec_is_Nat_eq_dec in H; simpl in H)
 .
 Fixpoint relation_of_arity (n : nat) : Type :=
   match n with
@@ -2127,7 +2141,7 @@ Fixpoint express_function (n : nat) : form -> function_of_arity n -> Prop :=
   end
 .
 Example express_function_example1 :
-  express_function 2 (eqn_form (ivar_tm 0) (plus_tm (ivar_tm 1) (ivar_tm 2))) (fun x1 : nat => fun x2 : nat => x1 + x2)
+  express_function 3 (eqn_form (ivar_tm 0) (plus_tm (ivar_tm 1) (plus_tm (ivar_tm 2) (ivar_tm 3)))) (fun x1 : nat => fun x2 : nat => fun x3 : nat => x1 + (x2 + x3))
 .
     \end{coqcode}
   \end{context}

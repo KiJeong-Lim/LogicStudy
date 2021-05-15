@@ -505,6 +505,8 @@ Proof.
   - intros sigma; simpl; rewrite (IHn sigma); reflexivity.
 Qed.
 
+Ltac simpl_eval_tm_make_numeral := repeat (rewrite substitute_tm_make_numeral); repeat (rewrite eval_tm_make_numeral).
+Ltac simpl_in_eval_tm_make_numeral H := repeat (rewrite substitute_tm_make_numeral in H); repeat (rewrite eval_tm_make_numeral in H).
 Lemma occursFreeIn_tm_make_numeral :
   forall val : nat,
   forall x : vr,
@@ -514,6 +516,7 @@ Proof.
   - intros x; simpl; reflexivity.
   - intros x; simpl; rewrite (IHval x); reflexivity.
 Qed.
+Ltac simplify_make_numeral := repeat (rewrite substitute_tm_make_numeral); repeat (apply occursFreeIn_tm_make_numeral).
 Lemma vr_eq_dec_is_Nat_eq_dec {A : Type} :
   forall x1 : A,
   forall x2 : A,
@@ -530,6 +533,8 @@ Proof.
     + contradiction.
     + reflexivity.
 Qed.
+Ltac eval_vr_eq_dec := repeat (rewrite vr_eq_dec_is_Nat_eq_dec; simpl).
+Ltac eval_in_vr_eq_dec H := repeat (rewrite vr_eq_dec_is_Nat_eq_dec in H; simpl in H).
 Fixpoint relation_of_arity (n : nat) : Type :=
   match n with
   | 0 => Prop
@@ -566,13 +571,14 @@ Example express_relation_example1 :
 Proof.
   simpl; intros val1 val2; constructor.
   - intros x; apply orb_false_iff; constructor.
-    + rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; apply occursFreeIn_tm_make_numeral.
-    + rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite substitute_tm_make_numeral; apply occursFreeIn_tm_make_numeral.
+    + eval_vr_eq_dec; simplify_make_numeral.
+    + eval_vr_eq_dec; simplify_make_numeral.
   - constructor.
-    + intros H va; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite substitute_tm_make_numeral; rewrite eval_tm_make_numeral; rewrite eval_tm_make_numeral; apply H.
+    + intros H va.
+      eval_vr_eq_dec; simpl_eval_tm_make_numeral; tauto.
     + intros H.
       assert (H0 := H (fun _ : vr => 0)).
-      rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite substitute_tm_make_numeral in H0; rewrite eval_tm_make_numeral in H0; rewrite eval_tm_make_numeral in H0; apply H0.
+      eval_in_vr_eq_dec H0; simpl_in_eval_tm_make_numeral H0; tauto.
 Qed.
 Fixpoint function_of_arity (n : nat) : Type :=
   match n with
@@ -608,25 +614,23 @@ Fixpoint express_function (n : nat) : form -> function_of_arity n -> Prop :=
   end
 .
 Example express_function_example1 :
-  express_function 2 (eqn_form (ivar_tm 0) (plus_tm (ivar_tm 1) (ivar_tm 2))) (fun x1 : nat => fun x2 : nat => x1 + x2).
+  express_function 3 (eqn_form (ivar_tm 0) (plus_tm (ivar_tm 1) (plus_tm (ivar_tm 2) (ivar_tm 3)))) (fun x1 : nat => fun x2 : nat => fun x3 : nat => x1 + (x2 + x3)).
 Proof.
-  simpl; intros val2 val1 val0; constructor.
+  simpl; intros val3 val2 val1 val0; constructor.
   - intros x.
     apply orb_false_iff; constructor.
-    { rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; apply occursFreeIn_tm_make_numeral.
-    }
-    { apply orb_false_iff; constructor.
-      { rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite substitute_tm_make_numeral; apply occursFreeIn_tm_make_numeral.
-      }
-      { rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite substitute_tm_make_numeral; rewrite substitute_tm_make_numeral; apply occursFreeIn_tm_make_numeral.
-      }
-    }
+    eval_vr_eq_dec; simplify_make_numeral.
+    apply orb_false_iff; constructor.
+    eval_vr_eq_dec; simplify_make_numeral.
+    apply orb_false_iff; constructor.
+    eval_vr_eq_dec; simplify_make_numeral.
+    eval_vr_eq_dec; simplify_make_numeral.
   - constructor.
     + intros H va.
-      rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite vr_eq_dec_is_Nat_eq_dec; simpl; rewrite substitute_tm_make_numeral; rewrite substitute_tm_make_numeral; rewrite substitute_tm_make_numeral; rewrite eval_tm_make_numeral; rewrite eval_tm_make_numeral; rewrite eval_tm_make_numeral; apply H.
+      eval_vr_eq_dec; simpl_eval_tm_make_numeral; tauto.
     + intros H.
       assert (H0 := H (fun _ : vr => 0)).
-      rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite vr_eq_dec_is_Nat_eq_dec in H0; simpl in H0; rewrite substitute_tm_make_numeral in H0; rewrite substitute_tm_make_numeral in H0; rewrite substitute_tm_make_numeral in H0; rewrite eval_tm_make_numeral in H0; rewrite eval_tm_make_numeral in H0; rewrite eval_tm_make_numeral in H0; apply H0.
+      eval_in_vr_eq_dec H0; simpl_in_eval_tm_make_numeral H0; tauto.
 Qed.
 
 End Chapter2.
