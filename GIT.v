@@ -215,10 +215,13 @@ Proof.
       }
 Qed.
 
-Definition value_assignment : Set :=
-  vr -> nat
+Definition value_of_N : Set :=
+  nat
 .
-Fixpoint eval_tm (va : value_assignment) (t : tm) : nat :=
+Definition value_assignment : Set :=
+  vr -> value_of_N
+.
+Fixpoint eval_tm (va : value_assignment) (t : tm) : value_of_N :=
   match t with
   | ivar_tm x => va x
   | zero_tm => 0
@@ -270,7 +273,7 @@ Fixpoint eval_form (va : value_assignment) (f : form) : Prop :=
   | leq_form t1 t2 => eval_tm va t1 <= eval_tm va t2
   | neg_form f1 => ~ eval_form va f1
   | imp_form f1 f2 => eval_form va f1 -> eval_form va f2
-  | all_form x f1 => forall val : nat, eval_form (fun z : vr => if vr_eq_dec x z then val else va z) f1
+  | all_form x f1 => forall val : value_of_N, eval_form (fun z : vr => if vr_eq_dec x z then val else va z) f1
   end
 .
 Lemma eval_form_extensionality :
@@ -305,7 +308,7 @@ Proof.
     intros x H0; apply H; apply orb_true_iff; tauto.
   - simpl; intros va1 va2 H.
     cut (
-      forall n : nat,
+      forall n : value_of_N,
       eval_form (fun z : vr => if vr_eq_dec v z then n else va1 z) f <->  eval_form (fun z : vr => if vr_eq_dec v z then n else va2 z) f
     ).
     { constructor.
@@ -324,14 +327,14 @@ Proof.
       - apply H0.
     }
 Qed.
-Fixpoint make_numeral (n : nat) : tm :=
+Fixpoint make_numeral (n : value_of_N) : tm :=
   match n with
   | 0 => zero_tm
-  | S n => succ_tm (make_numeral n)
+  | S n' => succ_tm (make_numeral n')
   end
 .
 Lemma eval_tm_make_numeral :
-  forall n : nat,
+  forall n : value_of_N,
   forall va : value_assignment,
   eval_tm va (make_numeral n) = n.
 Proof.
@@ -464,7 +467,7 @@ Proof.
     rewrite IHf1; rewrite IHf2; reflexivity.
   - intros sigma va. simpl.
     cut (
-      forall n : nat,
+      forall n : value_of_N,
       eval_form (fun z : vr => if vr_eq_dec v z then n else eval_tm va (substitute_vr sigma z)) f <-> eval_form (fun z : vr => if vr_eq_dec (chi sigma (all_form v f)) z then n else va z) (substitute_form ((v, ivar_tm (chi sigma (all_form v f))) :: sigma) f)
     ).
     { intros H; constructor.
@@ -497,7 +500,7 @@ Proof.
     }
 Qed.
 Lemma substitute_tm_make_numeral :
-  forall n : nat,
+  forall n : value_of_N,
   forall sigma : substitution,
   substitute_tm sigma (make_numeral n) = make_numeral n.
 Proof.
@@ -509,7 +512,7 @@ Qed.
 Ltac simpl_eval_tm_make_numeral := repeat (rewrite substitute_tm_make_numeral); repeat (rewrite eval_tm_make_numeral).
 Ltac simpl_in_eval_tm_make_numeral H := repeat (rewrite substitute_tm_make_numeral in H); repeat (rewrite eval_tm_make_numeral in H).
 Lemma occursFreeIn_tm_make_numeral :
-  forall val : nat,
+  forall val : value_of_N,
   forall x : vr,
   occursFreeIn_tm x (make_numeral val) = false.
 Proof.
@@ -540,19 +543,19 @@ Ltac auto_show_it_is_sentence := tryif (apply orb_false_iff; constructor) then a
 Fixpoint relation_of_arity (n : nat) : Type :=
   match n with
   | 0 => Prop
-  | S n' => nat -> relation_of_arity n'
+  | S n' => value_of_N -> relation_of_arity n'
   end
 .
 Fixpoint lift_relation (n : nat) : relation_of_arity (S n) -> nat -> relation_of_arity n :=
   match n as n0 return relation_of_arity (S n0) -> nat -> relation_of_arity n0 with
   | 0 =>
-    fun pred : nat -> Prop =>
-    fun val : nat =>
+    fun pred : value_of_N -> Prop =>
+    fun val : value_of_N =>
     pred val
   | S n' =>
-    fun pred : nat -> nat -> relation_of_arity n' =>
-    fun val : nat =>
-    fun val' : nat =>
+    fun pred : value_of_N -> value_of_N -> relation_of_arity n' =>
+    fun val : value_of_N =>
+    fun val' : value_of_N =>
     lift_relation n' (pred val') val 
   end
 .
@@ -564,12 +567,12 @@ Fixpoint express_relation (n : nat) : form -> relation_of_arity n -> Prop :=
     (forall x : vr, occursFreeIn_form x f = false) /\ (pred <-> forall va : value_assignment, eval_form va f)
   | S n' =>
     fun f : form =>
-    fun pred : nat -> relation_of_arity n' =>
-    forall val : nat, express_relation n' (substitute_form [(n', make_numeral val)] f) (lift_relation n' pred val)
+    fun pred : value_of_N -> relation_of_arity n' =>
+    forall val : value_of_N, express_relation n' (substitute_form [(n', make_numeral val)] f) (lift_relation n' pred val)
   end
 .
 Example express_relation_example1 :
-  express_relation 2 (leq_form (ivar_tm 0) (ivar_tm 1)) (fun x0 : nat => fun x1 : nat => x0 <= x1).
+  express_relation 2 (leq_form (ivar_tm 0) (ivar_tm 1)) (fun x0 : value_of_N => fun x1 : value_of_N => x0 <= x1).
 Proof.
   simpl; intros val1 val0; constructor.
   - intros x; auto_show_it_is_sentence.
@@ -582,20 +585,20 @@ Proof.
 Qed.
 Fixpoint function_of_arity (n : nat) : Type :=
   match n with
-  | 0 => nat
-  | S n' => nat -> function_of_arity n'
+  | 0 => value_of_N
+  | S n' => value_of_N -> function_of_arity n'
   end
 .
 Fixpoint lift_function (n : nat) : function_of_arity (S n) -> nat -> function_of_arity n :=
   match n as n0 return function_of_arity (S n0) -> nat -> function_of_arity n0 with
   | 0 =>
-    fun func : nat -> nat =>
-    fun val : nat =>
+    fun func : value_of_N -> value_of_N =>
+    fun val : value_of_N =>
     func val
   | S n' =>
-    fun func : nat -> nat -> function_of_arity n' =>
-    fun val : nat =>
-    fun val' : nat =>
+    fun func : value_of_N -> value_of_N -> function_of_arity n' =>
+    fun val : value_of_N =>
+    fun val' : value_of_N =>
     lift_function n' (func val') val 
   end
 .
@@ -603,18 +606,18 @@ Fixpoint express_function (n : nat) : form -> function_of_arity n -> Prop :=
   match n as n0 return form -> function_of_arity n0 -> Prop with
   | 0 =>
     fun f : form =>
-    fun func : nat =>
-    forall val : nat,
+    fun func : value_of_N =>
+    forall val : value_of_N,
     let f' : form := substitute_form [(0, make_numeral val)] f in
     (forall x : vr, occursFreeIn_form x f' = false) /\ (val = func <-> forall va : value_assignment, eval_form va f')
   | S n' =>
     fun f : form =>
-    fun func : nat -> function_of_arity n' =>
-    forall val : nat, express_function n' (substitute_form [(n, make_numeral val)] f) (lift_function n' func val)
+    fun func : value_of_N -> function_of_arity n' =>
+    forall val : value_of_N, express_function n' (substitute_form [(n, make_numeral val)] f) (lift_function n' func val)
   end
 .
 Example express_function_example1 :
-  express_function 3 (eqn_form (ivar_tm 0) (plus_tm (ivar_tm 1) (plus_tm (ivar_tm 2) (ivar_tm 3)))) (fun x1 : nat => fun x2 : nat => fun x3 : nat => x1 + (x2 + x3)).
+  express_function 3 (eqn_form (ivar_tm 0) (plus_tm (ivar_tm 1) (plus_tm (ivar_tm 2) (ivar_tm 3)))) (fun x1 : value_of_N => fun x2 : value_of_N => fun x3 : value_of_N => x1 + (x2 + x3)).
 Proof.
   simpl; intros val3 val2 val1 val0; constructor.
   - intros x; auto_show_it_is_sentence.
