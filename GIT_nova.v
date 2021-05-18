@@ -266,19 +266,26 @@ Fixpoint assocLift {A : Type} (n : arity) : forall ary, Lift n (Lift ary A) -> L
   end
 .
 
-Definition projection (m : arity) (n : arity) : Lift (m + S n) w :=
+Lemma assoc_return :
+  forall ary : arity,
+  returnLift (ary + 0) 0 = assocLift ary 0 (returnLift ary 0).
+Proof with eauto.
+  induction ary... simpl. rewrite IHary...
+Qed.
+
+Definition projection (n : arity) (m : arity) : Lift (m + S n) w :=
   assocLift m (S n) (returnLift m (returnLift n))
 .
 
-Example projection_ex1 : projection 4 0 = (fun x0 : w => fun x1 : w => fun x2 : w => fun x3 : w => fun x4 : w => x4) := eq_refl.
+Example projection_ex1 : projection 0 4 = (fun x4 : w => fun x3 : w => fun x2 : w => fun x1 : w => fun x0 : w => x0) := eq_refl.
 
-Example projection_ex2 : projection 3 1 = (fun x0 : w => fun x1 : w => fun x2 : w => fun x3 : w => fun x4 : w => x3) := eq_refl.
+Example projection_ex2 : projection 1 3 = (fun x4 : w => fun x3 : w => fun x2 : w => fun x1 : w => fun x0 : w => x1) := eq_refl.
 
-Example projection_ex3 : projection 2 2 = (fun x0 : w => fun x1 : w => fun x2 : w => fun x3 : w => fun x4 : w => x2) := eq_refl.
+Example projection_ex3 : projection 2 2 = (fun x4 : w => fun x3 : w => fun x2 : w => fun x1 : w => fun x0 : w => x2) := eq_refl.
 
-Example projection_ex4 : projection 1 3 = (fun x0 : w => fun x1 : w => fun x2 : w => fun x3 : w => fun x4 : w => x1) := eq_refl.
+Example projection_ex4 : projection 3 1 = (fun x4 : w => fun x3 : w => fun x2 : w => fun x1 : w => fun x0 : w => x3) := eq_refl.
 
-Example projection_ex5 : projection 0 4 = (fun x0 : w => fun x1 : w => fun x2 : w => fun x3 : w => fun x4 : w => x0) := eq_refl.
+Example projection_ex5 : projection 4 0 = (fun x4 : w => fun x3 : w => fun x2 : w => fun x1 : w => fun x0 : w => x4) := eq_refl.
 
 Definition chi_lt (x : w) (y : w) : w :=
   if Compare_dec.lt_dec x y then 0 else 1
@@ -292,7 +299,7 @@ Inductive evalArith : forall ary : arity, Arith -> Lift ary w -> Prop :=
 | varEval :
   forall m : arity,
   forall n : arity,
-  evalArith (m + S n) (varArith n) (projection m n)
+  evalArith (m + S n) (varArith n) (projection n m)
 | plusEval :
   forall ary : arity,
   forall val1 : Lift ary w,
@@ -352,28 +359,38 @@ Lemma liftEval (n : arity) :
   evalArith ary e val ->
   evalArith (n + ary) e (assocLift n ary (returnLift n val)).
 Proof.
-  induction n; eauto. simpl. eauto using liftEval_once.
+  induction n; eauto. simpl; eauto using liftEval_once.
 Qed.
 
-Definition IsArithmetic (ary : arity) (func : Lift ary w) : Prop :=
-  exists e : Arith, evalArith ary e func
+Definition representsFunc (e : Arith) (ary : arity) (func : Lift ary w) : Prop :=
+  exists func1 : Lift ary w, unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun x : w => fun y : w => x = y)) func) func1) /\ evalArith ary e func1
 .
 
-Definition funcIsRecursive (ary : arity) (func : Lift ary w) : Prop :=
-  exists func1 : Lift ary w, IsArithmetic ary func1 /\ unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun x : w => fun y : w => x = y)) func) func1)
+Definition representsRel (e : Arith) (ary : arity) (rel : Lift ary Prop) : Prop :=
+  exists func1 : Lift ary w, unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun p : Prop => fun x : w => (~ ~ p -> x = 0) /\ (~ p -> x = 1))) rel) func1) /\ evalArith ary e func1
 .
 
-Definition relIsRecursive (ary : arity) (rel : Lift ary Prop) : Prop :=
-  exists func : Lift ary w, funcIsRecursive ary func /\ unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun P : Prop => fun n : w => (P -> n = 0) /\ (~ P -> n = 1))) rel) func)
+Inductive IsRecursivelyEnumerable : forall ary : arity, Lift ary Prop -> Prop :=
+| IsRE :
+  forall e : Arith,
+  forall ary : arity,
+  forall rel : Lift ary Prop,
+  forall rel1 : Lift (S ary) Prop,
+  representsRel e (S ary) rel1 ->
+  unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun P : Prop => fun Q : w -> Prop => P <-> exists x : w, Q x)) rel) (shiftLift_left ary rel1)) -> 
+  IsRecursivelyEnumerable ary rel
 .
 
-Definition IsRecursivelyEnumerable (ary : arity) (rel : Lift ary Prop) : Prop :=
-  exists rel1 : Lift (S ary) Prop, unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun P : Prop => fun Q : w -> Prop => P <-> exists x : w, Q x)) rel) (shiftLift_left ary rel1)) /\ relIsRecursive (S ary) rel1
+Fixpoint representsNum (n : nat) : Arith :=
+  match n with
+  | 0 => muArith (varArith 0)
+  | S n' => muArith (ltArith (representsNum n') (varArith 0))
+  end
 .
 
-Lemma constantsIsRecursive :
+Lemma constantIsRecursive :
   forall n : nat,
-  funcIsRecursive 0 n.
+  representsFunc (representsNum n) 0 n.
 Proof with eauto.
   assert ( claim1 :
     forall n : nat,
@@ -407,20 +424,18 @@ Proof with eauto.
       - reflexivity.
     }
     exists 0.
-    constructor.
-    + exists (muArith (varArith 0))...
-    + reflexivity.
+    constructor...
+    reflexivity.
   - destruct IHn as [func1].
     destruct H.
-    simpl in H0.
-    destruct H as [e].
-    assert (evalArith 0 (muArith (ltArith e (varArith 0))) (apLift 0 (apLift 0 (returnLift 0 first_nat)) (check 0 (shiftLift_left 0 (fun x : w => chi_lt n x))) (S n))).
+    assert (evalArith 0 (muArith (ltArith (representsNum n) (varArith 0))) (apLift 0 (apLift 0 (returnLift 0 first_nat)) (check 0 (shiftLift_left 0 (fun x : w => chi_lt n x))) (S n))).
     { apply (muEval 0 (fun x : w => chi_lt n x) (S n)).
       - apply (ltEval 1).
-        + apply liftEval_once.
-          unfold apLift in H0.
-          simpl in H0.
-          rewrite H0...
+        + apply liftEval_once...
+          unfold apLift in H.
+          simpl in H.
+          rewrite <- H in H0.
+          apply H0.
         + apply (varEval 0 0).
       - unfold apLift.
         simpl.
@@ -431,16 +446,87 @@ Proof with eauto.
         unfold chi_lt.
         destruct (Compare_dec.lt_dec n (S n))...
     }
-    exists ((apLift 0 (apLift 0 (returnLift 0 first_nat)) (check 0 (shiftLift_left 0 (fun x : w => chi_lt n x))) (S n))).
-    constructor.
-    + exists (muArith (ltArith e (varArith 0)))...
-    + unfold apLift.
+    exists (apLift 0 (apLift 0 (returnLift 0 first_nat)) (check 0 (shiftLift_left 0 (fun x : w => chi_lt n x))) (S n)).
+    constructor...
+    unfold apLift.
+    simpl.
+    unfold check.
+    unfold apLift.
+    unfold chi_lt.
+    simpl.
+    cut (S n = first_nat (fun x : w => Nat.eqb (if Compare_dec.lt_dec n x then 0 else 1) 0) (S n))...
+Qed.
+
+Definition representsNeg (e : Arith) : Arith :=
+  ltArith (representsNum 0) e
+.
+
+Lemma negationIsRecursive :
+  forall ary : arity,
+  forall P : Lift ary Prop,
+  forall e : Arith,
+  representsRel e ary P ->
+  representsRel (representsNeg e) ary (apLift ary (returnLift ary (fun p : Prop => ~ p)) P).
+Proof with eauto.
+  assert ( claim1 :
+    forall ary P  func1,
+  unLiftProp ary
+  (bindLift ary
+     (bindLift ary
+        (returnLift ary
+           (fun (p : Prop) (x : w) => (~ ~ p -> x = 0) /\ (~ p -> x = 1)))
+        (fun f' : Prop -> w -> Prop =>
+         bindLift ary P (fun x' : Prop => returnLift ary (f' x'))))
+     (fun f' : w -> Prop =>
+      bindLift ary func1 (fun x' : w => returnLift ary (f' x')))) -> unLiftProp ary
+      (apLift ary
+         (apLift ary
+            (returnLift ary
+               (fun (p : Prop) (x : w) => (~ ~ p -> x = 0) /\ (~ p -> x = 1)))
+            (bindLift ary (returnLift ary (fun p : Prop => ~ p))
+               (fun f' : Prop -> Prop =>
+                bindLift ary P (fun x' : Prop => returnLift ary (f' x')))))
+         (apLift ary (apLift ary (returnLift ary chi_lt) (returnLift ary 0))
+            func1)) 
+  ).
+  { induction ary.
+    - unfold apLift.
       simpl.
-      unfold check.
-      unfold apLift.
+      intros.
       unfold chi_lt.
-      simpl.
-      cut (S n = first_nat (fun x : w => Nat.eqb (if Compare_dec.lt_dec n x then 0 else 1) 0) (S n))...
+      destruct (Compare_dec.lt_dec 0 func1 ).
+      * constructor...
+        intros.
+        assert (func1 = 0) by (apply H; eauto)...
+        lia.
+      * assert (func1 = 0) by lia.
+        constructor...
+        intros.
+        assert (func1 = 1) by (apply H; eauto)...
+        lia.
+    - unfold apLift.
+      simpl...
+  }
+  unfold apLift.
+  simpl.
+  intros ary P e H.
+  destruct H as [func1].
+  destruct H.
+  unfold apLift in H.
+  simpl in H.
+  exists (apLift ary (apLift ary (returnLift ary chi_lt) (returnLift ary 0)) func1).
+  constructor...
+  unfold representsNeg.
+  apply ltEval...
+  destruct (constantIsRecursive 0) as [func2].
+  destruct H1.
+  unfold apLift in H1.
+  simpl in H1.
+  rewrite <- H1 in H2.
+  assert (ary = ary + 0)...
+  rewrite H3.
+  rewrite (assoc_return ary).
+  apply (liftEval ary 0 (representsNum 0) 0 H2)...
 Qed.
 
 End Arithmetic.
