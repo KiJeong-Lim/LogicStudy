@@ -350,9 +350,9 @@ Lemma liftEval (n : arity) :
   forall e : Arith,
   forall val : Lift ary w,
   evalArith ary e val ->
-  evalArith (S ary) e (returnLift 1 val).
+  evalArith (n + ary) e (assocLift n ary (returnLift n val)).
 Proof.
-  induction n; eauto using liftEval_once.
+  induction n; eauto. simpl. eauto using liftEval_once.
 Qed.
 
 Definition IsArithmetic (ary : arity) (func : Lift ary w) : Prop :=
