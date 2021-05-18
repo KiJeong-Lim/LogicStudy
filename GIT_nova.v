@@ -340,14 +340,25 @@ Lemma upgradeEval_once :
   forall val : Lift ary w,
   evalArith ary e val ->
   evalArith (S ary) e (upgradeLift 1 ary val).
-Proof.
+Proof with eauto.
   intros ary e val H; induction H.
-  - apply (varEval (S m) n).
-  - apply (plusEval (S ary)); eauto.
-  - apply (multEval (S ary)); eauto.
-  - apply (ltEval (S ary)); eauto.
-  - apply (muEval (S ary)); eauto.
-    simpl; intros n; apply H0.
+  - apply (varEval (S m) n)...
+  - apply (plusEval (S ary))...
+  - apply (multEval (S ary))...
+  - apply (ltEval (S ary))...
+  - apply (muEval (S ary))... simpl...
+Qed.
+
+Lemma upgradeEval (n : arity) :
+  forall ary : arity,
+  forall e : Arith,
+  forall val : Lift ary w,
+  evalArith ary e val ->
+  evalArith (n + ary) e (upgradeLift n ary val).
+Proof with eauto.
+  induction n...
+  intros.
+  apply (upgradeEval_once (n + ary) e (upgradeLift n ary val))...
 Qed.
 
 Definition IsArithmetic (ary : arity) (func : Lift ary w) : Prop :=
