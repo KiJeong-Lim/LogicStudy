@@ -355,10 +355,8 @@ Lemma upgradeEval (n : arity) :
   forall val : Lift ary w,
   evalArith ary e val ->
   evalArith (n + ary) e (upgradeLift n ary val).
-Proof with eauto.
-  induction n...
-  intros.
-  apply (upgradeEval_once (n + ary) e (upgradeLift n ary val))...
+Proof.
+  induction n; eauto using upgradeEval_once.
 Qed.
 
 Definition IsArithmetic (ary : arity) (func : Lift ary w) : Prop :=
@@ -380,35 +378,29 @@ Definition IsRecursivelyEnumerable (ary : arity) (rel : Lift ary Prop) : Prop :=
 Lemma constantsIsRecursive :
   forall n : nat,
   funcIsRecursive 0 n.
-Proof.
+Proof with eauto.
   assert ( claim1 :
     forall n : nat,
     S n = first_nat (fun x : w => (if Compare_dec.lt_dec n x then 0 else 1) =? 0) (S n)
   ).
   { assert (forall n : nat, forall p : nat -> bool, first_nat p n <= n).
-    { induction n.
-      - reflexivity.
-      - simpl.
-        intros p.
-        destruct (p (first_nat p n)) eqn: H0.
-        + assert (first_nat p n <= n) by apply IHn.
-          lia. 
-        + reflexivity.
+    { induction n...
+      simpl.
+      intros p.
+      destruct (p (first_nat p n)) eqn: H0...
     }
     intros n.
     assert (first_nat (fun x : w => (if Compare_dec.lt_dec n x then 0 else 1) =? 0) (S n) <= S n) by apply H.
     set (p := (fun x : w => (if Compare_dec.lt_dec n x then 0 else 1) =? 0)).
     assert (p (first_nat p (S n)) = true).
-    { apply well_ordering_principle.
+    { apply well_ordering_principle...
       unfold p.
-      destruct (Compare_dec.lt_dec n (S n)).
-      - reflexivity.
-      - lia.
+      destruct (Compare_dec.lt_dec n (S n)) eqn: H1...
     }
     unfold p in H1.
+    unfold p.
     destruct (Compare_dec.lt_dec n (first_nat (fun x : w => (if Compare_dec.lt_dec n x then 0 else 1) =? 0) (S n))).
-    - unfold p.
-      lia.
+    - lia.
     - inversion H1.
   }
   induction n.
@@ -419,9 +411,8 @@ Proof.
       - reflexivity.
     }
     exists 0.
-    constructor.
-    + exists (muArith (varArith 0)).
-      apply H.
+    split.
+    + exists (muArith (varArith 0))...
     + reflexivity.
   - destruct IHn as [func1].
     destruct H.
@@ -433,9 +424,8 @@ Proof.
         + apply upgradeEval_once.
           unfold apLift in H0.
           simpl in H0.
-          rewrite H0.
-          apply H.
-        + apply (varEval 0 0).
+          rewrite H0...
+        + apply (varEval 0 0).  
       - unfold apLift.
         simpl.
         unfold check.
@@ -443,21 +433,18 @@ Proof.
         unfold apLift.
         simpl.
         unfold chi_lt.
-        destruct (Compare_dec.lt_dec n (S n)).
-        + reflexivity.
-        + contradiction n0; lia.
+        destruct (Compare_dec.lt_dec n (S n))...
     }
     exists ((apLift 0 (apLift 0 (returnLift 0 first_nat)) (check 0 (shiftLift_left 0 (fun x : w => chi_lt n x))) (S n))).
-    constructor.
-    + exists (muArith (ltArith e (varArith 0))).
-      apply H1.
+    split.
+    + exists (muArith (ltArith e (varArith 0)))...
     + unfold apLift.
       simpl.
       unfold check.
       unfold apLift.
       unfold chi_lt.
       simpl.
-      cut (S n = first_nat (fun x : w => Nat.eqb (if Compare_dec.lt_dec n x then 0 else 1) 0) (S n)); eauto.
+      cut (S n = first_nat (fun x : w => Nat.eqb (if Compare_dec.lt_dec n x then 0 else 1) 0) (S n))...
 Qed.
 
 End Arithmetic.
