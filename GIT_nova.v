@@ -224,20 +224,6 @@ Fixpoint bindLift {A : Type} {B : Type} (ary : arity) : Lift ary A -> (A -> Lift
   end
 .
 
-Fixpoint upgradeLift {A : Type} (n : arity) : forall ary : arity, Lift ary A -> Lift (n + ary) A :=
-  match n with
-  | 0 =>
-    fun ary : arity =>
-    fun x : Lift ary A =>
-    x
-  | S n' =>
-    fun ary : arity =>
-    fun x : Lift ary A =>
-    fun _ : w =>
-    upgradeLift n' ary x
-  end
-.
-
 Fixpoint shiftLift_left {A : Type} (ary : arity) : Lift (S ary) A -> Lift ary (w -> A) :=
   match ary with
   | 0 =>
@@ -280,9 +266,19 @@ Fixpoint assocLift {A : Type} (n : arity) : forall ary, Lift n (Lift ary A) -> L
   end
 .
 
-Definition projection (n : arity) (m : arity) : Lift (m + (n + 1)) w :=
-  assocLift m (n + 1) (returnLift m (upgradeLift n 1 (fun x : w => x)))
+Definition projection (m : arity) (n : arity) : Lift (m + S n) w :=
+  assocLift m (S n) (returnLift m (returnLift n))
 .
+
+Example projection_ex1 : projection 4 0 = (fun x0 : w => fun x1 : w => fun x2 : w => fun x3 : w => fun x4 : w => x4) := eq_refl.
+
+Example projection_ex2 : projection 3 1 = (fun x0 : w => fun x1 : w => fun x2 : w => fun x3 : w => fun x4 : w => x3) := eq_refl.
+
+Example projection_ex3 : projection 2 2 = (fun x0 : w => fun x1 : w => fun x2 : w => fun x3 : w => fun x4 : w => x2) := eq_refl.
+
+Example projection_ex4 : projection 1 3 = (fun x0 : w => fun x1 : w => fun x2 : w => fun x3 : w => fun x4 : w => x1) := eq_refl.
+
+Example projection_ex5 : projection 0 4 = (fun x0 : w => fun x1 : w => fun x2 : w => fun x3 : w => fun x4 : w => x0) := eq_refl.
 
 Definition chi_lt (x : w) (y : w) : w :=
   if Compare_dec.lt_dec x y then 0 else 1
@@ -296,7 +292,7 @@ Inductive evalArith : forall ary : arity, Arith -> Lift ary w -> Prop :=
 | varEval :
   forall m : arity,
   forall n : arity,
-  evalArith (m + (n + 1)) (varArith n) (projection n m)
+  evalArith (m + S n) (varArith n) (projection m n)
 | plusEval :
   forall ary : arity,
   forall val1 : Lift ary w,
@@ -334,12 +330,12 @@ Inductive evalArith : forall ary : arity, Arith -> Lift ary w -> Prop :=
   evalArith ary (muArith e1) (apLift ary (apLift ary (returnLift ary first_nat) (check ary val1)) val')
 .
 
-Lemma upgradeEval_once :
+Lemma liftEval_once :
   forall ary : arity,
   forall e : Arith,
   forall val : Lift ary w,
   evalArith ary e val ->
-  evalArith (S ary) e (upgradeLift 1 ary val).
+  evalArith (S ary) e (returnLift 1 val).
 Proof with eauto.
   intros ary e val H; induction H.
   - apply (varEval (S m) n)...
@@ -349,14 +345,14 @@ Proof with eauto.
   - apply (muEval (S ary))... simpl...
 Qed.
 
-Lemma upgradeEval (n : arity) :
+Lemma liftEval (n : arity) :
   forall ary : arity,
   forall e : Arith,
   forall val : Lift ary w,
   evalArith ary e val ->
-  evalArith (n + ary) e (upgradeLift n ary val).
+  evalArith (S ary) e (returnLift 1 val).
 Proof.
-  induction n; eauto using upgradeEval_once.
+  induction n; eauto using liftEval_once.
 Qed.
 
 Definition IsArithmetic (ary : arity) (func : Lift ary w) : Prop :=
@@ -395,12 +391,12 @@ Proof with eauto.
     assert (p (first_nat p (S n)) = true).
     { apply well_ordering_principle...
       unfold p.
-      destruct (Compare_dec.lt_dec n (S n)) eqn: H1...
+      destruct (Compare_dec.lt_dec n (S n))...
     }
     unfold p in H1.
-    unfold p.
     destruct (Compare_dec.lt_dec n (first_nat (fun x : w => (if Compare_dec.lt_dec n x then 0 else 1) =? 0) (S n))).
-    - lia.
+    - unfold p.
+      lia.
     - inversion H1.
   }
   induction n.
@@ -411,7 +407,7 @@ Proof with eauto.
       - reflexivity.
     }
     exists 0.
-    split.
+    constructor.
     + exists (muArith (varArith 0))...
     + reflexivity.
   - destruct IHn as [func1].
@@ -421,11 +417,11 @@ Proof with eauto.
     assert (evalArith 0 (muArith (ltArith e (varArith 0))) (apLift 0 (apLift 0 (returnLift 0 first_nat)) (check 0 (shiftLift_left 0 (fun x : w => chi_lt n x))) (S n))).
     { apply (muEval 0 (fun x : w => chi_lt n x) (S n)).
       - apply (ltEval 1).
-        + apply upgradeEval_once.
+        + apply liftEval_once.
           unfold apLift in H0.
           simpl in H0.
           rewrite H0...
-        + apply (varEval 0 0).  
+        + apply (varEval 0 0).
       - unfold apLift.
         simpl.
         unfold check.
@@ -436,7 +432,7 @@ Proof with eauto.
         destruct (Compare_dec.lt_dec n (S n))...
     }
     exists ((apLift 0 (apLift 0 (returnLift 0 first_nat)) (check 0 (shiftLift_left 0 (fun x : w => chi_lt n x))) (S n))).
-    split.
+    constructor.
     + exists (muArith (ltArith e (varArith 0)))...
     + unfold apLift.
       simpl.
