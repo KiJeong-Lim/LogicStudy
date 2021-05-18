@@ -469,25 +469,10 @@ Lemma negationIsRecursive :
   representsRel (representsNeg e) ary (apLift ary (returnLift ary (fun p : Prop => ~ p)) P).
 Proof with eauto.
   assert ( claim1 :
-    forall ary P  func1,
-  unLiftProp ary
-  (bindLift ary
-     (bindLift ary
-        (returnLift ary
-           (fun (p : Prop) (x : w) => (~ ~ p -> x = 0) /\ (~ p -> x = 1)))
-        (fun f' : Prop -> w -> Prop =>
-         bindLift ary P (fun x' : Prop => returnLift ary (f' x'))))
-     (fun f' : w -> Prop =>
-      bindLift ary func1 (fun x' : w => returnLift ary (f' x')))) -> unLiftProp ary
-      (apLift ary
-         (apLift ary
-            (returnLift ary
-               (fun (p : Prop) (x : w) => (~ ~ p -> x = 0) /\ (~ p -> x = 1)))
-            (bindLift ary (returnLift ary (fun p : Prop => ~ p))
-               (fun f' : Prop -> Prop =>
-                bindLift ary P (fun x' : Prop => returnLift ary (f' x')))))
-         (apLift ary (apLift ary (returnLift ary chi_lt) (returnLift ary 0))
-            func1)) 
+    forall ary : arity,
+    forall P : Lift ary Prop,
+    forall func1 : Lift ary w,
+    unLiftProp ary (bindLift ary (bindLift ary (returnLift ary (fun (p : Prop) (x : w) => (~ ~ p -> x = 0) /\ (~ p -> x = 1))) (fun f' : Prop -> w -> Prop => bindLift ary P (fun x' : Prop => returnLift ary (f' x')))) (fun f' : w -> Prop => bindLift ary func1 (fun x' : w => returnLift ary (f' x')))) -> unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun (p : Prop) (x : w) => (~ ~ p -> x = 0) /\ (~ p -> x = 1))) (bindLift ary (returnLift ary (fun p : Prop => ~ p)) (fun f' : Prop -> Prop => bindLift ary P (fun x' : Prop => returnLift ary (f' x'))))) (apLift ary (apLift ary (returnLift ary chi_lt) (returnLift ary 0)) func1))
   ).
   { induction ary.
     - unfold apLift.
@@ -497,12 +482,12 @@ Proof with eauto.
       destruct (Compare_dec.lt_dec 0 func1 ).
       * constructor...
         intros.
-        assert (func1 = 0) by (apply H; eauto)...
+        assert (func1 = 0) by (apply H; eauto).
         lia.
       * assert (func1 = 0) by lia.
         constructor...
         intros.
-        assert (func1 = 1) by (apply H; eauto)...
+        assert (func1 = 1) by (apply H; eauto).
         lia.
     - unfold apLift.
       simpl...
@@ -526,7 +511,7 @@ Proof with eauto.
   assert (ary = ary + 0)...
   rewrite H3.
   rewrite (assoc_return ary).
-  apply (liftEval ary 0 (representsNum 0) 0 H2)...
+  apply (liftEval ary 0 (representsNum 0) 0 H2).
 Qed.
 
 End Arithmetic.
