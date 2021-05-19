@@ -366,9 +366,30 @@ Definition correspondsToFunc (ary : arity) (func1 : Lift ary w) (func : Lift ary
   unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun x : w => fun y : w => x = y)) func) func1)
 .
 
+Example correspondsToFunc_ex1 (f : Lift 2 w) :
+  correspondsToFunc 2 (fun x1 : w => fun x0 : w => f x1 x0) (apLift 2 (apLift 2 (returnLift 2 f) (projection 1 0)) (projection 0 1)).
+Proof.
+  unfold correspondsToFunc.
+  unfold apLift.
+  simpl.
+  reflexivity.
+Qed.
+
 Definition correspondsToRel (ary : arity) (func1 : Lift ary w) (rel : Lift ary Prop) : Prop :=
   unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun p : Prop => fun x : w => (~ ~ p -> x = 0) /\ (~ p -> x = 1))) rel) func1)
 .
+
+Example correspondsToRel_ex1 :
+  correspondsToRel 2 (fun x1 : w => fun x0 : w => chi_lt x1 x0) (apLift 2 (apLift 2 (returnLift 2 lt) (projection 1 0)) (projection 0 1)).
+Proof.
+  unfold correspondsToRel.
+  unfold chi_lt.
+  unfold projection.
+  unfold apLift.
+  simpl.
+  intros n1 n2.
+  destruct (Compare_dec.lt_dec n1 n2); lia.
+Qed.
 
 Inductive IsRecursivelyEnumerable : forall ary : arity, Lift ary Prop -> Prop :=
 | IsRE :
