@@ -362,35 +362,37 @@ Proof.
   induction n; eauto. simpl; eauto using liftEval_once.
 Qed.
 
-Definition representsFunc (e : Arith) (ary : arity) (func : Lift ary w) : Prop :=
-  exists func1 : Lift ary w, unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun x : w => fun y : w => x = y)) func) func1) /\ evalArith ary e func1
+Definition correspondsToFunc (ary : arity) (func1 : Lift ary w) (func : Lift ary w) : Prop :=
+  unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun x : w => fun y : w => x = y)) func) func1)
 .
 
-Definition representsRel (e : Arith) (ary : arity) (rel : Lift ary Prop) : Prop :=
-  exists func1 : Lift ary w, unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun p : Prop => fun x : w => (~ ~ p -> x = 0) /\ (~ p -> x = 1))) rel) func1) /\ evalArith ary e func1
+Definition correspondsToRel (ary : arity) (func1 : Lift ary w) (rel : Lift ary Prop) : Prop :=
+  unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun p : Prop => fun x : w => (~ ~ p -> x = 0) /\ (~ p -> x = 1))) rel) func1)
 .
 
 Inductive IsRecursivelyEnumerable : forall ary : arity, Lift ary Prop -> Prop :=
 | IsRE :
   forall e : Arith,
   forall ary : arity,
-  forall rel : Lift ary Prop,
+  forall func1 : Lift (S ary) w,
   forall rel1 : Lift (S ary) Prop,
-  representsRel e (S ary) rel1 ->
+  forall rel : Lift ary Prop,
+  evalArith (S ary) e func1 ->
+  correspondsToRel (S ary) func1 rel1 ->
   unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun P : Prop => fun Q : w -> Prop => P <-> exists x : w, Q x)) rel) (shiftLift_left ary rel1)) -> 
   IsRecursivelyEnumerable ary rel
 .
 
-Fixpoint representsNum (n : nat) : Arith :=
+Fixpoint numEval (n : nat) : Lift 0 w :=
   match n with
-  | 0 => muArith (varArith 0)
-  | S n' => muArith (ltArith (representsNum n') (varArith 0))
+  | 0 => apLift 0 (apLift 0 (returnLift 0 first_nat) (check 0 (fun x : w => x))) 0
+  | S n' => apLift 0 (apLift 0 (returnLift 0 first_nat)) (check 0 (shiftLift_left 0 (fun x : w => chi_lt (numEval n') x))) (S (numEval n'))
   end
 .
 
-Lemma constantIsRecursive :
+Lemma numEval_correpondsTo_num :
   forall n : nat,
-  representsFunc (representsNum n) 0 n.
+  correspondsToFunc 0 (numEval n) n.
 Proof with eauto.
   assert ( claim1 :
     forall n : nat,
@@ -417,56 +419,62 @@ Proof with eauto.
     - inversion H1.
   }
   induction n.
-  - assert (evalArith 0 (muArith (varArith 0)) 0).
-    { cut (evalArith 0 (muArith (varArith 0)) (apLift 0 (apLift 0 (returnLift 0 first_nat) (check 0 (fun x : w => x))) 0)); eauto.
-      apply muEval.
-      - apply (varEval 0 0).
-      - reflexivity.
-    }
-    exists 0.
-    constructor...
-    reflexivity.
-  - destruct IHn as [func1].
-    destruct H.
-    assert (evalArith 0 (muArith (ltArith (representsNum n) (varArith 0))) (apLift 0 (apLift 0 (returnLift 0 first_nat)) (check 0 (shiftLift_left 0 (fun x : w => chi_lt n x))) (S n))).
-    { apply (muEval 0 (fun x : w => chi_lt n x) (S n)).
-      - apply (ltEval 1).
-        + apply liftEval_once...
-          unfold apLift in H.
-          simpl in H.
-          rewrite <- H in H0.
-          apply H0.
-        + apply (varEval 0 0).
-      - unfold apLift.
-        simpl.
-        unfold check.
-        simpl.
-        unfold apLift.
-        simpl.
-        unfold chi_lt.
-        destruct (Compare_dec.lt_dec n (S n))...
-    }
-    exists (apLift 0 (apLift 0 (returnLift 0 first_nat)) (check 0 (shiftLift_left 0 (fun x : w => chi_lt n x))) (S n)).
-    constructor...
-    unfold apLift.
-    simpl.
-    unfold check.
-    unfold apLift.
-    unfold chi_lt.
-    simpl.
-    cut (S n = first_nat (fun x : w => Nat.eqb (if Compare_dec.lt_dec n x then 0 else 1) 0) (S n))...
+  - reflexivity.
+  - unfold correspondsToFunc in *.
+    unfold check in *.
+    unfold apLift in *.
+    unfold chi_lt in *.
+    simpl in *.
+    rewrite <- IHn...
 Qed.
 
-Definition representsNot (e : Arith) : Arith :=
-  ltArith (representsNum 0) e
+Fixpoint numArith (n : nat) : Arith :=
+  match n with
+  | 0 => muArith (varArith 0)
+  | S n' => muArith (ltArith (numArith n') (varArith 0))
+  end
 .
 
-Lemma negationIsRecursive :
+Lemma eval_numArith_numEval :
+  forall n : nat,
+  evalArith 0 (numArith n) (numEval n).
+Proof with eauto.
+  induction n.
+  - apply muEval.
+    + apply (varEval 0 0).
+    + reflexivity.
+  - simpl.
+    assert (n = numEval n) by apply numEval_correpondsTo_num.
+    cut (evalArith 0 (muArith (ltArith (numArith n) (varArith 0))) (apLift 0 (apLift 0 (returnLift 0 first_nat)) (check 0 (shiftLift_left 0 (fun x : w => chi_lt n x))) (S n))).
+    { unfold apLift.
+      simpl.
+      rewrite <- H...
+    }
+    apply (muEval 0 (fun x : w => chi_lt n x) (S n)).
+    + apply (ltEval 1).
+      * apply liftEval_once...
+        rewrite <- H in IHn...
+      * apply (varEval 0 0).
+    + unfold apLift.
+      simpl.
+      unfold check.
+      simpl.
+      unfold apLift.
+      simpl.
+      unfold chi_lt.
+      destruct (Compare_dec.lt_dec n (S n))...
+Qed.
+
+Definition notEval (ary : arity) (func1 : Lift ary w) : Lift ary w :=
+  apLift ary (apLift ary (returnLift ary chi_lt) (returnLift ary 0)) func1
+.
+
+Lemma notEval_correpondsTo_not :
   forall ary : arity,
-  forall P : Lift ary Prop,
-  forall e : Arith,
-  representsRel e ary P ->
-  representsRel (representsNot e) ary (apLift ary (returnLift ary (fun p : Prop => ~ p)) P).
+  forall P1 : Lift ary Prop,
+  forall func1 : Lift ary w,
+  correspondsToRel ary func1 P1 ->
+  correspondsToRel ary (notEval ary func1) (apLift ary (returnLift ary (fun p1 : Prop => ~ p1)) P1).
 Proof with eauto.
   assert ( claim1 :
     forall ary : arity,
@@ -493,42 +501,45 @@ Proof with eauto.
     - unfold apLift.
       simpl...
   }
-  unfold apLift.
-  simpl.
-  intros ary P e H.
-  destruct H as [func1].
-  destruct H.
-  unfold apLift in H.
-  simpl in H.
-  exists (apLift ary (apLift ary (returnLift ary chi_lt) (returnLift ary 0)) func1).
-  constructor...
-  unfold representsNot.
-  apply ltEval...
-  destruct (constantIsRecursive 0) as [func2].
-  destruct H1.
-  unfold apLift in H1.
-  simpl in H1.
-  rewrite <- H1 in H2.
-  assert (ary = ary + 0)...
-  rewrite H3.
-  rewrite (assoc_return ary).
-  apply (liftEval ary 0 (representsNum 0) 0 H2).
+  unfold correspondsToRel...
 Qed.
 
-Definition representsOr (e1 : Arith) (e2 : Arith) : Arith :=
-  multArith e1 e2
+Definition notArith (e1 : Arith) : Arith :=
+  ltArith (numArith 0) e1
 .
 
-Lemma disjunctionIsRecursive :
+Lemma eval_notArith_notEval :
+  forall e1 : Arith,
+  forall ary : arity,
+  forall func1 : Lift ary w,
+  evalArith ary e1 func1 ->
+  evalArith ary (notArith e1) (notEval ary func1).
+Proof with eauto.
+  unfold notEval.
+  unfold notArith.
+  intros.
+  apply ltEval...
+  assert (ary = ary + 0)...
+  rewrite H0.
+  rewrite (assoc_return ary).
+  apply liftEval.
+  apply eval_numArith_numEval.
+Qed.
+
+Definition orEval (ary : arity) (func1 : Lift ary w) (func2 : Lift ary w) : Lift ary w :=
+  apLift ary (apLift ary (returnLift ary mult) func1) func2
+.
+
+Lemma orEval_correspondsTo_or :
   forall ary : arity,
   forall P1 : Lift ary Prop,
   forall P2 : Lift ary Prop,
-  forall e1 : Arith,
-  forall e2 : Arith,
-  representsRel e1 ary P1 ->
-  representsRel e2 ary P2 ->
-  representsRel (representsOr e1 e2) ary (apLift ary (apLift ary (returnLift ary (fun p1 : Prop => fun p2 : Prop => p1 \/ p2)) P1) P2).
-Proof with eauto.
+  forall func1 : Lift ary w,
+  forall func2 : Lift ary w,
+  correspondsToRel ary func1 P1 ->
+  correspondsToRel ary func2 P2 ->
+  correspondsToRel ary (orEval ary func1 func2) (apLift ary (apLift ary (returnLift ary (fun p1 : Prop => fun p2 : Prop => p1 \/ p2)) P1) P2).
+Proof with eauto. 
   assert ( claim1 :
     forall ary : arity,
     forall P1 : Lift ary Prop,
@@ -554,21 +565,74 @@ Proof with eauto.
     - unfold apLift.
       simpl...
   }
-  unfold apLift.
-  simpl.
-  intros ary P1 P2 e1 e2 H H0.
-  destruct H as [func1].
-  destruct H.
-  unfold apLift in H.
-  simpl in H.
-  destruct H0 as [func2].
-  destruct H0.
-  unfold apLift in H0.
-  simpl in H0.
-  exists (apLift ary (apLift ary (returnLift ary mult) func1) func2).
-  constructor...
-  unfold representsOr.
+  unfold orEval.
+  unfold correspondsToRel...
+Qed.
+
+Definition orArith (e1 : Arith) (e2 : Arith) : Arith :=
+  multArith e1 e2
+.
+
+Lemma eval_orArith_orEval :
+  forall e1 : Arith,
+  forall e2 : Arith,
+  forall ary : arity,
+  forall func1 : Lift ary w,
+  forall func2 : Lift ary w,
+  evalArith ary e1 func1 ->
+  evalArith ary e2 func2 ->
+  evalArith ary (orArith e1 e2) (orEval ary func1 func2).
+Proof with eauto.
+  intros.
+  unfold orArith.
+  unfold orEval.
   apply multEval...
+Qed.
+
+Definition andEval (ary : arity) (func1 : Lift ary w) (func2 : Lift ary w) : Lift ary w :=
+  notEval ary (orEval ary (notEval ary func1) (notEval ary func2))
+.
+
+Lemma andEval_correpondsTo_and :
+  forall ary : arity,
+  forall P1 : Lift ary Prop,
+  forall P2 : Lift ary Prop,
+  forall func1 : Lift ary w,
+  forall func2 : Lift ary w,
+  correspondsToRel ary func1 P1 ->
+  correspondsToRel ary func2 P2 ->
+  correspondsToRel ary (andEval ary func1 func2) (apLift ary (apLift ary (returnLift ary (fun p1 : Prop => fun p2 : Prop => p1 /\ p2)) P1) P2).
+Proof with eauto.
+  assert ( claim1 :
+    forall ary : arity,
+    forall P1 : Lift ary Prop,
+    forall P2 : Lift ary Prop,
+    forall func1 : Lift ary w,
+    forall func2 : Lift ary w,
+    unLiftProp ary (bindLift ary (bindLift ary (returnLift ary (fun (p : Prop) (x : w) => (~ ~ p -> x = 0) /\ (~ p -> x = 1))) (fun f' : Prop -> w -> Prop => bindLift ary P1 (fun x' : Prop => returnLift ary (f' x')))) (fun f' : w -> Prop => bindLift ary func1 (fun x' : w => returnLift ary (f' x')))) ->
+    unLiftProp ary (bindLift ary (bindLift ary (returnLift ary (fun (p : Prop) (x : w) => (~ ~ p -> x = 0) /\ (~ p -> x = 1))) (fun f' : Prop -> w -> Prop => bindLift ary P2 (fun x' : Prop => returnLift ary (f' x')))) (fun f' : w -> Prop => bindLift ary func2 (fun x' : w => returnLift ary (f' x')))) ->
+    unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun (p : Prop) (x : w) => (~ ~ p -> x = 0) /\ (~ p -> x = 1))) (bindLift ary (bindLift ary (returnLift ary (fun p1 p2 : Prop => p1 /\ p2)) (fun f' : Prop -> Prop -> Prop => bindLift ary P1 (fun x' : Prop => returnLift ary (f' x')))) (fun f' : Prop -> Prop => bindLift ary P2 (fun x' : Prop => returnLift ary (f' x'))))) (notEval ary (orEval ary (notEval ary func1) (notEval ary func2))))
+  ).
+  { induction ary.
+    - intros.
+      assert (correspondsToRel 0 (notEval 0 (orEval 0 (notEval 0 func1) (notEval 0 func2))) (apLift 0 (apLift 0 (returnLift 0 (fun p1 p2 : Prop => ~ (~ p1 \/ ~ p2))) P1) P2)).
+      { apply (notEval_correpondsTo_not 0).
+        apply (orEval_correspondsTo_or 0).
+        - apply (notEval_correpondsTo_not 0)...
+        - apply (notEval_correpondsTo_not 0)...
+      }
+      unfold correspondsToRel in H1.
+      unfold correspondsToRel.
+      unfold apLift in *.
+      simpl in *.
+      tauto.
+    - unfold orEval.
+      unfold notEval.
+      unfold apLift.
+      simpl...
+  }
+  unfold andEval.
+  unfold correspondsToRel...
 Qed.
 
 End Arithmetic.
