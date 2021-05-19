@@ -603,36 +603,29 @@ Lemma andEval_correpondsTo_and :
   correspondsToRel ary func2 P2 ->
   correspondsToRel ary (andEval ary func1 func2) (apLift ary (apLift ary (returnLift ary (fun p1 : Prop => fun p2 : Prop => p1 /\ p2)) P1) P2).
 Proof with eauto.
-  assert ( claim1 :
-    forall ary : arity,
-    forall P1 : Lift ary Prop,
-    forall P2 : Lift ary Prop,
-    forall func1 : Lift ary w,
-    forall func2 : Lift ary w,
-    unLiftProp ary (bindLift ary (bindLift ary (returnLift ary (fun (p : Prop) (x : w) => (~ ~ p -> x = 0) /\ (~ p -> x = 1))) (fun f' : Prop -> w -> Prop => bindLift ary P1 (fun x' : Prop => returnLift ary (f' x')))) (fun f' : w -> Prop => bindLift ary func1 (fun x' : w => returnLift ary (f' x')))) ->
-    unLiftProp ary (bindLift ary (bindLift ary (returnLift ary (fun (p : Prop) (x : w) => (~ ~ p -> x = 0) /\ (~ p -> x = 1))) (fun f' : Prop -> w -> Prop => bindLift ary P2 (fun x' : Prop => returnLift ary (f' x')))) (fun f' : w -> Prop => bindLift ary func2 (fun x' : w => returnLift ary (f' x')))) ->
-    unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun (p : Prop) (x : w) => (~ ~ p -> x = 0) /\ (~ p -> x = 1))) (bindLift ary (bindLift ary (returnLift ary (fun p1 p2 : Prop => p1 /\ p2)) (fun f' : Prop -> Prop -> Prop => bindLift ary P1 (fun x' : Prop => returnLift ary (f' x')))) (fun f' : Prop -> Prop => bindLift ary P2 (fun x' : Prop => returnLift ary (f' x'))))) (notEval ary (orEval ary (notEval ary func1) (notEval ary func2))))
-  ).
-  { induction ary.
-    - intros.
-      assert (correspondsToRel 0 (notEval 0 (orEval 0 (notEval 0 func1) (notEval 0 func2))) (apLift 0 (apLift 0 (returnLift 0 (fun p1 p2 : Prop => ~ (~ p1 \/ ~ p2))) P1) P2)).
-      { apply (notEval_correpondsTo_not 0).
-        apply (orEval_correspondsTo_or 0).
-        - apply (notEval_correpondsTo_not 0)...
-        - apply (notEval_correpondsTo_not 0)...
-      }
-      unfold correspondsToRel in H1.
-      unfold correspondsToRel.
-      unfold apLift in *.
-      simpl in *.
-      tauto.
-    - unfold orEval.
-      unfold notEval.
-      unfold apLift.
-      simpl...
-  }
+  unfold correspondsToRel.
   unfold andEval.
-  unfold correspondsToRel...
+  intros.
+  unfold apLift in H.
+  unfold apLift in H0.
+  generalize dependent ary.
+  induction ary.
+  - intros.
+    assert (correspondsToRel 0 (notEval 0 (orEval 0 (notEval 0 func1) (notEval 0 func2))) (apLift 0 (apLift 0 (returnLift 0 (fun p1 p2 : Prop => ~ (~ p1 \/ ~ p2))) P1) P2)).
+    { apply (notEval_correpondsTo_not 0).
+      apply (orEval_correspondsTo_or 0).
+      - apply (notEval_correpondsTo_not 0)...
+      - apply (notEval_correpondsTo_not 0)...
+    }
+    unfold correspondsToRel in H1.
+    unfold correspondsToRel.
+    unfold apLift in *.
+    simpl in *.
+    tauto.
+  - unfold orEval.
+    unfold notEval.
+    unfold apLift.
+    simpl...
 Qed.
 
 End Arithmetic.
