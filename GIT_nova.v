@@ -734,6 +734,28 @@ Proof with eauto.
     simpl...
 Qed.
 
+Definition eqArith (e1 : Arith) (e2 : Arith) : Arith :=
+  andArith (notArith (ltArith e1 e2)) (notArith (ltArith e2 e1))
+.
+
+Lemma eval_eqArith_eqEval :
+  forall e1 : Arith,
+  forall e2 : Arith,
+  forall ary : arity,
+  forall func1 : Lift ary w,
+  forall func2 : Lift ary w,
+  evalArith ary e1 func1 ->
+  evalArith ary e2 func2 ->
+  evalArith ary (eqArith e1 e2) (eqEval ary func1 func2).
+Proof with eauto.
+  intros.
+  apply eval_andArith_andEval.
+  - apply eval_notArith_notEval.
+    apply ltEval...
+  - apply eval_notArith_notEval.
+    apply ltEval...
+Qed.
+
 End Arithmetic.
 
 End Goedel's_Incompleteness_Theorem.
