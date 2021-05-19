@@ -390,7 +390,7 @@ Fixpoint numEval (n : nat) : Lift 0 w :=
   end
 .
 
-Lemma numEval_correpondsTo_num :
+Lemma numEval_correpondsTo_numeral :
   forall n : nat,
   correspondsToFunc 0 (numEval n) n.
 Proof with eauto.
@@ -444,7 +444,7 @@ Proof with eauto.
     + apply (varEval 0 0).
     + reflexivity.
   - simpl.
-    assert (n = numEval n) by apply numEval_correpondsTo_num.
+    assert (n = numEval n) by apply numEval_correpondsTo_numeral.
     cut (evalArith 0 (muArith (ltArith (numArith n) (varArith 0))) (apLift 0 (apLift 0 (returnLift 0 first_nat)) (check 0 (shiftLift_left 0 (fun x : w => chi_lt n x))) (S n))).
     { unfold apLift.
       simpl.
@@ -469,7 +469,7 @@ Definition notEval (ary : arity) (func1 : Lift ary w) : Lift ary w :=
   apLift ary (apLift ary (returnLift ary chi_lt) (returnLift ary 0)) func1
 .
 
-Lemma notEval_correpondsTo_not :
+Lemma notEval_correpondsTo_negation :
   forall ary : arity,
   forall P1 : Lift ary Prop,
   forall func1 : Lift ary w,
@@ -530,7 +530,7 @@ Definition orEval (ary : arity) (func1 : Lift ary w) (func2 : Lift ary w) : Lift
   apLift ary (apLift ary (returnLift ary mult) func1) func2
 .
 
-Lemma orEval_correspondsTo_or :
+Lemma orEval_correspondsTo_disjunction :
   forall ary : arity,
   forall P1 : Lift ary Prop,
   forall P2 : Lift ary Prop,
@@ -593,7 +593,7 @@ Definition andEval (ary : arity) (func1 : Lift ary w) (func2 : Lift ary w) : Lif
   notEval ary (orEval ary (notEval ary func1) (notEval ary func2))
 .
 
-Lemma andEval_correpondsTo_and :
+Lemma andEval_correpondsTo_conjunction :
   forall ary : arity,
   forall P1 : Lift ary Prop,
   forall P2 : Lift ary Prop,
@@ -612,10 +612,10 @@ Proof with eauto.
   induction ary.
   - intros.
     assert (correspondsToRel 0 (notEval 0 (orEval 0 (notEval 0 func1) (notEval 0 func2))) (apLift 0 (apLift 0 (returnLift 0 (fun p1 p2 : Prop => ~ (~ p1 \/ ~ p2))) P1) P2)).
-    { apply (notEval_correpondsTo_not 0).
-      apply (orEval_correspondsTo_or 0).
-      - apply (notEval_correpondsTo_not 0)...
-      - apply (notEval_correpondsTo_not 0)...
+    { apply (notEval_correpondsTo_negation 0).
+      apply (orEval_correspondsTo_disjunction 0).
+      - apply (notEval_correpondsTo_negation 0)...
+      - apply (notEval_correpondsTo_negation 0)...
     }
     unfold correspondsToRel in H1.
     unfold correspondsToRel.
@@ -624,6 +624,91 @@ Proof with eauto.
     tauto.
   - unfold orEval.
     unfold notEval.
+    unfold apLift.
+    simpl...
+Qed.
+
+Definition andArith (e1 : Arith) (e2 : Arith) : Arith :=
+  notArith (orArith (notArith e1) (notArith e2))
+.
+
+Lemma eval_andArith_andEval :
+  forall e1 : Arith,
+  forall e2 : Arith,
+  forall ary : arity,
+  forall func1 : Lift ary w,
+  forall func2 : Lift ary w,
+  evalArith ary e1 func1 ->
+  evalArith ary e2 func2 ->
+  evalArith ary (andArith e1 e2) (andEval ary func1 func2).
+Proof with eauto.
+  intros.
+  apply eval_notArith_notEval.
+  apply eval_orArith_orEval.
+  apply eval_notArith_notEval...
+  apply eval_notArith_notEval...
+Qed.
+
+Definition eqEval (ary : arity) (func1 : Lift ary w) (func2 : Lift ary w) : Lift ary w :=
+  andEval ary (notEval ary (apLift ary (apLift ary (returnLift ary chi_lt) func1) func2)) (notEval ary ((apLift ary (apLift ary (returnLift ary chi_lt) func2) func1)))
+.
+
+Lemma eqEval_correspondsTo_equality :
+  forall ary : arity,
+  forall val1 : Lift ary w,
+  forall val2 : Lift ary w,
+  forall func1 : Lift ary w,
+  forall func2 : Lift ary w,
+  correspondsToFunc ary func1 val1 ->
+  correspondsToFunc ary func2 val2 ->
+  correspondsToRel ary (eqEval ary func1 func2) (apLift ary (apLift ary (returnLift ary (fun x : w => fun y : w => x = y)) val1) val2).
+Proof with eauto.
+  unfold correspondsToFunc.
+  unfold correspondsToRel.
+  unfold eqEval.
+  intros.
+  unfold apLift in H.
+  unfold apLift in H0.
+  generalize dependent ary.
+  induction ary.
+  - intros.
+    simpl.
+    assert (correspondsToRel 0 (eqEval 0 func1 func2) (apLift 0 (apLift 0 (returnLift 0 (fun x1 : w => fun x2 : w => (~ (x1 < x2) /\ ~ (x2 < x1)))) val1) val2)).
+    { unfold eqEval.
+      apply (andEval_correpondsTo_conjunction 0).
+      - apply (notEval_correpondsTo_negation 0)...
+        unfold apLift.
+        simpl.
+        unfold chi_lt.
+        unfold correspondsToFunc in *.
+        unfold correspondsToRel.
+        unfold apLift in *.
+        simpl in *.
+        destruct (Compare_dec.lt_dec func1 func2); lia.
+      - apply (notEval_correpondsTo_negation 0)...
+        unfold apLift.
+        simpl.
+        unfold chi_lt.
+        unfold correspondsToFunc in *.
+        unfold correspondsToRel.
+        unfold apLift in *.
+        simpl in *.
+        destruct (Compare_dec.lt_dec func2 func1); lia.
+    }
+    unfold correspondsToRel in H1.
+    unfold apLift in *.
+    simpl in *...
+    destruct H1.
+    constructor.
+    + intros.
+      apply H1.
+      lia.
+    + intros.
+      apply H2.
+      lia.
+  - unfold andEval.
+    unfold notEval.
+    unfold orEval.
     unfold apLift.
     simpl...
 Qed.
