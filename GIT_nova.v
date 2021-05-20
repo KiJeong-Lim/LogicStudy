@@ -2,13 +2,15 @@ From Coq.Bool Require Export Bool.
 From Coq.micromega Require Export Lia.
 From Coq.Lists Require Export List.
 From Coq.Arith Require Export PeanoNat.
-From Coq.Strings Require Export String.
+From Coq.Program Require Export Equality.
 
 Module Goedel's_Incompleteness_Theorem.
 
 Import ListNotations.
 
 Section Preliminaries.
+
+Import EqNotations.
 
 Lemma div_mod_uniqueness :
   forall a : nat,
@@ -158,6 +160,18 @@ Proof.
   intros n x y; constructor.
   - apply (cantor_pairing_is_injective n x y).
   - intros H; subst; rewrite (cantor_pairing_is_surjective x y); reflexivity.
+Qed.
+
+
+Definition existsT_snd_eq {A : Type} :
+  forall P : A -> Type,
+  forall x : A,
+  forall H1 : P x,
+  forall H2 : P x,
+  existT P x H1 = existT P x H2 ->
+  H1 = H2.
+Proof.
+  intros. dependent destruction H. reflexivity.
 Qed.
 
 End Preliminaries.
@@ -360,6 +374,195 @@ Lemma liftEval (n : arity) :
   evalArith (n + ary) e (assocLift n ary (returnLift n val)).
 Proof.
   induction n; eauto. simpl; eauto using liftEval_once.
+Qed.
+
+Definition hasSameSemantics {A : Type} (ary : arity) (val1 : Lift ary A) (val2 : Lift ary A) : Prop :=
+  unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun x : A => fun y : A => x = y)) val1) val2)
+.
+
+Lemma hasSameSemantics_refl {A : Type} :
+  forall ary : arity,
+  forall f : Lift ary w,
+  hasSameSemantics ary f f.
+Proof with eauto.
+  unfold hasSameSemantics.
+  unfold apLift.
+  induction ary.
+  - simpl...
+  - simpl...
+Qed.
+
+Lemma hasSameSemantics_symm {A : Type} :
+  forall ary : arity,
+  forall f : Lift ary A,
+  forall g : Lift ary A,
+  hasSameSemantics ary f g ->
+  hasSameSemantics ary g f.
+Proof with eauto.
+  unfold hasSameSemantics.
+  unfold apLift.
+  induction ary.
+  - simpl...
+  - simpl...
+Qed.
+
+Lemma hasSameSemantics_trans {A : Type} :
+  forall ary : arity,
+  forall f : Lift ary A,
+  forall g : Lift ary A,
+  forall h : Lift ary A,
+  hasSameSemantics ary f g ->
+  hasSameSemantics ary g h ->
+  hasSameSemantics ary f h.
+Proof with eauto.
+  unfold hasSameSemantics.
+  unfold apLift.
+  induction ary.
+  - simpl.
+    apply eq_trans.
+  - simpl...
+Qed.
+
+Lemma hasSameSemantics_liftA2 {A : Type} {B : Type} {C : Type} :
+  forall ary : arity,
+  forall f : A -> B -> C,
+  forall g1 : Lift ary A,
+  forall g2 : Lift ary A,
+  forall h1 : Lift ary B,
+  forall h2 : Lift ary B,
+  hasSameSemantics ary g1 g2 ->
+  hasSameSemantics ary h1 h2 ->
+  hasSameSemantics ary (apLift ary (apLift ary (returnLift ary f) g1) h1) (apLift ary (apLift ary (returnLift ary f) g2) h2).
+Proof with eauto.
+  unfold hasSameSemantics.
+  unfold apLift.
+  induction ary.
+  - simpl...
+    intros.
+    rewrite H.
+    rewrite H0.
+    reflexivity.
+  - simpl...
+Qed.
+
+Lemma eval_unique :
+  forall e : Arith,
+  forall ary : arity,
+  forall val1 : Lift ary w,
+  forall val2 : Lift ary w,
+  evalArith ary e val1 ->
+  evalArith ary e val2 ->
+  hasSameSemantics ary val1 val2.
+Proof with eauto.
+  assert ( claim1 :
+    forall ary : arity,
+    forall f1 : Lift ary (w -> bool),
+    forall f2 : Lift ary (w -> bool),
+    (forall i : Lift ary w, hasSameSemantics ary (apLift ary f1 i) (apLift ary f2 i)) ->
+    forall n1 : Lift ary w,
+    forall n2 : Lift ary w,
+    unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun f : w -> bool => fun x : w => f x = true)) f1) n1) ->
+    unLiftProp ary (apLift ary (apLift ary (returnLift ary (fun f : w -> bool => fun x : w => f x = true)) f2) n2) ->
+    hasSameSemantics ary (apLift ary (apLift ary (returnLift ary first_nat) f1) n1) (apLift ary (apLift ary (returnLift ary first_nat) f2) n2)
+  ).
+  { induction ary.
+    - unfold hasSameSemantics.
+      unfold apLift.
+      simpl.
+      intros f1 f2 H.
+      assert (forall n : nat, first_nat f1 n = first_nat f2 n).
+      { induction n...
+        simpl.
+        rewrite IHn.
+        rewrite H...
+      }
+      intros.
+      rewrite H0.
+      assert (first_nat f2 n1 <= first_nat f2 n2).
+      { apply well_ordering_principle...
+        apply well_ordering_principle...
+      }
+      assert (first_nat f2 n2 <= first_nat f2 n1).
+      { apply well_ordering_principle...
+        apply well_ordering_principle...
+      }
+      lia.
+    - unfold hasSameSemantics.
+      unfold apLift.
+      simpl.
+      intros.
+      apply IHary.
+      intros.
+      apply (H (fun _ : w => i) n).
+      apply H0.
+      apply H1.
+  }
+  assert ( claim2 :
+    forall ary : arity,
+    forall n1 : Lift (S ary) w,
+    forall n2 : Lift (S ary) w,
+    hasSameSemantics (S ary) n1 n2 ->
+    forall i : Lift ary w,
+    hasSameSemantics ary (apLift ary (check ary n1) i) (apLift ary (check ary n2) i)
+  ).
+  { unfold hasSameSemantics.
+    unfold check.
+    unfold apLift.
+    induction ary.
+    - simpl...
+    - simpl.
+      intros.
+      apply IHary.
+      simpl...
+  } 
+  induction e.
+  - intros.
+    inversion H.
+    subst.
+    assert (projection a m = val1) by (apply (existsT_snd_eq (fun x : arity => Lift x w)); apply H5).
+    rewrite <- H1.
+    inversion H0.
+    subst.
+    assert (m0 = m) by lia.
+    subst m0.
+    assert (projection a m = val2) by (apply (existsT_snd_eq (fun x : arity => Lift x w)); apply H8).
+    rewrite <- H1.
+    apply (@hasSameSemantics_refl w).
+  - intros.
+    inversion H.
+    subst.
+    assert (apLift ary (apLift ary (returnLift ary plus) val0) val3 = val1) by (apply (existsT_snd_eq (fun x : arity => Lift x w)); apply H4).
+    inversion H0.
+    subst.
+    assert (apLift ary (apLift ary (returnLift ary plus) val4) val5 = val2) by (apply (existsT_snd_eq (fun x : arity => Lift x w)); apply H8).
+    subst.
+    apply hasSameSemantics_liftA2...
+  - intros.
+    inversion H.
+    subst.
+    assert (apLift ary (apLift ary (returnLift ary mult) val0) val3 = val1) by (apply (existsT_snd_eq (fun x : arity => Lift x w)); apply H4).
+    inversion H0.
+    subst.
+    assert (apLift ary (apLift ary (returnLift ary mult) val4) val5 = val2) by (apply (existsT_snd_eq (fun x : arity => Lift x w)); apply H8).
+    subst.
+    apply hasSameSemantics_liftA2...
+  - intros.
+    inversion H.
+    subst.
+    assert (apLift ary (apLift ary (returnLift ary chi_lt) val0) val3 = val1) by (apply (existsT_snd_eq (fun x : arity => Lift x w)); apply H4).
+    inversion H0.
+    subst.
+    assert (apLift ary (apLift ary (returnLift ary chi_lt) val4) val5 = val2) by (apply (existsT_snd_eq (fun x : arity => Lift x w)); apply H8).
+    subst.
+    apply hasSameSemantics_liftA2...
+  - intros.
+    inversion H.
+    inversion H0.
+    subst.
+    assert ((apLift ary (apLift ary (returnLift ary first_nat) (check ary val0)) val') = val1) by (apply (existsT_snd_eq (fun x : arity => Lift x w)); apply H2).
+    assert ((apLift ary (apLift ary (returnLift ary first_nat) (check ary val3)) val'0) = val2) by (apply (existsT_snd_eq (fun x : arity => Lift x w)); apply H7).
+    subst.
+    apply claim1...
 Qed.
 
 Definition correspondsToFunc (ary : arity) (func1 : Lift ary w) (func : Lift ary w) : Prop :=
