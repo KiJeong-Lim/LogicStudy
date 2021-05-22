@@ -368,6 +368,206 @@ Inductive RuleArith : forall n : nat, Arith -> Arity n w -> Prop :=
   RuleArith n (muArith e1) (muEval n val1 witness)
 .
 
+Lemma upgradeRule_once :
+  forall n : nat,
+  forall e : Arith,
+  forall val : Arity n w,
+  RuleArith n e val ->
+  RuleArith (S n) e (pureArity 1 val).
+Proof with eauto.
+  intros n e val H; induction H.
+  - apply (varRule (S n))...
+  - apply (plusRule (S n))...
+  - apply (multRule (S n))...
+  - apply (ltRule (S n))...
+  - apply (muRule (S n))... simpl...
+Qed.
+
+Lemma upgradeRule (m : nat) :
+  forall n : nat,
+  forall e : Arith,
+  forall val : Arity n w,
+  RuleArith n e val ->
+  RuleArith (m + n) e (assocArity w m n (pureArity m val)).
+Proof with eauto.
+  induction m...
+  simpl; intros; apply upgradeRule_once...
+Qed.
+
+Definition extensionality (A : Type) (n : nat) : Arity n A -> Arity n A -> Prop :=
+  fun val1 : Arity n A => fun val2 : Arity n A => universal n (liftArity2 n (fun x1 : A => fun x2 : A => x1 = x2) val1 val2)
+.
+
+Lemma extensionality_refl {A : Type} :
+  forall n : nat,
+  forall f : Arity n A,
+  extensionality A n f f.
+Proof with eauto.
+  unfold extensionality.
+  induction n.
+  - reflexivity.
+  - simpl... 
+Qed.
+
+Lemma extensionality_symm {A : Type} :
+  forall n : nat,
+  forall f : Arity n A,
+  forall g : Arity n A,
+  extensionality A n f g ->
+  extensionality A n g f.
+Proof with eauto.
+  unfold extensionality.
+  induction n.
+  - symmetry...
+  - simpl...
+Qed.
+
+Lemma extensionality_trans {A : Type} :
+  forall n : nat,
+  forall f : Arity n A,
+  forall g : Arity n A,
+  forall h : Arity n A,
+  extensionality A n f g ->
+  extensionality A n g h ->
+  extensionality A n f h.
+Proof with eauto.
+  unfold extensionality.
+  induction n.
+  - intros.
+    transitivity g...
+  - simpl...
+Qed.
+
+Lemma extensionality_lift1 {A : Type} {B : Type} :
+  forall n : nat,
+  forall f : A -> B,
+  forall val1 : Arity n A,
+  forall val2 : Arity n A,
+  extensionality A n val1 val2 ->
+  extensionality B n (liftArity1 n f val1) (liftArity1 n f val2).
+Proof with eauto.
+  unfold extensionality.
+  induction n.
+  - intros.
+    apply f_equal...
+  - simpl...
+Qed.
+
+Lemma extensionality_lift2 {A : Type} {B : Type} {C : Type} :
+  forall n : nat,
+  forall f : A -> B -> C,
+  forall val1 : Arity n A,
+  forall val2 : Arity n A,
+  forall val3 : Arity n B,
+  forall val4 : Arity n B,
+  extensionality A n val1 val2 ->
+  extensionality B n val3 val4 ->
+  extensionality C n (liftArity2 n f val1 val3) (liftArity2 n f val2 val4).
+Proof with eauto.
+  unfold extensionality.
+  induction n.
+  - intros.
+    apply f_equal2...
+  - simpl...
+Qed.
+
+Ltac Arity_eq := apply (existsT_snd_eq (fun x : nat => Arity x w)); eauto.
+
+Lemma Rule_unique :
+  forall e : Arith,
+  forall n : nat,
+  forall val1 : Arity n w,
+  forall val2 : Arity n w,
+  RuleArith n e val1 ->
+  RuleArith n e val2 ->
+  extensionality w n val1 val2.
+Proof with eauto.
+  assert ( claim1 :
+    forall n : nat,
+    forall val1 : Arity (S n) w,
+    forall val2 : Arity (S n) w,
+    extensionality w (S n) val1 val2 ->
+    forall witness1 : Arity n w,
+    forall witness2 : Arity n w,
+    universal n (apArity n (apArity n (pureArity n (fun f : w -> w => fun x : w => f x = 0)) (shiftArity_left n val1)) witness1) ->
+    universal n (apArity n (apArity n (pureArity n (fun f : w -> w => fun x : w => f x = 0)) (shiftArity_left n val2)) witness2) ->
+    extensionality w n (muEval n val1 witness1) (muEval n val2 witness2)
+  ).
+  { unfold extensionality.
+    induction n.
+    - unfold muEval.
+      unfold liftArity2.
+      simpl...
+      intros val1 val2 ext_eq.
+      assert (forall m : w, first_nat (fun x : w => val1 x =? 0) m = first_nat (fun x : w => val2 x =? 0) m).
+      { induction m...
+        simpl.
+        rewrite ext_eq.
+        rewrite IHm...
+      }
+      intros.
+      rewrite H.
+      rewrite ext_eq in H0.
+      set (p := fun x : w => val2 x =? 0).
+      assert (first_nat p witness1 <= first_nat p witness2).
+      { apply well_ordering_principle...
+        unfold p...
+        apply well_ordering_principle...
+        unfold p...
+      }
+      assert (first_nat p witness2 <= first_nat p witness1).
+      { apply well_ordering_principle...
+        unfold p...
+        apply well_ordering_principle...
+        unfold p...
+      }
+      lia.
+    - simpl... intros. apply IHn... simpl...
+  }
+  induction e.
+  - intros.
+    inversion H.
+    inversion H0.
+    subst.
+    assert (n2 = n1) by lia.
+    subst.
+    assert (varEval n1 n = val1) by Arity_eq.
+    assert (varEval n1 n = val2) by Arity_eq.
+    subst.
+    apply extensionality_refl.
+  - intros.
+    inversion H.
+    inversion H0.
+    subst.
+    assert (plusEval n val0 val3 = val1) by Arity_eq.
+    assert (plusEval n val4 val5 = val2) by Arity_eq.
+    subst.
+    apply extensionality_lift2...
+  - intros.
+    inversion H.
+    inversion H0.
+    subst.
+    assert (multEval n val0 val3 = val1) by Arity_eq.
+    assert (multEval n val4 val5 = val2) by Arity_eq.
+    subst.
+    apply extensionality_lift2...
+  - intros.
+    inversion H.
+    inversion H0.
+    subst.
+    assert (ltEval n val0 val3 = val1) by Arity_eq.
+    assert (ltEval n val4 val5 = val2) by Arity_eq.
+    subst.
+    apply extensionality_lift2...
+  - intros.
+    inversion H.
+    inversion H0.
+    subst.
+    assert (muEval n val0 witness = val1) by Arity_eq.
+    assert (muEval n val3 witness0 = val2) by Arity_eq.
+    subst...
+Qed.
+
 Definition correpondsToFunc (n : nat) : Arity n w -> Arity n w -> Prop :=
   fun val1 : Arity n w => fun func : Arity n w => universal n (liftArity2 n (fun x1 : w => fun x : w => x1 = x) val1 func)
 .
