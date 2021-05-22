@@ -368,6 +368,14 @@ Inductive RuleArith : forall n : nat, Arith -> Arity n w -> Prop :=
   RuleArith n (muArith e1) (muEval n val1 witness)
 .
 
+Definition correpondsToFunc (n : nat) : Arity n w -> Arity n w -> Prop :=
+  fun val1 : Arity n w => fun func : Arity n w => universal n (liftArity2 n (fun x1 : w => fun x : w => x1 = x) val1 func)
+.
+
+Definition correpondsToRel (n : nat) : Arity n w -> Arity n Prop -> Prop :=
+  fun val1 : Arity n w => fun rel : Arity n Prop => universal n (liftArity2 n (fun x1 : w => fun p : Prop => (x1 = 0 -> p) /\ (x1 = 1 -> ~ p)) val1 rel)
+.
+
 End Arithmetic.
 
 End Goedel's_Incompleteness_Theorem.
