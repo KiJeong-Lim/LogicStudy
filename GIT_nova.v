@@ -612,7 +612,7 @@ Inductive IsArith : forall n : nat, Arity n Prop -> Prop :=
   IsArith n rel
 .
 
-Lemma has_characterstic_fun_then_Arith_dec (n : nat) :
+Definition has_characterstic_fun_then_Arith_dec (n : nat) :
   forall val : Arity n w,
   forall P : Arity n Prop,
   correpondsToRel n val P ->
@@ -624,8 +624,14 @@ Proof with eauto.
   induction n.
   - simpl.
     intros.
-    destruct (Nat.eq_dec val 0); tauto.
-  - simpl...
+    destruct (Nat.eq_dec val 0).
+    + left.
+      exact H.
+    + right.
+      exact H.
+  - simpl.
+    intros.
+    apply (IHn (val m) (P m) (H m)).
 Qed.
 
 Lemma ltEval_correpondsTo_less_than :
