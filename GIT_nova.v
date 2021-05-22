@@ -298,6 +298,75 @@ Proof with eauto.
   - simpl...
 Qed.
 
+Inductive Arith : Set :=
+| varArith : nat -> Arith
+| plusArith : Arith -> Arith -> Arith
+| multArith : Arith -> Arith -> Arith
+| ltArith : Arith -> Arith -> Arith
+| muArith : Arith -> Arith
+.
+
+Definition varEval (m : nat) (n : nat) : Arity (m + S n) w :=
+  assocArity w m (S n) (pureArity m (pureArity n))
+.
+
+Definition plusEval (n : nat) : Arity n w -> Arity n w -> Arity n w :=
+  fun val1 : Arity n w => fun val2 : Arity n w => apArity n (apArity n (pureArity n plus) val1) val2
+.
+
+Definition multEval (n : nat) : Arity n w -> Arity n w -> Arity n w :=
+  fun val1 : Arity n w => fun val2 : Arity n w => apArity n (apArity n (pureArity n mult) val1) val2
+.
+
+Definition ltEval (n : nat) : Arity n w -> Arity n w -> Arity n w :=
+  fun val1 : Arity n w => fun val2 : Arity n w => apArity n (apArity n (pureArity n (fun x : w => fun y : w => if Compare_dec.lt_dec x y then 0 else 1)) val1) val2
+.
+
+Definition muEval (n : nat) : Arity (S n) w -> Arity n w -> Arity n w :=
+  fun val1 : Arity (S n) w => fun witness : Arity n w => apArity n (apArity n (pureArity n first_nat) (apArity n (pureArity n (fun f : w -> w => fun x : w => Nat.eqb (f x) 0)) (shiftArity_left n val1))) witness
+.
+
+Inductive RuleArith : forall n : nat, Arith -> Arity n w -> Prop :=
+| varRule :
+  forall n : nat,
+  forall i : nat,
+  RuleArith (n + S i) (varArith i) (varEval n i)
+| plusRule :
+  forall n : nat,
+  forall e1 : Arith,
+  forall e2 : Arith,
+  forall val1 : Arity n w,
+  forall val2 : Arity n w,
+  RuleArith n e1 val1 ->
+  RuleArith n e2 val2 ->
+  RuleArith n (plusArith e1 e2) (plusEval n val1 val2)
+| multRule :
+  forall n : nat,
+  forall e1 : Arith,
+  forall e2 : Arith,
+  forall val1 : Arity n w,
+  forall val2 : Arity n w,
+  RuleArith n e1 val1 ->
+  RuleArith n e2 val2 ->
+  RuleArith n (multArith e1 e2) (multEval n val1 val2)
+| ltRule :
+  forall n : nat,
+  forall e1 : Arith,
+  forall e2 : Arith,
+  forall val1 : Arity n w,
+  forall val2 : Arity n w,
+  RuleArith n e1 val1 ->
+  RuleArith n e2 val2 ->
+  RuleArith n (ltArith e1 e2) (ltEval n val1 val2)
+| muRule :
+  forall n : nat,
+  forall e1 : Arith,
+  forall val1 : Arity (S n) w,
+  forall witness : Arity n w,
+  RuleArith (S n) e1 val1 ->
+  RuleArith n (muArith e1) (muEval n val1 witness)
+.
+
 End Arithmetic.
 
 End Goedel's_Incompleteness_Theorem.
