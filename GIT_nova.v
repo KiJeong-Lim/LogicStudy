@@ -363,6 +363,7 @@ Inductive RuleArith : forall n : nat, Arith -> Arity n w -> Prop :=
   forall e1 : Arith,
   forall val1 : Arity (S n) w,
   forall witness : Arity n w,
+  universal n (apArity n (apArity n (pureArity n (fun f : w -> w => fun x : w => f x = 0)) (shiftArity_left n val1)) witness) ->
   RuleArith (S n) e1 val1 ->
   RuleArith n (muArith e1) (muEval n val1 witness)
 .
