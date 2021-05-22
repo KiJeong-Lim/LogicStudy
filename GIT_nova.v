@@ -404,7 +404,14 @@ Ltac execRule :=
     | |- RuleArith _ _ (muEval ?n _ _) => apply (muRule n)
     | _ => fail
     end
-  ) then execRule else simpl; (tryif (eapply upgradeRule_once || eapply upgradeRule) then execRule else eauto) 
+  ) then execRule else tryif (
+    tryif (
+      match goal with
+      | |- RuleArith _ _ (pureArity ?n _) => rewrite <- (Nat.add_0_r n); rewrite (pure_assoc_pure n)
+      | _ => fail
+      end
+    ) then eapply upgradeRule else (eapply upgradeRule_once || eapply upgradeRule)
+  ) then execRule else eauto
 .
 
 Definition extensionality (A : Type) (n : nat) : Arity n A -> Arity n A -> Prop :=
@@ -586,8 +593,57 @@ Definition correpondsToFunc (n : nat) : Arity n w -> Arity n w -> Prop :=
 .
 
 Definition correpondsToRel (n : nat) : Arity n w -> Arity n Prop -> Prop :=
-  fun val1 : Arity n w => fun rel : Arity n Prop => universal n (liftArity2 n (fun x1 : w => fun p : Prop => (x1 = 0 -> p) /\ (x1 = 1 -> ~ p)) val1 rel)
+  fun val1 : Arity n w => fun rel : Arity n Prop => universal n (liftArity2 n (fun x1 : w => fun p : Prop => if Nat.eq_dec x1 0 then p else ~ p) val1 rel)
 .
+
+Definition isBoolean (n : nat) : Arity n w -> Prop :=
+  fun val1 : Arity n w => universal n (liftArity1 n (fun x1 : w => x1 = 0 \/ x1 = 1) val1)
+.
+
+Inductive IsArith : forall n : nat, Arity n Prop -> Prop :=
+| IsArithmetic :
+  forall n : nat,
+  forall e : Arith,
+  forall val : Arity n w,
+  forall rel : Arity n Prop,
+  RuleArith n e val ->
+  isBoolean n val ->
+  correpondsToRel n val rel ->
+  IsArith n rel
+.
+
+Lemma has_characterstic_fun_then_Arith_dec (n : nat) :
+  forall val : Arity n w,
+  forall P : Arity n Prop,
+  correpondsToRel n val P ->
+  Arity_dec n P (liftArity1 n (fun p : Prop => ~ p) P).
+Proof with eauto.
+  unfold correpondsToRel.
+  unfold liftArity2.
+  unfold liftArity1.
+  induction n.
+  - simpl.
+    intros.
+    destruct (Nat.eq_dec val 0); tauto.
+  - simpl...
+Qed.
+
+Lemma ltEval_correpondsTo_less_than :
+  forall n : nat,
+  forall val1 : Arity n w,
+  forall val2 : Arity n w,
+  correpondsToRel n (ltEval n val1 val2) (liftArity2 n (fun x1 : w => fun x2 : w => x1 < x2) val1 val2).
+Proof with eauto.
+  unfold correpondsToRel.
+  induction n.
+  - unfold liftArity2.
+    simpl.
+    unfold ltEval.
+    simpl.
+    intros.
+    destruct (Compare_dec.lt_dec val1 val2); simpl; firstorder.
+  - simpl...
+Qed.
 
 Fixpoint numEval (m : nat) : Arity 0 w :=
   match m with
@@ -654,6 +710,147 @@ Proof with eauto.
     rewrite numEval_correpondsTo_numeral.
     destruct (Compare_dec.lt_dec m (S m)); lia.
 Qed.
+
+Definition notEval (n : nat) : Arity n w -> Arity n w :=
+  fun val1 : Arity n w => ltEval n (pureArity n (numEval 0)) val1
+.
+
+Lemma notEval_isBoolean :
+  forall n : nat,
+  forall val1 : Arity n w,
+  isBoolean n (notEval n val1).
+Proof with eauto.
+  unfold isBoolean.
+  unfold notEval.
+  unfold liftArity1.
+  induction n.
+  - simpl.
+    unfold ltEval.
+    unfold muEval.
+    unfold varEval.
+    simpl.
+    intros.
+    destruct (Compare_dec.lt_dec 0 val1); firstorder.
+  - simpl...
+Qed.
+
+Lemma notEval_correpondsTo_negation :
+  forall n : nat,
+  forall val1 : Arity n w,
+  forall P : Arity n Prop,
+  correpondsToRel n val1 P ->
+  correpondsToRel n (notEval n val1) (liftArity1 n (fun p : Prop => ~ p) P).
+Proof with eauto.
+  unfold correpondsToRel.
+  induction n.
+  - unfold liftArity2.
+    unfold notEval.
+    simpl.
+    fold (numEval 0).
+    rewrite numEval_correpondsTo_numeral.
+    unfold liftArity1.
+    simpl.
+    intros.
+    assert (if Nat.eq_dec (ltEval 0 0 val1) 0 then 0 < val1 else ~ 0 < val1) by apply (ltEval_correpondsTo_less_than 0 0 val1).
+    destruct (Nat.eq_dec val1 0).
+    + subst.
+      simpl.
+      tauto.
+    + unfold ltEval in *.
+      simpl in *.
+      destruct (Compare_dec.lt_dec 0 val1); lia || tauto.
+  - simpl...
+Qed.
+
+Definition notArith (e1 : Arith) : Arith :=
+  ltArith (numArith 0) e1
+.
+
+Lemma notRule :
+  forall n : nat,
+  forall e1 : Arith,
+  forall val1 : Arity n w,
+  RuleArith n e1 val1 ->
+  RuleArith n (notArith e1) (notEval n val1).
+Proof with eauto.
+  unfold notArith.
+  unfold notEval.
+  intros.
+  execRule.
+Qed.
+
+Definition orEval (n : nat) : Arity n w -> Arity n w -> Arity n w :=
+  fun val1 : Arity n w => fun val2 : Arity n w => notEval n (notEval n (multEval n val1 val2))
+.
+
+Lemma orEval_isBoolean :
+  forall n : nat,
+  forall val1 : Arity n w,
+  forall val2 : Arity n w,
+  isBoolean n (orEval n val1 val2).
+Proof with eauto.
+  unfold orEval.
+  unfold isBoolean.
+  unfold liftArity1.
+  induction n.
+  - simpl.
+    unfold multEval.
+    simpl.
+    lia.
+  - simpl...
+Qed.
+
+Lemma orEval_correpondsTo_disjunction :
+  forall n : nat,
+  forall val1 : Arity n w,
+  forall val2 : Arity n w,
+  forall P1 : Arity n Prop,
+  forall P2 : Arity n Prop,
+  correpondsToRel n val1 P1 ->
+  correpondsToRel n val2 P2 ->
+  correpondsToRel n (orEval n val1 val2) (liftArity2 n (fun p1 : Prop => fun p2 : Prop => p1 \/ p2) P1 P2).
+Proof with eauto.
+  unfold correpondsToRel.
+  unfold orEval.
+  induction n.
+  - simpl.
+    unfold liftArity2.
+    simpl.
+    intros.
+    destruct (Nat.eq_dec val1 0); destruct (Nat.eq_dec val2 0).
+    + subst; simpl; tauto.
+    + subst; simpl; tauto.
+    + unfold multEval; simpl.
+      assert (val1 * val2 = 0) by lia.
+      rewrite H1.
+      simpl; tauto.
+    + unfold multEval; simpl.
+      destruct (Nat.eq_dec (val1 * val2) 0); lia || tauto.
+  - simpl...
+Qed.
+
+Definition orArith (e1 : Arith) (e2 : Arith) : Arith :=
+  multArith e1 e2
+.
+
+Lemma orRule :
+  forall n : nat,
+  forall e1 : Arith,
+  forall e2 : Arith,
+  forall val1 : Arity n w,
+  forall val2 : Arity n w,
+  RuleArith n e1 val1 ->
+  RuleArith n e2 val2 ->
+  RuleArith n (orArith e1 e2) (orEval n val1 val2).
+Proof with eauto.
+  unfold orArith; unfold orEval.
+  intros.
+  execRule.
+Qed.
+
+Definition andEval (n : nat) : Arity n w -> Arity n w -> Arity n w :=
+  fun val1 : Arity n w => fun val2 : Arity n w => notEval n (orEval n (notEval n val1) (notEval n val2))
+.
 
 End Arithmetic.
 
