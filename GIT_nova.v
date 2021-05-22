@@ -394,6 +394,19 @@ Proof with eauto.
   simpl; intros; apply upgradeRule_once...
 Qed.
 
+Ltac execRule :=
+  simpl; tryif (
+    match goal with
+    | |- RuleArith _ _ (varEval ?n ?i) => apply (varRule n i)
+    | |- RuleArith _ _ (plusEval ?n _ _) => apply (plusRule n)
+    | |- RuleArith _ _ (multEval ?n _ _) => apply (multRule n)
+    | |- RuleArith _ _ (ltEval ?n _ _) => apply (ltRule n)
+    | |- RuleArith _ _ (muEval ?n _ _) => apply (muRule n)
+    | _ => fail
+    end
+  ) then execRule else simpl; (tryif (eapply upgradeRule_once || eapply upgradeRule) then execRule else eauto) 
+.
+
 Definition extensionality (A : Type) (n : nat) : Arity n A -> Arity n A -> Prop :=
   fun val1 : Arity n A => fun val2 : Arity n A => universal n (liftArity2 n (fun x1 : A => fun x2 : A => x1 = x2) val1 val2)
 .
@@ -406,7 +419,7 @@ Proof with eauto.
   unfold extensionality.
   induction n.
   - reflexivity.
-  - simpl... 
+  - simpl...
 Qed.
 
 Lemma extensionality_symm {A : Type} :
@@ -575,6 +588,72 @@ Definition correpondsToFunc (n : nat) : Arity n w -> Arity n w -> Prop :=
 Definition correpondsToRel (n : nat) : Arity n w -> Arity n Prop -> Prop :=
   fun val1 : Arity n w => fun rel : Arity n Prop => universal n (liftArity2 n (fun x1 : w => fun p : Prop => (x1 = 0 -> p) /\ (x1 = 1 -> ~ p)) val1 rel)
 .
+
+Fixpoint numEval (m : nat) : Arity 0 w :=
+  match m with
+  | 0 => muEval 0 (varEval 0 0) 0
+  | S m' => muEval 0 (ltEval 1 (pureArity 1 (numEval m')) (varEval 0 0)) (S m')
+  end
+.
+
+Lemma numEval_correpondsTo_numeral :
+  forall m : nat,
+  correpondsToFunc 0 (numEval m) m.
+Proof with eauto.
+  assert ( claim1 :
+    forall x : nat,
+    first_nat (fun x1 : w => Nat.eqb (if Compare_dec.lt_dec x x1 then 0 else 1) 0) (S x) = S x
+  ).
+  { intros x.
+    set (p := fun x1 : w => (if Compare_dec.lt_dec x x1 then 0 else 1) =? 0).
+    assert (p (S x) = true).
+    { unfold p.
+      destruct (Compare_dec.lt_dec x (S x)).
+      - tauto.
+      - lia.
+    }
+    assert (first_nat p (S x) <= S x).
+    { apply well_ordering_principle...
+    }
+    assert (first_nat p (S x) > x).
+    { unfold p.
+      simpl.
+      fold p.
+      destruct (Compare_dec.lt_dec x (first_nat p x)).
+      - simpl; lia.
+      - simpl; lia.
+    }
+    lia.
+  }
+  unfold correpondsToFunc.
+  induction m.
+  - reflexivity.
+  - simpl...
+    assert (numEval m = m) by apply IHm.
+    rewrite H.
+    apply claim1...
+Qed.
+
+Fixpoint numArith (m : nat) : Arith :=
+  match m with
+  | 0 => muArith (varArith 0)
+  | S m' => muArith (ltArith (numArith m') (varArith 0))
+  end
+.
+
+Lemma numRule :
+  forall m : nat,
+  RuleArith 0 (numArith m) (numEval m).
+Proof with eauto.
+  induction m.
+  - execRule.
+  - execRule.
+    unfold ltEval.
+    unfold varEval.
+    simpl.
+    rewrite numEval_correpondsTo_numeral.
+    destruct (Compare_dec.lt_dec m (S m)); lia.
+Qed.
 
 End Arithmetic.
 
