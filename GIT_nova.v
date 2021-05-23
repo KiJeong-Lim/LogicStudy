@@ -397,13 +397,91 @@ Definition lift (m : nat) (n : nat) (val1 : Arity n w) : Arity (m + n) w :=
   assocArity w m n (pureArity m val1)
 .
 
+Lemma extensionality_lift {A : Type} (m : nat) :
+  forall n : nat,
+  forall f : Arity n A,
+  forall g : Arity n A,
+  extensionality A n f g ->
+  extensionality A (m + n) (assocArity A m n (pureArity m f)) (assocArity A m n (pureArity m g)).
+Proof with eauto.
+  unfold extensionality.
+  unfold liftArity2.
+  induction m.
+  - simpl...
+  - simpl...
+Qed.
+
 Definition call (n : nat) (val1 : Arity (S n) w) (val2 : Arity n w) : Arity n w :=
   apArity n (shiftArity_left n val1) val2
 .
 
+Lemma extensionality_call {A : Type} :
+  forall n : nat,
+  forall f1 : Arity (S n) A,
+  forall f2 : Arity (S n) A,
+  forall g1 : Arity n w,
+  forall g2 : Arity n w,
+  extensionality A (S n) f1 f2 ->
+  extensionality w n g1 g2 ->
+  extensionality A n (apArity n (shiftArity_left n f1) g1) (apArity n (shiftArity_left n f2) g2).
+Proof with eauto.
+  unfold extensionality.
+  unfold liftArity2.
+  induction n.
+  - simpl.
+    intros.
+    rewrite H0.
+    rewrite H...
+  - simpl.
+    intros.
+    apply (IHn (f1 m) (f2 m) (g1 m) (g2 m))...
+    simpl...
+Qed.
+
 Definition mini (n : nat) (val1 : Arity (S n) w) (witness : Arity n w) : Arity n w :=
   liftArity2 n first_nat (liftArity1 n (fun f : w -> w => fun x : w => Nat.eqb (f x) 0) (shiftArity_left n val1)) witness
 .
+
+Lemma extensionality_mini :
+  forall n : nat,
+  forall val1 : Arity (S n) w,
+  forall val2 : Arity (S n) w,
+  extensionality w (S n) val1 val2 ->
+  forall witness1 : Arity n w,
+  forall witness2 : Arity n w,
+  universal n (liftArity1 n (fun x : w => x = 0) (call n val1 witness1)) ->
+  universal n (liftArity1 n (fun x : w => x = 0) (call n val2 witness2)) ->
+  extensionality w n (mini n val1 witness1) (mini n val2 witness2).
+Proof with eauto.
+  unfold extensionality.
+  unfold liftArity2.
+  induction n.
+  - unfold call.
+    unfold mini.
+    unfold liftArity2.
+    unfold liftArity1.
+    simpl.
+    intros val1 val2 H.
+    assert (forall x : w, first_nat (fun y : w => val1 y =? 0) x = first_nat (fun y : w => val2 y =? 0) x).
+    { induction x...
+      simpl.
+      rewrite H.
+      rewrite IHx...
+    }
+    intros.
+    rewrite H0.
+    set (p := fun x : w => val2 x =? 0).
+    assert (first_nat p witness1 <= first_nat p witness2).
+    { apply well_ordering_principle. unfold p. rewrite <- H...
+      apply well_ordering_principle. unfold p...
+    }
+    assert (first_nat p witness2 <= first_nat p witness1).
+    { apply well_ordering_principle. unfold p...
+      apply well_ordering_principle. unfold p. rewrite <- H. rewrite H1. reflexivity.
+    }
+    lia.
+  - unfold mini. simpl. intros. apply (IHn (val1 m) (val2 m) (H m) (witness1 m) (witness2 m))...
+Qed.
 
 Inductive evalArith : forall n : nat, arith -> Arity n w -> Prop :=
 | projE :
@@ -440,6 +518,49 @@ Inductive evalArith : forall n : nat, arith -> Arity n w -> Prop :=
   universal n (liftArity1 n (fun x : w => x = 0) (call n val1 witness)) ->
   evalArith n (miniA e1) (mini n val1 witness) 
 .
+
+Lemma evalArith_unique :
+  forall e : arith,
+  forall ary : nat,
+  forall f : Arity ary w,
+  forall g : Arity ary w,
+  evalArith ary e f ->
+  evalArith ary e g ->
+  extensionality w ary f g.
+Proof with eauto.
+  induction e.
+  - intros.
+    dependent destruction H.
+    dependent destruction H0.
+    apply extensionality_refl.
+  - intros.
+    dependent destruction H.
+    dependent destruction H0.
+    apply extensionality_refl.
+  - intros.
+    dependent destruction H.
+    dependent destruction H0.
+    apply extensionality_refl.
+  - intros.
+    dependent destruction H.
+    dependent destruction H0.
+    apply extensionality_refl.
+  - intros.
+    dependent destruction H.
+    dependent destruction H0.
+    assert (n1 = n0) by lia.
+    subst.
+    rewrite <- x.
+    apply extensionality_lift...
+  - intros.
+    dependent destruction H.
+    dependent destruction H1.
+    apply extensionality_call...
+  - intros.
+    dependent destruction H.
+    dependent destruction H1.
+    apply extensionality_mini...
+Qed.
 
 End Arithmetic.
 
