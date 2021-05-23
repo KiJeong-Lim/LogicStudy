@@ -380,7 +380,7 @@ Inductive arith : Set :=
 | plusA : arith
 | multA : arith
 | lessA : arith
-| liftA : arith -> arith
+| liftA : nat -> arith -> arith
 | callA : arith -> arith -> arith
 | miniA : arith -> arith
 .
@@ -421,7 +421,7 @@ Inductive evalArith : forall n : nat, arith -> Arity n w -> Prop :=
   forall e1 : arith,
   forall val1 : Arity n w,
   evalArith n e1 val1 ->
-  evalArith (m + n) (liftA e1) (lift m n val1)
+  evalArith (m + n) (liftA m e1) (lift m n val1)
 | callE :
   forall n : nat,
   forall e1 : arith,
