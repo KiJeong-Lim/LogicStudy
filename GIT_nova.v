@@ -456,6 +456,26 @@ Proof with eauto.
   - intros. dependent destruction H. dependent destruction H1. apply extensionality_mini...
 Qed.
 
+Definition is_char_on (n : nat) : Arity n w -> Arity n Prop -> Prop :=
+  fun val1 : Arity n w => fun P1 : Arity n Prop => universal n (liftArity2 n (fun x1 : w => fun p1 : Prop => if Nat.eq_dec x1 0 then p1 else ~ p1) val1 P1)
+.
+
+Lemma less_is_char_on_lt :
+  is_char_on 2 less (fun x : w => fun y : w => x < y).
+Proof with eauto.
+  unfold is_char_on. unfold liftArity2. simpl. unfold less. intros. destruct (Compare_dec.lt_dec m m0)...
+Qed.
+
+Definition isBoolean (n : nat) : Arity n w -> Prop :=
+  fun val1 : Arity n w => universal n (liftArity1 n (fun x1 : w => x1 = 0 \/ x1 = 1) val1)
+.
+
+Lemma less_isBoolean :
+  isBoolean 2 less.
+Proof with eauto.
+  unfold isBoolean. unfold liftArity1. simpl. unfold less. intros. destruct (Compare_dec.lt_dec m m0)...
+Qed.
+
 End Arithmetic.
 
 End Goedel's_Incompleteness_Theorem.
