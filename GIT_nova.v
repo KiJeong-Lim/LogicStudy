@@ -479,12 +479,29 @@ Qed.
 Fixpoint num (n : nat) : Arity 0 w :=
   match n with
   | 0 => mini 0 (proj 0) 0
-  | S n' => mini 0 (call 1 (lift 1 1 (call 1 less (lift 1 0 (num n')))) (proj 0)) (S n')
+  | S n' => mini 0 (call 1 (lift 1 1 (less (num n'))) (proj 0)) (S n')
   end
 .
 
-Fixpoint numA (n : nat) : Arith :=
-  match 
+Lemma num_n_is_n :
+  forall n : nat,
+  num n = n.
+Proof with eauto.
+  assert ( claim1 :
+    forall x : nat,
+    first_nat (fun y : w => (if Compare_dec.lt_dec x y then 0 else 1) =? 0) (S x) = S x
+  ).
+  { intros x.
+    set (p := fun y : w => (if Compare_dec.lt_dec x y then 0 else 1) =? 0).
+    assert (~ first_nat p (S x) < S x). { unfold p. simpl. fold p. destruct (Compare_dec.lt_dec x (first_nat p x)); simpl; lia... }
+    assert (p (S x) = true). { unfold p. destruct (Compare_dec.lt_dec x (S x)); [tauto | lia]. }
+    assert (first_nat p (S x) <= S x). { apply well_ordering_principle... }
+    lia.
+  }
+  induction n.
+  - simpl. reflexivity.
+  - simpl. rewrite IHn. apply claim1...
+Qed.
 
 End Arithmetic.
 
