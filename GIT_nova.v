@@ -10,8 +10,6 @@ Import ListNotations.
 
 Section Preliminaries.
 
-Import EqNotations.
-
 Lemma div_mod_uniqueness :
   forall a : nat,
   forall b : nat,
@@ -20,34 +18,30 @@ Lemma div_mod_uniqueness :
   a = b * q + r ->
   r < b ->
   a / b = q /\ a mod b = r.
-Proof.
+Proof with lia.
   assert (forall x : nat, forall y : nat, x > y <-> (exists z : nat, x = S (y + z))).
   { intros x y; constructor.
     - intros H; induction H.
-      + exists 0; lia.
-      + destruct IHle as [z H0]; exists (S z); lia.
-    - intros H; destruct H as [z H]; lia.
+      + exists 0...
+      + destruct IHle as [z H0]; exists (S z)...
+    - intros H; destruct H as [z H]...
   }
   intros a b q r H1 H2.
-  assert (H0 : a = b * (a / b) + (a mod b)) by (apply (Nat.div_mod a b); lia).
-  assert (H3 : 0 <= a mod b < b).
-  { apply (Nat.mod_bound_pos a b).
-    - lia.
-    - lia.
-  }
+  assert (H0 : a = b * (a / b) + (a mod b)). { apply (Nat.div_mod a b)... }
+  assert (H3 : 0 <= a mod b < b). { apply (Nat.mod_bound_pos a b)... }
   assert (H4 : ~ q > a / b).
   { intros H4.
-    assert (H5 : exists z : nat, q = S (a / b + z)) by (apply (H q (a / b)); lia).
+    assert (H5 : exists z : nat, q = S (a / b + z)). { apply (H q (a / b))... }
     destruct H5 as [z H5].
-    cut (b * q + r >= b * S (a / b) + r); lia.
+    cut (b * q + r >= b * S (a / b) + r)...
   }
   assert (H5 : ~ q < a / b).
   { intros H5.
-    assert (H6 : exists z : nat, a / b = S (q + z)) by (apply (H (a / b) q); lia).
+    assert (H6 : exists z : nat, a / b = S (q + z)). { apply (H (a / b) q)... }
     destruct H6 as [z H6].
-    cut (b * q + a mod b >= b * S (a / b) + a mod b); lia.
+    cut (b * q + a mod b >= b * S (a / b) + a mod b)...
   }
-  assert (H6 : q = a / b) by lia; assert (H7 : r = a mod b) by lia; lia.
+  cut (q = a / b)...
 Qed.
 
 Fixpoint first_nat (p : nat -> bool) (n : nat) : nat :=
@@ -160,18 +154,6 @@ Proof.
   intros n x y; constructor.
   - apply (cantor_pairing_is_injective n x y).
   - intros H; subst; rewrite (cantor_pairing_is_surjective x y); reflexivity.
-Qed.
-
-
-Definition existsT_snd_eq {A : Type} :
-  forall P : A -> Type,
-  forall x : A,
-  forall H1 : P x,
-  forall H2 : P x,
-  existT P x H1 = existT P x H2 ->
-  H1 = H2.
-Proof.
-  intros. dependent destruction H. reflexivity.
 Qed.
 
 End Preliminaries.
@@ -290,11 +272,8 @@ Lemma Arity_ite_is {A : Type} :
   forall val2 : Arity n A,
   universal n (apArity n (apArity n (apArity n (apArity n (pureArity n (fun r : Prop => fun x1 : A => fun x2 : A => fun x : A => (r -> x = x1) /\ (~ r -> x = x2))) R) val1) val2) (Arity_ite n R (liftArity1 n (fun r : Prop => ~ r) R) R_dec val1 val2)).
 Proof with eauto.
-  unfold liftArity1.
-  induction n.
-  - simpl.
-    intros.
-    destruct R_dec; firstorder.
+  unfold liftArity1. induction n.
+  - simpl. intros. destruct R_dec; firstorder.
   - simpl...
 Qed.
 
@@ -307,8 +286,7 @@ Lemma extensionality_refl {A : Type} :
   forall f : Arity n A,
   extensionality A n f f.
 Proof with eauto.
-  unfold extensionality.
-  induction n.
+  unfold extensionality. induction n.
   - reflexivity.
   - simpl...
 Qed.
@@ -320,8 +298,7 @@ Lemma extensionality_symm {A : Type} :
   extensionality A n f g ->
   extensionality A n g f.
 Proof with eauto.
-  unfold extensionality.
-  induction n.
+  unfold extensionality. induction n.
   - symmetry...
   - simpl...
 Qed.
@@ -335,10 +312,8 @@ Lemma extensionality_trans {A : Type} :
   extensionality A n g h ->
   extensionality A n f h.
 Proof with eauto.
-  unfold extensionality.
-  induction n.
-  - intros.
-    transitivity g...
+  unfold extensionality. induction n.
+  - intros. transitivity g...
   - simpl...
 Qed.
 
@@ -350,10 +325,8 @@ Lemma extensionality_lift1 {A : Type} {B : Type} :
   extensionality A n val1 val2 ->
   extensionality B n (liftArity1 n f val1) (liftArity1 n f val2).
 Proof with eauto.
-  unfold extensionality.
-  induction n.
-  - intros.
-    apply f_equal...
+  unfold extensionality. induction n.
+  - intros. apply f_equal...
   - simpl...
 Qed.
 
@@ -368,10 +341,8 @@ Lemma extensionality_lift2 {A : Type} {B : Type} {C : Type} :
   extensionality B n val3 val4 ->
   extensionality C n (liftArity2 n f val1 val3) (liftArity2 n f val2 val4).
 Proof with eauto.
-  unfold extensionality.
-  induction n.
-  - intros.
-    apply f_equal2...
+  unfold extensionality. induction n.
+  - intros. apply f_equal2...
   - simpl...
 Qed.
 
@@ -404,11 +375,7 @@ Lemma extensionality_lift {A : Type} (m : nat) :
   extensionality A n f g ->
   extensionality A (m + n) (assocArity A m n (pureArity m f)) (assocArity A m n (pureArity m g)).
 Proof with eauto.
-  unfold extensionality.
-  unfold liftArity2.
-  induction m.
-  - simpl...
-  - simpl...
+  unfold extensionality. unfold liftArity2. induction m; simpl...
 Qed.
 
 Definition call (n : nat) (val1 : Arity (S n) w) (val2 : Arity n w) : Arity n w :=
@@ -425,17 +392,9 @@ Lemma extensionality_call {A : Type} :
   extensionality w n g1 g2 ->
   extensionality A n (apArity n (shiftArity_left n f1) g1) (apArity n (shiftArity_left n f2) g2).
 Proof with eauto.
-  unfold extensionality.
-  unfold liftArity2.
-  induction n.
-  - simpl.
-    intros.
-    rewrite H0.
-    rewrite H...
-  - simpl.
-    intros.
-    apply (IHn (f1 m) (f2 m) (g1 m) (g2 m))...
-    simpl...
+  unfold extensionality. unfold liftArity2. induction n.
+  - simpl. intros. rewrite H0. rewrite H...
+  - simpl. intros. apply (IHn (f1 m) (f2 m) (g1 m) (g2 m))... simpl...
 Qed.
 
 Definition mini (n : nat) (val1 : Arity (S n) w) (witness : Arity n w) : Arity n w :=
@@ -453,32 +412,12 @@ Lemma extensionality_mini :
   universal n (liftArity1 n (fun x : w => x = 0) (call n val2 witness2)) ->
   extensionality w n (mini n val1 witness1) (mini n val2 witness2).
 Proof with eauto.
-  unfold extensionality.
-  unfold liftArity2.
-  induction n.
-  - unfold call.
-    unfold mini.
-    unfold liftArity2.
-    unfold liftArity1.
-    simpl.
-    intros val1 val2 H.
-    assert (forall x : w, first_nat (fun y : w => val1 y =? 0) x = first_nat (fun y : w => val2 y =? 0) x).
-    { induction x...
-      simpl.
-      rewrite H.
-      rewrite IHx...
-    }
-    intros.
-    rewrite H0.
-    set (p := fun x : w => val2 x =? 0).
-    assert (first_nat p witness1 <= first_nat p witness2).
-    { apply well_ordering_principle. unfold p. rewrite <- H...
-      apply well_ordering_principle. unfold p...
-    }
-    assert (first_nat p witness2 <= first_nat p witness1).
-    { apply well_ordering_principle. unfold p...
-      apply well_ordering_principle. unfold p. rewrite <- H. rewrite H1. reflexivity.
-    }
+  unfold extensionality. unfold liftArity2. induction n.
+  - unfold call. unfold mini. unfold liftArity2. unfold liftArity1. simpl. intros val1 val2 H.
+    assert (forall x : w, first_nat (fun y : w => val1 y =? 0) x = first_nat (fun y : w => val2 y =? 0) x). { induction x... simpl. rewrite H. rewrite IHx... }
+    intros. rewrite H0. set (p := fun x : w => val2 x =? 0).
+    assert (first_nat p witness1 <= first_nat p witness2). { apply well_ordering_principle. unfold p. rewrite <- H... apply well_ordering_principle. unfold p... }
+    assert (first_nat p witness2 <= first_nat p witness1). { apply well_ordering_principle. unfold p... apply well_ordering_principle. unfold p. rewrite <- H. rewrite H1. reflexivity. }
     lia.
   - unfold mini. simpl. intros. apply (IHn (val1 m) (val2 m) (H m) (witness1 m) (witness2 m))...
 Qed.
@@ -529,37 +468,13 @@ Lemma evalArith_unique :
   extensionality w ary f g.
 Proof with eauto.
   induction e.
-  - intros.
-    dependent destruction H.
-    dependent destruction H0.
-    apply extensionality_refl.
-  - intros.
-    dependent destruction H.
-    dependent destruction H0.
-    apply extensionality_refl.
-  - intros.
-    dependent destruction H.
-    dependent destruction H0.
-    apply extensionality_refl.
-  - intros.
-    dependent destruction H.
-    dependent destruction H0.
-    apply extensionality_refl.
-  - intros.
-    dependent destruction H.
-    dependent destruction H0.
-    assert (n1 = n0) by lia.
-    subst.
-    rewrite <- x.
-    apply extensionality_lift...
-  - intros.
-    dependent destruction H.
-    dependent destruction H1.
-    apply extensionality_call...
-  - intros.
-    dependent destruction H.
-    dependent destruction H1.
-    apply extensionality_mini...
+  - intros. dependent destruction H. dependent destruction H0. apply extensionality_refl.
+  - intros. dependent destruction H. dependent destruction H0. apply extensionality_refl.
+  - intros. dependent destruction H. dependent destruction H0. apply extensionality_refl.
+  - intros. dependent destruction H. dependent destruction H0. apply extensionality_refl.
+  - intros. dependent destruction H. dependent destruction H0. assert (n1 = n0) by lia. subst. rewrite <- x. apply extensionality_lift...
+  - intros. dependent destruction H. dependent destruction H1. apply extensionality_call...
+  - intros. dependent destruction H. dependent destruction H1. apply extensionality_mini...
 Qed.
 
 End Arithmetic.
