@@ -173,12 +173,8 @@ Fixpoint Arity (n : nat) (A : Type) : Type :=
 
 Fixpoint universal (n : nat) : Arity n Prop -> Prop :=
   match n with
-  | 0 =>
-    fun P : Prop =>
-    P
-  | S n' =>
-    fun P : w -> Arity n' Prop =>
-    forall m : nat, universal n' (P m)
+  | 0 => fun P : Prop => P
+  | S n' => fun P : w -> Arity n' Prop => forall m : nat, universal n' (P m)
   end
 .
 
@@ -206,39 +202,22 @@ Definition liftArity2 {A : Type} {B : Type} {C : Type} (n : nat) : (A -> B -> C)
 
 Fixpoint assocArity (A : Type) (n : nat) : forall i : nat, Arity n (Arity i A) -> Arity (n + i) A :=
   match n with
-  | 0 =>
-    fun i : nat =>
-    fun val : Arity i A =>
-    val
-  | S n' =>
-    fun i : nat =>
-    fun val : w -> Arity n' (Arity i A) =>
-    fun m : w =>
-    assocArity A n' i (val m)
+  | 0 => fun i : nat => fun val : Arity i A => val
+  | S n' => fun i : nat => fun val : w -> Arity n' (Arity i A) => fun m : w => assocArity A n' i (val m)
   end
 .
 
 Fixpoint shiftArity_left {A : Type} (n : nat) : Arity (S n) A -> Arity n (w -> A) :=
   match n with
-  | 0 =>
-    fun val : w -> A =>
-    val
-  | S n' =>
-    fun val : w -> Arity (S n') A =>
-    fun m : w =>
-    shiftArity_left n' (val m)
+  | 0 => fun val : w -> A => val
+  | S n' => fun val : w -> Arity (S n') A => fun m : w => shiftArity_left n' (val m)
   end
 .
 
 Fixpoint shiftArity_right {A : Type} (n : nat) : Arity n (w -> A) -> Arity (S n) A :=
   match n with
-  | 0 =>
-    fun val : w -> A =>
-    val
-  | S n' =>
-    fun val : w -> Arity n' (w -> A) =>
-    fun m : w =>
-    shiftArity_right n' (val m)
+  | 0 => fun val : w -> A => val
+  | S n' => fun val : w -> Arity n' (w -> A) => fun m : w => shiftArity_right n' (val m)
   end
 .
 
