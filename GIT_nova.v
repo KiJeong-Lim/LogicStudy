@@ -476,6 +476,16 @@ Proof with eauto.
   unfold isBoolean. unfold liftArity1. simpl. unfold less. intros. destruct (Compare_dec.lt_dec m m0)...
 Qed.
 
+Fixpoint num (n : nat) : Arity 0 w :=
+  match n with
+  | 0 => mini 0 (proj 0) 0
+  | S n' => mini 0 (call 1 (lift 1 1 (call 1 less (lift 1 0 (num n')))) (proj 0)) (S n')
+  end
+.
+
+Fixpoint numA (n : nat) : Arith :=
+  match 
+
 End Arithmetic.
 
 End Goedel's_Incompleteness_Theorem.
