@@ -391,6 +391,12 @@ Proof.
   reflexivity.
 Qed.
 
+Example compose_example2 (f : w -> w -> w -> w) (g1 : w -> w -> w) (g2 : w -> w -> w) (g3 : w -> w -> w) :
+  call 2 (call 3 (call 4 (lift 2 3 f) (call 4 (call 5 (lift 4 2 g3) (lift 1 4 (proj 3))) (lift 0 4 (proj 3)))) (call 3 (call 4 (lift 3 2 g2) (lift 1 3 (proj 2))) (lift 0 3 (proj 2)))) g1 = (fun x0 : w => fun x1 : w => f (g1 x0 x1) (g2 x0 x1) (g3 x0 x1)).
+Proof.
+  reflexivity.
+Qed.
+
 Lemma extensionality_call {A : Type} :
   forall n : nat,
   forall f1 : Arity (S n) A,
