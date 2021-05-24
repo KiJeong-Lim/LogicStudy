@@ -503,7 +503,7 @@ Qed.
 Fixpoint num (n : nat) : Arity 0 w :=
   match n with
   | 0 => mini 0 (proj 0) 0
-  | S n' => mini 0 (call 1 (lift 1 1 (less (num n'))) (proj 0)) (S n')
+  | S n' => mini 0 (call 1 (call 2 (call 3 (lift 2 2 less) (proj 2)) (lift 2 0 (num n'))) (proj 0)) (S n')
   end
 .
 
