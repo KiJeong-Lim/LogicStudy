@@ -480,6 +480,21 @@ Proof with eauto.
   - intros. dependent destruction H. dependent destruction H1. apply extensionality_mini...
 Qed.
 
+Ltac autoE_loop :=
+  simpl; (
+    match goal with
+    | |- evalArith _ _ (proj ?x) => apply (projE x)
+    | |- evalArith _ _ plus => apply plusE
+    | |- evalArith _ _ mult => apply multE
+    | |- evalArith _ _ less => apply lessE
+    | |- evalArith _ _ (lift ?x ?y _) => apply (liftE x y); autoE_loop
+    | |- evalArith _ _ (call ?x _ _) => apply (callE x); autoE_loop
+    | |- evalArith _ _ (mini ?x _ _) => apply (miniE x); [autoE_loop | ]
+    | |- _ => eauto
+    end
+  )
+.
+
 Definition is_char_on (n : nat) : Arity n w -> Arity n Prop -> Prop :=
   fun val1 : Arity n w => fun P1 : Arity n Prop => universal n (liftArity2 n (fun x1 : w => fun p1 : Prop => if Nat.eq_dec x1 0 then p1 else ~ p1) val1 P1)
 .
@@ -522,9 +537,23 @@ Proof with eauto.
     assert (first_nat p (S x) <= S x). { apply well_ordering_principle... }
     lia.
   }
+  induction n... simpl. rewrite IHn. apply claim1.
+Qed.
+
+Fixpoint numA (n : nat) : arith :=
+  match n with
+  | 0 => miniA (projA 0)
+  | S n' => miniA (callA (callA (callA (liftA 2 lessA) (projA 2)) (liftA 2 (numA n'))) (projA 0))
+  end
+.
+
+Lemma numE :
+  forall n : nat,
+  evalArith 0 (numA n) (num n).
+Proof with eauto.
   induction n.
-  - simpl. reflexivity.
-  - simpl. rewrite IHn. apply claim1...
+  - autoE_loop. reflexivity.
+  - autoE_loop. rewrite num_n_is_n. unfold liftArity1. unfold call. unfold proj. unfold lift. unfold less. simpl. destruct (Compare_dec.lt_dec n (S n)); lia.
 Qed.
 
 End Arithmetic.
