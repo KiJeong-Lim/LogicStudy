@@ -347,6 +347,12 @@ Definition lift (m : nat) (n : nat) (val1 : Arity n w) : Arity (m + n) w :=
   assocArity w m n (pureArity m val1)
 .
 
+Example lift_example1 (f : w -> w -> w -> w) :
+  lift 2 3 f = (fun x1 : w => fun x2 : w => fun x3 : w => fun x4 : w => fun x5 : w => f x3 x4 x5).
+Proof.
+  reflexivity.
+Qed.
+
 Lemma extensionality_lift {A : Type} (m : nat) :
   forall n : nat,
   forall f : Arity n A,
@@ -360,6 +366,24 @@ Qed.
 Definition call (n : nat) (val1 : Arity (S n) w) (val2 : Arity n w) : Arity n w :=
   apArity n (shiftArity_left n val1) val2
 .
+
+Example call_example1 (f : w -> w -> w -> w) (g : w -> w -> w) :
+  call 2 f g = (fun x1 : w => fun x2 : w => f x1 x2 (g x1 x2)).
+Proof.
+  reflexivity.
+Qed.
+
+Example call_example2 (f : w -> w -> w -> w) (g : w -> w -> w) (h : w -> w) :
+  call 1 (call 2 f g) h = (fun x1 => f x1 (h x1) (g x1 (h x1))).
+Proof.
+  reflexivity.
+Qed.
+
+Example call_example3 (f : w -> w -> w -> w) (g : w -> w -> w -> w) (h : w -> w -> w) :
+  call 2 f (call 2 g h) = (fun x1 : w => fun x2 : w => f x1 x2 (g x1 x2 (h x1 x2))).
+Proof.
+  reflexivity.
+Qed.
 
 Lemma extensionality_call {A : Type} :
   forall n : nat,
