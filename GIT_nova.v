@@ -299,15 +299,41 @@ Proof.
 Qed.
 
 Example composition_example1 (f : w -> w -> w -> w -> w) (g1 : w -> w -> w) (g2 : w -> w -> w) (g3 : w -> w -> w) (g4 : w -> w -> w) :
-  load 2 0 (load 2 1 (load 2 2 (load 2 3 (call 2 4 f) g1) g2) g3) g4 = (fun x0 : w => fun x1 : w => f (g1 x0 x1) (g2 x0 x1) (g3 x0 x1) (g4 x0 x1)).
+  (fun x0 : w => fun x1 : w => f (g1 x0 x1) (g2 x0 x1) (g3 x0 x1) (g4 x0 x1)) = load 2 0 (load 2 1 (load 2 2 (load 2 3 (call 2 4 f) g1) g2) g3) g4.
 Proof.
   reflexivity.
 Qed.
 
 Example composition_example2 (f : w -> w -> w) (g1 : w -> w -> w -> w) (g2 : w -> w -> w -> w) :
-  load 3 0 (load 3 1 (call 3 2 f) g1) g2 = (fun x0 : w => fun x1 : w => fun x2 : w => f (g1 x0 x1 x2) (g2 x0 x1 x2)).
+  (fun x0 : w => fun x1 : w => fun x2 : w => f (g1 x0 x1 x2) (g2 x0 x1 x2)) = load 3 0 (load 3 1 (call 3 2 f) g1) g2.
 Proof.
   reflexivity.
+Qed.
+
+Fixpoint shiftZeroRight (n : nat) : Arity n w -> Arity (n + 0) w :=
+  match n with
+  | 0 => fun f : w => f
+  | S n' => fun f : w -> Arity n' w => fun r : w => shiftZeroRight n' (f r)
+  end
+.
+
+Lemma composition_arity_1 (n : nat) :
+  forall f : w -> w,
+  forall g1 : Arity n w,
+  extensionality w (n + 0) (shiftZeroRight n (apArity n (pureArity n f) g1)) (load n 0 (call n 1 f) g1).
+Proof with eauto.
+  unfold extensionality.
+  induction n; [easy | simpl]...
+Qed.
+
+Lemma composition_arity_2 (n : nat) :
+  forall f : w -> w -> w,
+  forall g1 : Arity n w,
+  forall g2 : Arity n w,
+  extensionality w (n + 0) (shiftZeroRight n (apArity n (apArity n (pureArity n f) g1) g2)) (load n 0 (load n 1 (call n 2 f) g1) g2).
+Proof with eauto.
+  unfold extensionality.
+  induction n; [easy | simpl]...
 Qed.
 
 End Arithmetic.
