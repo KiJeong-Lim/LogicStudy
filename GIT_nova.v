@@ -348,41 +348,55 @@ Definition less : Arity 2 w :=
 .
 
 Definition mini (n : nat) : Arity (S n) w -> Arity n w -> Arity n w :=
-  fun f : Arity (S n) w => fun witness : Arity n w => apArity n (apArity n (pureArity n (fun f' : w -> w => fun x' : w => first_nat (fun x : w => Nat.eqb (f' x) 0) x')) (shiftOnceLeft n f)) witness
+  fun val : Arity (S n) w => fun witness : Arity n w => apArity n (apArity n (pureArity n (fun f : w -> w => fun x : w => first_nat (fun r : w => Nat.eqb (f r) 0) x)) (shiftOnceLeft n val)) witness
 .
 
 Inductive IsArith : forall n : nat, Arity n w -> Prop :=
 | plusA :
-  IsArith 2 plus
+  forall f : Arity 2 w,
+  extensionality w 2 f plus ->
+  IsArith 2 f
 | multA :
-  IsArith 2 mult
+  forall f : Arity 2 w,
+  extensionality w 2 f mult ->
+  IsArith 2 f
 | lessA :
-  IsArith 2 less
+  forall f : Arity 2 w,
+  extensionality w 2 f less ->
+  IsArith 2 f
 | projA :
   forall m : nat,
   forall n : nat,
-  IsArith (m + S n) (proj m n)
+  forall f : Arity (m + S n) w,
+  extensionality w (m + S n) f (proj m n) ->
+  IsArith (m + S n) f
 | loadA :
   forall m : nat,
   forall n : nat,
-  forall f : Arity (m + S n) w,
-  forall g : Arity m w,
-  IsArith (m + S n) f ->
-  IsArith m g ->
-  IsArith (m + n) (load m n f g)
+  forall val1 : Arity (m + S n) w,
+  forall val2 : Arity m w,
+  forall f : Arity (m + n) w,
+  IsArith (m + S n) val1 ->
+  IsArith m val2 ->
+  extensionality w (m + n) f (load m n val1 val2) ->
+  IsArith (m + n) f
 | callA :
   forall m : nat,
   forall n : nat,
-  forall f : Arity n w,
-  IsArith n f ->
-  IsArith (m + n) (call m n f)
+  forall val1 : Arity n w,
+  forall f : Arity (m + n) w,
+  IsArith n val1 ->
+  extensionality w (m + n) f (call m n val1) ->
+  IsArith (m + n) f
 | miniA :
   forall n : nat,
-  forall f : Arity (S n) w,
+  forall val1 : Arity (S n) w,
   forall witness : Arity n w,
-  IsArith (S n) f ->
-  universal n (apArity n (apArity n (pureArity n (fun f' : w -> w => fun x' : w => f' x' = 0)) (shiftOnceLeft n f)) witness) ->
-  IsArith n (mini n f witness)
+  forall f : Arity n w,
+  IsArith (S n) val1 ->
+  universal n (apArity n (apArity n (pureArity n (fun f : w -> w => fun x : w => f x = 0)) (shiftOnceLeft n val1)) witness) ->
+  extensionality w n f (mini n val1 witness) ->
+  IsArith n f
 .
 
 End Arithmetic.
