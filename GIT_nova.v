@@ -1,7 +1,7 @@
 From Coq.Bool Require Export Bool.
 From Coq.micromega Require Export Lia.
 From Coq.Lists Require Export List.
-From Coq.Arith Require Export PeanoNat.
+From Coq.IsArith Require Export PeanoNat.
 From Coq.Program Require Export Equality.
 
 Module Goedel's_Incompleteness_Theorem.
@@ -317,6 +317,13 @@ Fixpoint shiftZeroRight (n : nat) : Arity n w -> Arity (n + 0) w :=
   end
 .
 
+Fixpoint shiftOnceLeft (n : nat) : Arity (S n) w -> Arity n (w -> w) :=
+  match n with
+  | 0 => fun f : w -> w => f
+  | S n' => fun f : w -> Arity (S n') w => fun r : w => shiftOnceLeft n' (f r)
+  end
+.
+
 Lemma composition_arity_1 (n : nat) :
   forall f : w -> w,
   forall g1 : Arity n w,
@@ -335,6 +342,48 @@ Proof with eauto.
   unfold extensionality.
   induction n; [easy | simpl]...
 Qed.
+
+Definition less : Arity 2 w :=
+  fun x : w => fun y : w => if Compare_dec.lt_dec x y then 0 else 1
+.
+
+Definition mini (n : nat) : Arity (S n) w -> Arity n w -> Arity n w :=
+  fun f : Arity (S n) w => fun witness : Arity n w => apArity n (apArity n (pureArity n (fun f' : w -> w => fun x' : w => first_nat (fun x : w => Nat.eqb (f' x) 0) x')) (shiftOnceLeft n f)) witness
+.
+
+Inductive IsArith : forall n : nat, Arity n w -> Prop :=
+| plusA :
+  IsArith 2 plus
+| multA :
+  IsArith 2 mult
+| lessA :
+  IsArith 2 less
+| projA :
+  forall m : nat,
+  forall n : nat,
+  IsArith (m + S n) (proj m n)
+| loadA :
+  forall m : nat,
+  forall n : nat,
+  forall f : Arity (m + S n) w,
+  forall g : Arity m w,
+  IsArith (m + S n) f ->
+  IsArith m g ->
+  IsArith (m + n) (load m n f g)
+| callA :
+  forall m : nat,
+  forall n : nat,
+  forall f : Arity n w,
+  IsArith n f ->
+  IsArith (m + n) (call m n f)
+| miniA :
+  forall n : nat,
+  forall f : Arity (S n) w,
+  forall witness : Arity n w,
+  IsArith (S n) f ->
+  universal n (apArity n (apArity n (pureArity n (fun f' : w -> w => fun x' : w => f' x' = 0)) (shiftOnceLeft n f)) witness) ->
+  IsArith n (mini n f witness)
+.
 
 End Arithmetic.
 
