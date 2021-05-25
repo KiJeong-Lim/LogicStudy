@@ -192,29 +192,6 @@ Fixpoint apArity {A : Type} {B : Type} (n : nat) : Arity n (A -> B) -> Arity n A
   end
 .
 
-Definition callArity1 {A : Type} {B : Type} (n : nat) : (A -> B) -> Arity n A -> Arity n B :=
-  fun f : A -> B => fun val1 : Arity n A => apArity n (pureArity n f) val1
-.
-
-Definition callArity2 {A : Type} {B : Type} {C : Type} (n : nat) : (A -> B -> C) -> Arity n A -> Arity n B -> Arity n C :=
-  fun f : A -> B -> C => fun val1 : Arity n A => fun val2 : Arity n B => apArity n (apArity n (pureArity n f) val1) val2
-.
-
-Fixpoint assocArity (A : Type) (n : nat) : forall i : nat, Arity n (Arity i A) -> Arity (n + i) A :=
-  match n with
-  | 0 => fun i : nat => fun val : Arity i A => val
-  | S n' => fun i : nat => fun val : w -> Arity n' (Arity i A) => fun m : w => assocArity A n' i (val m)
-  end
-.
-
-Lemma pure_assoc_pure {A : Type} :
-  forall n : nat,
-  forall x : A,
-  pureArity (n + 0) x = assocArity A n 0 (pureArity n x).
-Proof with eauto.
-  induction n... simpl. intros x. rewrite IHn...
-Qed.
-
 Fixpoint Arity_dec (n : nat) : Arity n Prop -> Arity n Prop -> Set :=
   match n with
   | 0 => fun P : Prop => fun Q : Prop => {P} + {Q}
@@ -232,18 +209,18 @@ Fixpoint Arity_ite {A : Type} (n : nat) : forall P : Arity n Prop, forall Q : Ar
 Lemma Arity_ite_is {A : Type} :
   forall n : nat,
   forall R : Arity n Prop,
-  forall R_dec : Arity_dec n R (callArity1 n (fun r : Prop => ~ r) R),
+  forall R_dec : Arity_dec n R (apArity n (pureArity n (fun r : Prop => ~ r)) R),
   forall val1 : Arity n A,
   forall val2 : Arity n A,
-  universal n (apArity n (apArity n (apArity n (apArity n (pureArity n (fun r : Prop => fun x1 : A => fun x2 : A => fun x : A => (r -> x = x1) /\ (~ r -> x = x2))) R) val1) val2) (Arity_ite n R (callArity1 n (fun r : Prop => ~ r) R) R_dec val1 val2)).
+  universal n (apArity n (apArity n (apArity n (apArity n (pureArity n (fun r : Prop => fun x1 : A => fun x2 : A => fun x : A => (r -> x = x1) /\ (~ r -> x = x2))) R) val1) val2) (Arity_ite n R (apArity n (pureArity n (fun r : Prop => ~ r)) R) R_dec val1 val2)).
 Proof with eauto.
-  unfold callArity1. induction n.
+  induction n.
   - simpl. intros. destruct R_dec; firstorder.
   - simpl...
 Qed.
 
 Definition extensionality (A : Type) (n : nat) : Arity n A -> Arity n A -> Prop :=
-  fun val1 : Arity n A => fun val2 : Arity n A => universal n (callArity2 n (fun x1 : A => fun x2 : A => x1 = x2) val1 val2)
+  fun val1 : Arity n A => fun val2 : Arity n A => universal n (apArity n (apArity n (pureArity n (fun x1 : A => fun x2 : A => x1 = x2)) val1) val2)
 .
 
 Lemma extensionality_refl {A : Type} :
@@ -321,8 +298,14 @@ Proof.
   reflexivity.
 Qed.
 
-Example composition_example1 (f : w -> w -> w -> w) (g1 : w -> w -> w) (g2 : w -> w -> w) (g3 : w -> w -> w) :
-  load 2 0 (load 2 1 (load 2 2 (call 2 3 f) g1) g2) g3 = (fun x0 : w => fun x1 : w => f (g1 x0 x1) (g2 x0 x1) (g3 x0 x1)).
+Example composition_example1 (f : w -> w -> w -> w -> w) (g1 : w -> w -> w) (g2 : w -> w -> w) (g3 : w -> w -> w) (g4 : w -> w -> w) :
+  load 2 0 (load 2 1 (load 2 2 (load 2 3 (call 2 4 f) g1) g2) g3) g4 = (fun x0 : w => fun x1 : w => f (g1 x0 x1) (g2 x0 x1) (g3 x0 x1) (g4 x0 x1)).
+Proof.
+  reflexivity.
+Qed.
+
+Example composition_example2 (f : w -> w -> w) (g1 : w -> w -> w -> w) (g2 : w -> w -> w -> w) :
+  load 3 0 (load 3 1 (call 3 2 f) g1) g2 = (fun x0 : w => fun x1 : w => fun x2 : w => f (g1 x0 x1 x2) (g2 x0 x1 x2)).
 Proof.
   reflexivity.
 Qed.
