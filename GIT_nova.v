@@ -1,7 +1,7 @@
 From Coq.Bool Require Export Bool.
 From Coq.micromega Require Export Lia.
 From Coq.Lists Require Export List.
-From Coq.IsArith Require Export PeanoNat.
+From Coq.Arith Require Export PeanoNat.
 From Coq.Program Require Export Equality.
 
 Module Goedel's_Incompleteness_Theorem.
