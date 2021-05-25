@@ -192,11 +192,11 @@ Fixpoint apArity {A : Type} {B : Type} (n : nat) : Arity n (A -> B) -> Arity n A
   end
 .
 
-Definition liftArity1 {A : Type} {B : Type} (n : nat) : (A -> B) -> Arity n A -> Arity n B :=
+Definition callArity1 {A : Type} {B : Type} (n : nat) : (A -> B) -> Arity n A -> Arity n B :=
   fun f : A -> B => fun val1 : Arity n A => apArity n (pureArity n f) val1
 .
 
-Definition liftArity2 {A : Type} {B : Type} {C : Type} (n : nat) : (A -> B -> C) -> Arity n A -> Arity n B -> Arity n C :=
+Definition callArity2 {A : Type} {B : Type} {C : Type} (n : nat) : (A -> B -> C) -> Arity n A -> Arity n B -> Arity n C :=
   fun f : A -> B -> C => fun val1 : Arity n A => fun val2 : Arity n B => apArity n (apArity n (pureArity n f) val1) val2
 .
 
@@ -246,18 +246,18 @@ Fixpoint Arity_ite {A : Type} (n : nat) : forall P : Arity n Prop, forall Q : Ar
 Lemma Arity_ite_is {A : Type} :
   forall n : nat,
   forall R : Arity n Prop,
-  forall R_dec : Arity_dec n R (liftArity1 n (fun r : Prop => ~ r) R),
+  forall R_dec : Arity_dec n R (callArity1 n (fun r : Prop => ~ r) R),
   forall val1 : Arity n A,
   forall val2 : Arity n A,
-  universal n (apArity n (apArity n (apArity n (apArity n (pureArity n (fun r : Prop => fun x1 : A => fun x2 : A => fun x : A => (r -> x = x1) /\ (~ r -> x = x2))) R) val1) val2) (Arity_ite n R (liftArity1 n (fun r : Prop => ~ r) R) R_dec val1 val2)).
+  universal n (apArity n (apArity n (apArity n (apArity n (pureArity n (fun r : Prop => fun x1 : A => fun x2 : A => fun x : A => (r -> x = x1) /\ (~ r -> x = x2))) R) val1) val2) (Arity_ite n R (callArity1 n (fun r : Prop => ~ r) R) R_dec val1 val2)).
 Proof with eauto.
-  unfold liftArity1. induction n.
+  unfold callArity1. induction n.
   - simpl. intros. destruct R_dec; firstorder.
   - simpl...
 Qed.
 
 Definition extensionality (A : Type) (n : nat) : Arity n A -> Arity n A -> Prop :=
-  fun val1 : Arity n A => fun val2 : Arity n A => universal n (liftArity2 n (fun x1 : A => fun x2 : A => x1 = x2) val1 val2)
+  fun val1 : Arity n A => fun val2 : Arity n A => universal n (callArity2 n (fun x1 : A => fun x2 : A => x1 = x2) val1 val2)
 .
 
 Lemma extensionality_refl {A : Type} :
@@ -296,20 +296,20 @@ Proof with eauto.
   - simpl...
 Qed.
 
-Lemma extensionality_lift1 {A : Type} {B : Type} :
+Lemma extensionality_call1 {A : Type} {B : Type} :
   forall n : nat,
   forall f : A -> B,
   forall val1 : Arity n A,
   forall val2 : Arity n A,
   extensionality A n val1 val2 ->
-  extensionality B n (liftArity1 n f val1) (liftArity1 n f val2).
+  extensionality B n (callArity1 n f val1) (callArity1 n f val2).
 Proof with eauto.
   unfold extensionality. induction n.
   - intros. apply f_equal...
   - simpl...
 Qed.
 
-Lemma extensionality_lift2 {A : Type} {B : Type} {C : Type} :
+Lemma extensionality_call2 {A : Type} {B : Type} {C : Type} :
   forall n : nat,
   forall f : A -> B -> C,
   forall val1 : Arity n A,
@@ -318,7 +318,7 @@ Lemma extensionality_lift2 {A : Type} {B : Type} {C : Type} :
   forall val4 : Arity n B,
   extensionality A n val1 val2 ->
   extensionality B n val3 val4 ->
-  extensionality C n (liftArity2 n f val1 val3) (liftArity2 n f val2 val4).
+  extensionality C n (callArity2 n f val1 val3) (callArity2 n f val2 val4).
 Proof with eauto.
   unfold extensionality. induction n.
   - intros. apply f_equal2...
@@ -330,8 +330,8 @@ Inductive arith : Set :=
 | plusA : arith
 | multA : arith
 | lessA : arith
-| liftA : nat -> arith -> arith
-| callA : arith -> arith -> arith
+| callA : nat -> arith -> arith
+| loadA : arith -> arith -> arith
 | miniA : arith -> arith
 .
 
@@ -343,67 +343,67 @@ Definition less (x : w) (y : w) : w :=
   if Compare_dec.lt_dec x y then 0 else 1
 .
 
-Definition lift (m : nat) (n : nat) (val1 : Arity n w) : Arity (m + n) w :=
+Definition call (m : nat) (n : nat) (val1 : Arity n w) : Arity (m + n) w :=
   assocArity w m n (pureArity m val1)
 .
 
-Example lift_example1 (f : w -> w -> w -> w) :
-  lift 2 3 f = (fun x1 : w => fun x2 : w => fun x3 : w => fun x4 : w => fun x5 : w => f x3 x4 x5).
+Example call_example1 (f : w -> w -> w -> w) :
+  call 2 3 f = (fun x1 : w => fun x2 : w => fun x3 : w => fun x4 : w => fun x5 : w => f x3 x4 x5).
 Proof.
   reflexivity.
 Qed.
 
-Lemma extensionality_lift {A : Type} (m : nat) :
+Lemma extensionality_call {A : Type} (m : nat) :
   forall n : nat,
   forall f : Arity n A,
   forall g : Arity n A,
   extensionality A n f g ->
   extensionality A (m + n) (assocArity A m n (pureArity m f)) (assocArity A m n (pureArity m g)).
 Proof with eauto.
-  unfold extensionality. unfold liftArity2. induction m; simpl...
+  unfold extensionality. unfold callArity2. induction m; simpl...
 Qed.
 
-Definition call (n : nat) (val1 : Arity (S n) w) (val2 : Arity n w) : Arity n w :=
+Definition load (n : nat) (val1 : Arity (S n) w) (val2 : Arity n w) : Arity n w :=
   apArity n (shiftArity_left n val1) val2
 .
 
-Example call_example1 (f : w -> w -> w -> w) (g : w -> w -> w) :
-  call 2 f g = (fun x1 : w => fun x2 : w => f x1 x2 (g x1 x2)).
+Example load_example1 (f : w -> w -> w -> w) (g : w -> w -> w) :
+  load 2 f g = (fun x1 : w => fun x2 : w => f x1 x2 (g x1 x2)).
 Proof.
   reflexivity.
 Qed.
 
-Example call_example2 (f : w -> w -> w -> w) (g : w -> w -> w) (h : w -> w) :
-  call 1 (call 2 f g) h = (fun x1 => f x1 (h x1) (g x1 (h x1))).
+Example load_example2 (f : w -> w -> w -> w) (g : w -> w -> w) (h : w -> w) :
+  load 1 (load 2 f g) h = (fun x1 => f x1 (h x1) (g x1 (h x1))).
 Proof.
   reflexivity.
 Qed.
 
-Example call_example3 (f : w -> w -> w -> w) (g : w -> w -> w -> w) (h : w -> w -> w) :
-  call 2 f (call 2 g h) = (fun x1 : w => fun x2 : w => f x1 x2 (g x1 x2 (h x1 x2))).
+Example load_example3 (f : w -> w -> w -> w) (g : w -> w -> w -> w) (h : w -> w -> w) :
+  load 2 f (load 2 g h) = (fun x1 : w => fun x2 : w => f x1 x2 (g x1 x2 (h x1 x2))).
 Proof.
   reflexivity.
 Qed.
 
-Example compose_example1 (f : w -> w -> w) (g1 : w -> w -> w) (g2 : w -> w -> w) :
-  call 2 (call 3 (lift 2 2 f) (call 3 (call 4 (lift 3 2 g2) (lift 1 3 (proj 2))) (lift 0 3 (proj 2)))) g1 = (fun x0 : w => fun x1 : w => f (g1 x0 x1) (g2 x0 x1)).
+Example composition_example1 (f : w -> w -> w) (g1 : w -> w -> w) (g2 : w -> w -> w) :
+  load 2 (load 3 (call 2 2 f) (load 3 (load 4 (call 3 2 g2) (call 1 3 (proj 2))) (call 0 3 (proj 2)))) g1 = (fun x0 : w => fun x1 : w => f (g1 x0 x1) (g2 x0 x1)).
 Proof.
   reflexivity.
 Qed.
 
-Example compose_example2 (f : w -> w -> w -> w) (g1 : w -> w -> w) (g2 : w -> w -> w) (g3 : w -> w -> w) :
-  call 2 (call 3 (call 4 (lift 2 3 f) (call 4 (call 5 (lift 4 2 g3) (lift 1 4 (proj 3))) (lift 0 4 (proj 3)))) (call 3 (call 4 (lift 3 2 g2) (lift 1 3 (proj 2))) (lift 0 3 (proj 2)))) g1 = (fun x0 : w => fun x1 : w => f (g1 x0 x1) (g2 x0 x1) (g3 x0 x1)).
+Example composition_example2 (f : w -> w -> w -> w) (g1 : w -> w -> w) (g2 : w -> w -> w) (g3 : w -> w -> w) :
+  load 2 (load 3 (load 4 (call 2 3 f) (load 4 (load 5 (call 4 2 g3) (call 1 4 (proj 3))) (call 0 4 (proj 3)))) (load 3 (load 4 (call 3 2 g2) (call 1 3 (proj 2))) (call 0 3 (proj 2)))) g1 = (fun x0 : w => fun x1 : w => f (g1 x0 x1) (g2 x0 x1) (g3 x0 x1)).
 Proof.
   reflexivity.
 Qed.
 
-Example compose_example3 (f : w -> w -> w) (g1 : w -> w -> w -> w) (g2 : w -> w -> w -> w) :
-  call 3 (call 4 (lift 3 2 f) (call 4 (call 5 (call 6 (lift 4 3 g2) (lift 2 4 (proj 3))) (lift 1 4 (proj 3))) (lift 0 4 (proj 3)))) g1 = (fun x0 : w => fun x1 : w => fun x2 : w => f (g1 x0 x1 x2) (g2 x0 x1 x2)).
+Example composition_example3 (f : w -> w -> w) (g1 : w -> w -> w -> w) (g2 : w -> w -> w -> w) :
+  load 3 (load 4 (call 3 2 f) (load 4 (load 5 (load 6 (call 4 3 g2) (call 2 4 (proj 3))) (call 1 4 (proj 3))) (call 0 4 (proj 3)))) g1 = (fun x0 : w => fun x1 : w => fun x2 : w => f (g1 x0 x1 x2) (g2 x0 x1 x2)).
 Proof.
   reflexivity.
 Qed.
 
-Lemma extensionality_call {A : Type} :
+Lemma extensionality_load {A : Type} :
   forall n : nat,
   forall f1 : Arity (S n) A,
   forall f2 : Arity (S n) A,
@@ -413,13 +413,13 @@ Lemma extensionality_call {A : Type} :
   extensionality w n g1 g2 ->
   extensionality A n (apArity n (shiftArity_left n f1) g1) (apArity n (shiftArity_left n f2) g2).
 Proof with eauto.
-  unfold extensionality. unfold liftArity2. induction n.
+  unfold extensionality. unfold callArity2. induction n.
   - simpl. intros. rewrite H0. rewrite H...
   - simpl. intros. apply (IHn (f1 m) (f2 m) (g1 m) (g2 m))... simpl...
 Qed.
 
 Definition mini (n : nat) (val1 : Arity (S n) w) (witness : Arity n w) : Arity n w :=
-  liftArity2 n first_nat (liftArity1 n (fun f : w -> w => fun x : w => Nat.eqb (f x) 0) (shiftArity_left n val1)) witness
+  callArity2 n first_nat (callArity1 n (fun f : w -> w => fun x : w => Nat.eqb (f x) 0) (shiftArity_left n val1)) witness
 .
 
 Lemma extensionality_mini :
@@ -429,12 +429,12 @@ Lemma extensionality_mini :
   extensionality w (S n) val1 val2 ->
   forall witness1 : Arity n w,
   forall witness2 : Arity n w,
-  universal n (liftArity1 n (fun x : w => x = 0) (call n val1 witness1)) ->
-  universal n (liftArity1 n (fun x : w => x = 0) (call n val2 witness2)) ->
+  universal n (callArity1 n (fun x : w => x = 0) (load n val1 witness1)) ->
+  universal n (callArity1 n (fun x : w => x = 0) (load n val2 witness2)) ->
   extensionality w n (mini n val1 witness1) (mini n val2 witness2).
 Proof with eauto.
-  unfold extensionality. unfold liftArity2. induction n.
-  - unfold call. unfold mini. unfold liftArity2. unfold liftArity1. simpl. intros val1 val2 H.
+  unfold extensionality. unfold callArity2. induction n.
+  - unfold load. unfold mini. unfold callArity2. unfold callArity1. simpl. intros val1 val2 H.
     assert (forall x : w, first_nat (fun y : w => val1 y =? 0) x = first_nat (fun y : w => val2 y =? 0) x). { induction x... simpl. rewrite H. rewrite IHx... }
     intros. rewrite H0. set (p := fun x : w => val2 x =? 0).
     assert (first_nat p witness1 <= first_nat p witness2). { apply well_ordering_principle. unfold p. rewrite <- H... apply well_ordering_principle. unfold p... }
@@ -453,14 +453,14 @@ Inductive evalArith : forall n : nat, arith -> Arity n w -> Prop :=
   evalArith 2 multA mult
 | lessE :
   evalArith 2 lessA less
-| liftE :
+| callE :
   forall m : nat,
   forall n : nat,
   forall e1 : arith,
   forall val1 : Arity n w,
   evalArith n e1 val1 ->
-  evalArith (m + n) (liftA m e1) (lift m n val1)
-| callE :
+  evalArith (m + n) (callA m e1) (call m n val1)
+| loadE :
   forall n : nat,
   forall e1 : arith,
   forall e2 : arith,
@@ -468,14 +468,14 @@ Inductive evalArith : forall n : nat, arith -> Arity n w -> Prop :=
   forall val2 : Arity n w,
   evalArith (S n) e1 val1 ->
   evalArith n e2 val2 ->
-  evalArith n (callA e1 e2) (call n val1 val2)
+  evalArith n (loadA e1 e2) (load n val1 val2)
 | miniE :
   forall n : nat,
   forall e1 : arith,
   forall val1 : Arity (S n) w,
   forall witness : Arity n w,
   evalArith (S n) e1 val1 ->
-  universal n (liftArity1 n (fun x : w => x = 0) (call n val1 witness)) ->
+  universal n (callArity1 n (fun x : w => x = 0) (load n val1 witness)) ->
   evalArith n (miniA e1) (mini n val1 witness) 
 .
 
@@ -493,8 +493,8 @@ Proof with eauto.
   - intros. dependent destruction H. dependent destruction H0. apply extensionality_refl.
   - intros. dependent destruction H. dependent destruction H0. apply extensionality_refl.
   - intros. dependent destruction H. dependent destruction H0. apply extensionality_refl.
-  - intros. dependent destruction H. dependent destruction H0. assert (n1 = n0) by lia. subst. rewrite <- x. apply extensionality_lift...
-  - intros. dependent destruction H. dependent destruction H1. apply extensionality_call...
+  - intros. dependent destruction H. dependent destruction H0. assert (n1 = n0) by lia. subst. rewrite <- x. apply extensionality_call...
+  - intros. dependent destruction H. dependent destruction H1. apply extensionality_load...
   - intros. dependent destruction H. dependent destruction H1. apply extensionality_mini...
 Qed.
 
@@ -505,8 +505,8 @@ Ltac autoE_loop :=
     | |- evalArith _ _ plus => apply plusE
     | |- evalArith _ _ mult => apply multE
     | |- evalArith _ _ less => apply lessE
-    | |- evalArith _ _ (lift ?x ?y _) => apply (liftE x y); autoE_loop
-    | |- evalArith _ _ (call ?x _ _) => apply (callE x); autoE_loop
+    | |- evalArith _ _ (call ?x ?y _) => apply (callE x y); autoE_loop
+    | |- evalArith _ _ (load ?x _ _) => apply (loadE x); autoE_loop
     | |- evalArith _ _ (mini ?x _ _) => apply (miniE x); [autoE_loop | ]
     | |- _ => eauto
     end
@@ -514,29 +514,29 @@ Ltac autoE_loop :=
 .
 
 Definition is_char_on (n : nat) : Arity n w -> Arity n Prop -> Prop :=
-  fun val1 : Arity n w => fun P1 : Arity n Prop => universal n (liftArity2 n (fun x1 : w => fun p1 : Prop => if Nat.eq_dec x1 0 then p1 else ~ p1) val1 P1)
+  fun val1 : Arity n w => fun P1 : Arity n Prop => universal n (callArity2 n (fun x1 : w => fun p1 : Prop => if Nat.eq_dec x1 0 then p1 else ~ p1) val1 P1)
 .
 
 Lemma less_is_char_on_lt :
   is_char_on 2 less (fun x : w => fun y : w => x < y).
 Proof with eauto.
-  unfold is_char_on. unfold liftArity2. simpl. unfold less. intros. destruct (Compare_dec.lt_dec m m0)...
+  unfold is_char_on. unfold callArity2. simpl. unfold less. intros. destruct (Compare_dec.lt_dec m m0)...
 Qed.
 
 Definition isBoolean (n : nat) : Arity n w -> Prop :=
-  fun val1 : Arity n w => universal n (liftArity1 n (fun x1 : w => x1 = 0 \/ x1 = 1) val1)
+  fun val1 : Arity n w => universal n (callArity1 n (fun x1 : w => x1 = 0 \/ x1 = 1) val1)
 .
 
 Lemma less_isBoolean :
   isBoolean 2 less.
 Proof with eauto.
-  unfold isBoolean. unfold liftArity1. simpl. unfold less. intros. destruct (Compare_dec.lt_dec m m0)...
+  unfold isBoolean. unfold callArity1. simpl. unfold less. intros. destruct (Compare_dec.lt_dec m m0)...
 Qed.
 
 Fixpoint num (n : nat) : Arity 0 w :=
   match n with
   | 0 => mini 0 (proj 0) 0
-  | S n' => mini 0 (call 1 (call 2 (call 3 (lift 2 2 less) (proj 2)) (lift 2 0 (num n'))) (proj 0)) (S n')
+  | S n' => mini 0 (load 1 (load 2 (load 3 (call 2 2 less) (proj 2)) (call 2 0 (num n'))) (proj 0)) (S n')
   end
 .
 
@@ -561,7 +561,7 @@ Qed.
 Fixpoint numA (n : nat) : arith :=
   match n with
   | 0 => miniA (projA 0)
-  | S n' => miniA (callA (callA (callA (liftA 2 lessA) (projA 2)) (liftA 2 (numA n'))) (projA 0))
+  | S n' => miniA (loadA (loadA (loadA (callA 2 lessA) (projA 2)) (callA 2 (numA n'))) (projA 0))
   end
 .
 
@@ -571,7 +571,7 @@ Lemma numE :
 Proof with eauto.
   induction n.
   - autoE_loop. reflexivity.
-  - autoE_loop. rewrite num_n_is_n. unfold liftArity1. unfold call. unfold proj. unfold lift. unfold less. simpl. destruct (Compare_dec.lt_dec n (S n)); lia.
+  - autoE_loop. rewrite num_n_is_n. unfold callArity1. unfold load. unfold proj. unfold call. unfold less. simpl. destruct (Compare_dec.lt_dec n (S n)); lia.
 Qed.
 
 End Arithmetic.
