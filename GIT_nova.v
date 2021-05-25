@@ -282,6 +282,51 @@ Proof with eauto.
   - simpl...
 Qed.
 
+Fixpoint proj (m : nat) : forall n : nat, Arity (m + S n) w :=
+  match m with
+  | 0 => fun n : nat => pureArity n
+  | S m' => fun n : nat => fun r : w => proj m' n
+  end
+.
+
+Example proj_example1 :
+  proj 2 1 = (fun x0 : w => fun x1 : w => fun x2 : w => fun x3 : w => x2).
+Proof.
+  reflexivity.
+Qed.
+
+Fixpoint call (m : nat) : forall n : nat, Arity n w -> Arity (m + n) w :=
+  match m with
+  | 0 => fun n : nat => fun f : Arity n w => f
+  | S m' => fun n : nat => fun f : Arity n w => fun r : w => call m' n f
+  end
+.
+
+Example call_example1 (f : w -> w -> w) :
+  call 1 2 f = (fun x0 : w => fun x1 : w => fun x2 : w => f x1 x2).
+Proof.
+  reflexivity.
+Qed.
+
+Fixpoint load (m : nat) : forall n : nat, Arity (m + S n) w -> Arity m w -> Arity (m + n) w :=
+  match m with
+  | 0 => fun n : nat => fun f : Arity (S n) w => fun g : w => f g
+  | S m' => fun n : nat => fun f : w -> Arity (m' + S n) w => fun g : w -> Arity m' w => fun r : w => load m' n (f r) (g r)
+  end
+.
+
+Example load_example1 (f : w -> w -> w -> w -> w -> w -> w) (g : w -> w -> w -> w) :
+  load 3 2 f g = (fun x0 : w => fun x1 : w => fun x2 : w => fun x3 : w => f x0 x1 x2 (g x0 x1 x2) x3).
+Proof.
+  reflexivity.
+Qed.
+
+Example composition_example1 (f : w -> w -> w -> w) (g1 : w -> w -> w) (g2 : w -> w -> w) (g3 : w -> w -> w) :
+  load 2 0 (load 2 1 (load 2 2 (call 2 3 f) g1) g2) g3 = (fun x0 : w => fun x1 : w => f (g1 x0 x1) (g2 x0 x1) (g3 x0 x1)).
+Proof.
+  reflexivity.
+Qed.
+
 End Arithmetic.
 
 End Goedel's_Incompleteness_Theorem.
