@@ -385,14 +385,20 @@ Proof.
   reflexivity.
 Qed.
 
-Example compose_example1 (f : w -> w -> w) (g : w -> w -> w) (h : w -> w -> w) :
-  call 2 (call 3 (lift 2 2 f) (call 3 (call 4 (lift 3 2 h) (lift 1 3 (proj 2))) (lift 0 3 (proj 2)))) g = (fun x0 : w => fun x1 : w => f (g x0 x1) (h x0 x1)).
+Example compose_example1 (f : w -> w -> w) (g1 : w -> w -> w) (g2 : w -> w -> w) :
+  call 2 (call 3 (lift 2 2 f) (call 3 (call 4 (lift 3 2 g2) (lift 1 3 (proj 2))) (lift 0 3 (proj 2)))) g1 = (fun x0 : w => fun x1 : w => f (g1 x0 x1) (g2 x0 x1)).
 Proof.
   reflexivity.
 Qed.
 
 Example compose_example2 (f : w -> w -> w -> w) (g1 : w -> w -> w) (g2 : w -> w -> w) (g3 : w -> w -> w) :
   call 2 (call 3 (call 4 (lift 2 3 f) (call 4 (call 5 (lift 4 2 g3) (lift 1 4 (proj 3))) (lift 0 4 (proj 3)))) (call 3 (call 4 (lift 3 2 g2) (lift 1 3 (proj 2))) (lift 0 3 (proj 2)))) g1 = (fun x0 : w => fun x1 : w => f (g1 x0 x1) (g2 x0 x1) (g3 x0 x1)).
+Proof.
+  reflexivity.
+Qed.
+
+Example compose_example3 (f : w -> w -> w) (g1 : w -> w -> w -> w) (g2 : w -> w -> w -> w) :
+  call 3 (call 4 (lift 3 2 f) (call 4 (call 5 (call 6 (lift 4 3 g2) (lift 2 4 (proj 3))) (lift 1 4 (proj 3))) (lift 0 4 (proj 3)))) g1 = (fun x0 : w => fun x1 : w => fun x2 : w => f (g1 x0 x1 x2) (g2 x0 x1 x2)).
 Proof.
   reflexivity.
 Qed.
