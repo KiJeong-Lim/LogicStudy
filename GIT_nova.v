@@ -80,7 +80,7 @@ Proof with eauto.
       rewrite H1...
   - induction x...
     simpl.
-    destruct (p (first_nat p x)) eqn:H0...
+    destruct (p (first_nat p x)) eqn: H0...
 Qed.
 
 Fixpoint sum_from_0_to (n : nat) : nat :=
@@ -313,10 +313,10 @@ Proof.
   reflexivity.
 Qed.
 
-Fixpoint shiftOnceLeft (n : nat) : Arity (n + 1) w -> Arity n (w -> w) :=
-  match n with
-  | 0 => fun f : w -> w => f
-  | S n' => fun f : w -> Arity (n' + 1) w => fun r : w => shiftOnceLeft n' (f r)
+Fixpoint unassocArity (m : nat) : forall n : nat, Arity (m + n) w -> Arity m (Arity n w) :=
+  match m with
+  | 0 => fun n : nat => fun f : Arity n w => f
+  | S m' => fun n : nat => fun f : w -> Arity (m' + n) w => fun r : w => unassocArity m' n (f r)
   end
 .
 
@@ -349,7 +349,7 @@ Definition less : Arity 2 w :=
 .
 
 Definition mini (n : nat) : Arity (n + 1) w -> Arity n w -> Arity n w :=
-  fun val : Arity (n + 1) w => fun witness : Arity n w => apArity n (apArity n (pureArity n (fun f : w -> w => fun x : w => first_nat (fun r : w => Nat.eqb (f r) 0) x)) (shiftOnceLeft n val)) witness
+  fun val : Arity (n + 1) w => fun witness : Arity n w => apArity n (apArity n (pureArity n (fun f : w -> w => fun x : w => first_nat (fun r : w => Nat.eqb (f r) 0) x)) (unassocArity n 1 val)) witness
 .
 
 Inductive IsArith : forall n : nat, Arity n w -> Prop :=
@@ -395,7 +395,7 @@ Inductive IsArith : forall n : nat, Arity n w -> Prop :=
   forall witness : Arity m w,
   forall f : Arity m w,
   IsArith (m + 1) val1 ->
-  universal m (apArity m (apArity m (pureArity m (fun f : w -> w => fun x : w => f x = 0)) (shiftOnceLeft m val1)) witness) ->
+  universal m (apArity m (apArity m (pureArity m (fun f : w -> w => fun x : w => f x = 0)) (unassocArity m 1 val1)) witness) ->
   extensionality w m f (mini m val1 witness) ->
   IsArith m f
 .
@@ -463,26 +463,21 @@ Proof with eauto.
   ).
   { assert (forall n : nat, forall p : nat -> bool, first_nat p n <= n).
     { induction n...
-      simpl.
-      intros p.
-      destruct (p (first_nat p n)) eqn: H0...
+      simpl. intros p. destruct (p (first_nat p n)) eqn: H0...
     }
     intros n.
     assert (first_nat (fun x : w => (if Compare_dec.lt_dec n x then 0 else 1) =? 0) (S n) <= S n) by apply H.
     set (p := (fun x : w => (if Compare_dec.lt_dec n x then 0 else 1) =? 0)).
     assert (p (first_nat p (S n)) = true).
     { apply well_ordering_principle...
-      unfold p.
-      destruct (Compare_dec.lt_dec n (S n))...
+      unfold p. destruct (Compare_dec.lt_dec n (S n))...
     }
-    unfold p in H1.
-    destruct (Compare_dec.lt_dec n (first_nat (fun x : w => (if Compare_dec.lt_dec n x then 0 else 1) =? 0) (S n))); [unfold p; lia | inversion H1].
+    unfold p in H1. destruct (Compare_dec.lt_dec n (first_nat (fun x : w => (if Compare_dec.lt_dec n x then 0 else 1) =? 0) (S n))); [unfold p; lia | inversion H1].
   }
   unfold extensionality.
   induction m; simpl...
   induction i; simpl; unfold mini; simpl...
-  rewrite IHi.
-  cut (first_nat (fun r : w => (if Compare_dec.lt_dec i r then 0 else 1) =? 0) (S i) = S i); unfold less...
+  rewrite IHi. cut (first_nat (fun r : w => (if Compare_dec.lt_dec i r then 0 else 1) =? 0) (S i) = S i); unfold less...
 Qed.
 
 Lemma numIsArith (i : nat) :
@@ -528,6 +523,45 @@ Lemma notIsArith :
 Proof with heehee.
   unfold not. auto_show_IsArith.
   apply numIsArith.
+Qed.
+
+Definition or : Arity 2 w :=
+  load 2 0 (call 2 1 not) (load 2 0 (call 2 1 not) (load 2 0 (load 2 1 (call 2 2 mult) (proj 0 1)) (proj 1 0)))
+.
+
+Lemma or_is (m : nat) :
+  forall val1 : Arity m w,
+  forall val2 : Arity m w,
+  forall P1 : Arity m Prop,
+  forall P2 : Arity m Prop,
+  isCharOn m (assocArity m 0 val1) P1 ->
+  isCharOn m (assocArity m 0 val2) P2 ->
+  isCharOn m (load m 0 (load m 1 (call m 2 or) val1) val2) (apArity m (apArity m (pureArity m (fun p1 : Prop => fun p2 : Prop => p1 \/ p2)) P1) P2).
+Proof with eauto.
+  induction m; simpl...
+  unfold or. unfold not. simpl.
+  unfold less. unfold mini. simpl.
+  intros. destruct (Nat.eq_dec val1 0); destruct (Nat.eq_dec val2 0).
+  - subst.
+    simpl; tauto.
+  - subst.
+    simpl; tauto.
+  - assert (H1 : val1 * val2 = 0) by lia. rewrite H1.
+    simpl; tauto.
+  - assert (H1 : val1 * val2 <> 0) by lia.
+    destruct (Compare_dec.lt_dec 0 (val1 * val2)); simpl; [tauto | lia].
+Qed.
+
+Lemma or_isBoolean :
+  isBoolean 2 or.
+Proof with eauto.
+  unfold isBoolean. simpl. intros. apply not_isBoolean.
+Qed.
+
+Lemma orIsArith :
+  IsArith 2 or.
+Proof with heehee.
+  unfold or. auto_show_IsArith; apply notIsArith.
 Qed.
 
 End Arithmetic.
