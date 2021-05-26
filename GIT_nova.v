@@ -64,7 +64,7 @@ Proof with eauto.
     simpl.
     destruct (p (first_nat p x)) eqn:H0...
   }
-  constructor...
+  split...
   intros i H4.
   enough (forall x : nat, first_nat p x <= x).
   enough (forall x : nat, p (first_nat p x) = true -> (forall y : nat, x < y -> first_nat p x = first_nat p y)).
@@ -114,21 +114,24 @@ Lemma cantor_pairing_is_surjective :
   forall x : nat,
   forall y : nat,
   (x, y) = cantor_pairing (sum_from_0_to (x + y) + y).
-Proof.
-  cut (forall z : nat, forall y : nat, forall x : nat, z = x + y -> (x, y) = cantor_pairing (sum_from_0_to z + y)); eauto.
-  intros z; induction z.
-  - intros y x H; assert (H0 : x = 0) by lia; assert (H1 : y = 0) by lia; subst; eauto.
-  - intros y; induction y.
+Proof with (lia || eauto).
+  cut (forall z : nat, forall y : nat, forall x : nat, z = x + y -> (x, y) = cantor_pairing (sum_from_0_to z + y))...
+  induction z.
+  - intros y x H.
+    assert (H0 : x = 0)...
+    assert (H1 : y = 0)...
+    subst...
+  - induction y.
     + intros x H.
-      assert (H0 : x = S z) by lia.
-      subst; simpl cantor_pairing; destruct (cantor_pairing (z + sum_from_0_to z + 0)) eqn: H0.
-      assert (H1 : (0, z) = cantor_pairing (sum_from_0_to z + z)) by (apply IHz; reflexivity).
-      rewrite Nat.add_0_r in H0; rewrite Nat.add_comm in H0; rewrite H0 in H1.
-      inversion H1; subst; reflexivity.
+      assert (H0 : x = S z)... subst. simpl.
+      destruct (cantor_pairing (z + sum_from_0_to z + 0)) eqn: H0.
+      assert (H1 : (0, z) = cantor_pairing (sum_from_0_to z + z))...
+      rewrite Nat.add_0_r in H0. rewrite Nat.add_comm in H0. rewrite H0 in H1.
+      inversion H1. subst...
     + intros x H.
-      assert (H0 : (S x, y) = cantor_pairing (sum_from_0_to (S z) + y)) by (apply (IHy (S x)); lia).
-      assert (H1 : z + sum_from_0_to z + S y = sum_from_0_to (S z) + y) by (simpl; lia).
-      simpl; rewrite H1; rewrite <- H0; eauto.
+      assert (H0 : (S x, y) = cantor_pairing (sum_from_0_to (S z) + y)). { apply (IHy (S x))... }
+      assert (H1 : z + sum_from_0_to z + S y = sum_from_0_to (S z) + y). { simpl... }
+      simpl. rewrite H1. rewrite <- H0...
 Qed.
 
 Lemma cantor_pairing_is_injective :
@@ -137,12 +140,20 @@ Lemma cantor_pairing_is_injective :
   forall y : nat,
   cantor_pairing n = (x, y) ->
   n = sum_from_0_to (x + y) + y.
-Proof.
-  intros n; induction n.
-  - simpl; intros x y H; inversion H; subst; reflexivity.
-  - simpl; intros x y H; destruct (cantor_pairing n) as [x' y'] eqn: H0; destruct x'.
-    + inversion H; subst; repeat (rewrite Nat.add_0_r); simpl; rewrite (IHn 0 y' eq_refl); rewrite Nat.add_0_l; lia.
-    + inversion H; subst; rewrite (IHn (S x) y' eq_refl); assert (H1 : forall x' : nat, S x' + y' = x' + S y') by lia; repeat (rewrite H1); lia.
+Proof with (lia || eauto).
+  induction n; simpl.
+  - intros x y H.
+    inversion H. subst...
+  - intros x y H.
+    destruct (cantor_pairing n) as [x' y'] eqn: H0.
+    destruct x'; (inversion H; subst).
+    + repeat (rewrite Nat.add_0_r).
+      simpl.
+      rewrite (IHn 0 y' eq_refl).
+      rewrite Nat.add_0_l...
+    + rewrite (IHn (S x) y' eq_refl).
+      assert (H1 : forall x' : nat, S x' + y' = x' + S y')...
+      repeat (rewrite H1)...
 Qed.
 
 Theorem cantor_pairing_is :
@@ -151,9 +162,7 @@ Theorem cantor_pairing_is :
   forall y : nat,
   cantor_pairing n = (x, y) <-> n = sum_from_0_to (x + y) + y.
 Proof.
-  intros n x y; constructor.
-  - apply (cantor_pairing_is_injective n x y).
-  - intros H; subst; rewrite (cantor_pairing_is_surjective x y); reflexivity.
+  intros n x y; split; [apply (cantor_pairing_is_injective n x y) | intros; subst; eauto using (cantor_pairing_is_surjective x y)].
 Qed.
 
 End Preliminaries.
@@ -228,9 +237,7 @@ Lemma extensionality_refl {A : Type} :
   forall f : Arity n A,
   extensionality A n f f.
 Proof with eauto.
-  unfold extensionality. induction n.
-  - reflexivity.
-  - simpl...
+  unfold extensionality. induction n; [reflexivity | simpl]...
 Qed.
 
 Lemma extensionality_symm {A : Type} :
@@ -240,9 +247,7 @@ Lemma extensionality_symm {A : Type} :
   extensionality A n f g ->
   extensionality A n g f.
 Proof with eauto.
-  unfold extensionality. induction n.
-  - symmetry...
-  - simpl...
+  unfold extensionality. induction n; [symmetry | simpl]...
 Qed.
 
 Lemma extensionality_trans {A : Type} :
@@ -254,9 +259,7 @@ Lemma extensionality_trans {A : Type} :
   extensionality A n g h ->
   extensionality A n f h.
 Proof with eauto.
-  unfold extensionality. induction n.
-  - intros. transitivity g...
-  - simpl...
+  unfold extensionality. induction n; [intros; transitivity g | simpl]...
 Qed.
 
 Fixpoint proj (m : nat) : forall n : nat, Arity (m + S n) w :=
@@ -317,10 +320,10 @@ Fixpoint shiftZeroRight (n : nat) : Arity n w -> Arity (n + 0) w :=
   end
 .
 
-Fixpoint shiftOnceLeft (n : nat) : Arity (S n) w -> Arity n (w -> w) :=
+Fixpoint shiftOnceLeft (n : nat) : Arity (n + 1) w -> Arity n (w -> w) :=
   match n with
   | 0 => fun f : w -> w => f
-  | S n' => fun f : w -> Arity (S n') w => fun r : w => shiftOnceLeft n' (f r)
+  | S n' => fun f : w -> Arity (n' + 1) w => fun r : w => shiftOnceLeft n' (f r)
   end
 .
 
@@ -328,9 +331,8 @@ Lemma composition_arity_1 (n : nat) :
   forall f : w -> w,
   forall g1 : Arity n w,
   extensionality w (n + 0) (shiftZeroRight n (apArity n (pureArity n f) g1)) (load n 0 (call n 1 f) g1).
-Proof with eauto.
-  unfold extensionality.
-  induction n; [easy | simpl]...
+Proof.
+  unfold extensionality. induction n; now simpl.
 Qed.
 
 Lemma composition_arity_2 (n : nat) :
@@ -338,17 +340,16 @@ Lemma composition_arity_2 (n : nat) :
   forall g1 : Arity n w,
   forall g2 : Arity n w,
   extensionality w (n + 0) (shiftZeroRight n (apArity n (apArity n (pureArity n f) g1) g2)) (load n 0 (load n 1 (call n 2 f) g1) g2).
-Proof with eauto.
-  unfold extensionality.
-  induction n; [easy | simpl]...
+Proof.
+  unfold extensionality. induction n; now simpl.
 Qed.
 
 Definition less : Arity 2 w :=
   fun x : w => fun y : w => if Compare_dec.lt_dec x y then 0 else 1
 .
 
-Definition mini (n : nat) : Arity (S n) w -> Arity n w -> Arity n w :=
-  fun val : Arity (S n) w => fun witness : Arity n w => apArity n (apArity n (pureArity n (fun f : w -> w => fun x : w => first_nat (fun r : w => Nat.eqb (f r) 0) x)) (shiftOnceLeft n val)) witness
+Definition mini (n : nat) : Arity (n + 1) w -> Arity n w -> Arity n w :=
+  fun val : Arity (n + 1) w => fun witness : Arity n w => apArity n (apArity n (pureArity n (fun f : w -> w => fun x : w => first_nat (fun r : w => Nat.eqb (f r) 0) x)) (shiftOnceLeft n val)) witness
 .
 
 Inductive IsArith : forall n : nat, Arity n w -> Prop :=
@@ -389,14 +390,14 @@ Inductive IsArith : forall n : nat, Arity n w -> Prop :=
   extensionality w (m + n) f (call m n val1) ->
   IsArith (m + n) f
 | miniA :
-  forall n : nat,
-  forall val1 : Arity (S n) w,
-  forall witness : Arity n w,
-  forall f : Arity n w,
-  IsArith (S n) val1 ->
-  universal n (apArity n (apArity n (pureArity n (fun f : w -> w => fun x : w => f x = 0)) (shiftOnceLeft n val1)) witness) ->
-  extensionality w n f (mini n val1 witness) ->
-  IsArith n f
+  forall m : nat,
+  forall val1 : Arity (m + 1) w,
+  forall witness : Arity m w,
+  forall f : Arity m w,
+  IsArith (m + 1) val1 ->
+  universal m (apArity m (apArity m (pureArity m (fun f : w -> w => fun x : w => f x = 0)) (shiftOnceLeft m val1)) witness) ->
+  extensionality w m f (mini m val1 witness) ->
+  IsArith m f
 .
 
 End Arithmetic.
