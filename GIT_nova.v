@@ -564,6 +564,42 @@ Proof with heehee.
   unfold or. auto_show_IsArith; apply notIsArith.
 Qed.
 
+Definition and : Arity 2 w :=
+  load 2 0 (call 2 1 not) (load 2 0 (load 2 1 (call 2 2 or) (load 2 0 (call 2 1 not) (proj 0 1))) (load 2 0 (call 2 1 not) (proj 1 0)))
+.
+
+Lemma and_is (m : nat) :
+  forall val1 : Arity m w,
+  forall val2 : Arity m w,
+  forall P1 : Arity m Prop,
+  forall P2 : Arity m Prop,
+  isCharOn m (assocArity m 0 val1) P1 ->
+  isCharOn m (assocArity m 0 val2) P2 ->
+  isCharOn m (load m 0 (load m 1 (call m 2 and) val1) val2) (apArity m (apArity m (pureArity m (fun p1 : Prop => fun p2 : Prop => p1 /\ p2)) P1) P2).
+Proof with eauto.
+  induction m; simpl...
+  unfold and. simpl.
+  unfold or. unfold not. simpl.
+  unfold less. unfold mini. simpl.
+  intros. destruct (Nat.eq_dec val1 0); destruct (Nat.eq_dec val2 0).
+  - subst. simpl. tauto.
+  - subst. simpl. destruct (Compare_dec.lt_dec 0 val2); [simpl; tauto | lia].
+  - subst. simpl. destruct (Compare_dec.lt_dec 0 val1); [simpl; tauto | lia].
+  - destruct (Compare_dec.lt_dec 0 val1); destruct (Compare_dec.lt_dec 0 val2); [simpl; tauto | lia | simpl; tauto | lia].
+Qed.
+
+Lemma and_isBoolean :
+  isBoolean 2 and.
+Proof with eauto.
+  unfold isBoolean. simpl. intros. apply not_isBoolean.
+Qed.
+
+Lemma andIsArith :
+  IsArith 2 and.
+Proof with heehee.
+  unfold and. auto_show_IsArith; [apply notIsArith | apply orIsArith | apply notIsArith | apply notIsArith].
+Qed.
+
 End Arithmetic.
 
 End Goedel's_Incompleteness_Theorem.
