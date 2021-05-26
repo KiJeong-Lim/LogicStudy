@@ -430,16 +430,28 @@ Proof with eauto.
       destruct (Compare_dec.lt_dec n (S n))...
     }
     unfold p in H1.
-    destruct (Compare_dec.lt_dec n (first_nat (fun x : w => (if Compare_dec.lt_dec n x then 0 else 1) =? 0) (S n))).
-    - unfold p.
-      lia.
-    - inversion H1.
+    destruct (Compare_dec.lt_dec n (first_nat (fun x : w => (if Compare_dec.lt_dec n x then 0 else 1) =? 0) (S n))); [unfold p; lia | inversion H1].
   }
   unfold extensionality.
   induction m; simpl...
   induction i; simpl; unfold mini; simpl...
   rewrite IHi.
   cut (first_nat (fun r : w => (if Compare_dec.lt_dec i r then 0 else 1) =? 0) (S i) = S i); unfold less...
+Qed.
+
+Lemma numIsArith (i : nat) :
+  IsArith 0 (num i).
+Proof with ((unfold extensionality; simpl; reflexivity) || eauto).
+  induction i; simpl.
+  - apply (miniA 0 (fun x : w => x) 0)...
+    + apply (projA 0 0)...
+  - apply (miniA 0 (fun r : w => less (num i) r) (S i))...
+    + apply (loadA 0 1 less (num i))...
+      apply lessA...
+    + simpl; unfold less.
+      assert (H : num i = i) by apply (num_is 0 i).
+      rewrite H.
+      destruct (Compare_dec.lt_dec i (S i)); [tauto | lia].
 Qed.
 
 End Arithmetic.
