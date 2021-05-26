@@ -313,13 +313,6 @@ Proof.
   reflexivity.
 Qed.
 
-Fixpoint shiftZeroRight (n : nat) : Arity n w -> Arity (n + 0) w :=
-  match n with
-  | 0 => fun f : w => f
-  | S n' => fun f : w -> Arity n' w => fun r : w => shiftZeroRight n' (f r)
-  end
-.
-
 Fixpoint shiftOnceLeft (n : nat) : Arity (n + 1) w -> Arity n (w -> w) :=
   match n with
   | 0 => fun f : w -> w => f
@@ -327,10 +320,17 @@ Fixpoint shiftOnceLeft (n : nat) : Arity (n + 1) w -> Arity n (w -> w) :=
   end
 .
 
+Fixpoint assocArity (m : nat) : forall n : nat, Arity m (Arity n w) -> Arity (m + n) w :=
+  match m with
+  | 0 => fun n : nat => fun f : Arity n w => f
+  | S m' => fun n : nat => fun f : w -> Arity m' (Arity n w) => fun r : w => assocArity m' n (f r)
+  end
+.
+
 Lemma composition_arity_1 (n : nat) :
   forall f : w -> w,
   forall g1 : Arity n w,
-  extensionality w (n + 0) (shiftZeroRight n (apArity n (pureArity n f) g1)) (load n 0 (call n 1 f) g1).
+  extensionality w (n + 0) (assocArity n 0 (apArity n (pureArity n f) g1)) (load n 0 (call n 1 f) g1).
 Proof.
   unfold extensionality. induction n; now simpl.
 Qed.
@@ -339,7 +339,7 @@ Lemma composition_arity_2 (n : nat) :
   forall f : w -> w -> w,
   forall g1 : Arity n w,
   forall g2 : Arity n w,
-  extensionality w (n + 0) (shiftZeroRight n (apArity n (apArity n (pureArity n f) g1) g2)) (load n 0 (load n 1 (call n 2 f) g1) g2).
+  extensionality w (n + 0) (assocArity n 0 (apArity n (apArity n (pureArity n f) g1) g2)) (load n 0 (load n 1 (call n 2 f) g1) g2).
 Proof.
   unfold extensionality. induction n; now simpl.
 Qed.
@@ -400,6 +400,46 @@ Inductive IsArith : forall n : nat, Arity n w -> Prop :=
   IsArith m f
 .
 
+Definition isBoolean (n : nat) : Arity n w -> Prop :=
+  fun val1 : Arity n w => universal n (apArity n (pureArity n (fun x1 : w => x1 = 0 \/ x1 = 1)) val1)
+.
+
+Fixpoint isCharOn (n : nat) : Arity (n + 0) w -> Arity n Prop -> Prop :=
+  match n with
+  | 0 => fun f : w => fun p : Prop => if Nat.eq_dec f 0 then p else ~ p
+  | S n' => fun f : w -> Arity (n' + 0) w => fun p : w -> Arity n' Prop => forall r : w, isCharOn n' (f r) (p r)
+  end
+.
+
+Inductive IsRecursive : forall n : nat, Arity n Prop -> Prop :=
+| Recursiveness :
+  forall m : nat,
+  forall val1 : Arity (m + 0) w,
+  forall P1 : Arity m Prop,
+  IsArith (m + 0) val1 ->
+  isBoolean (m + 0) val1 -> 
+  isCharOn m val1 P1 ->
+  IsRecursive m P1
+.
+
+Ltac heehee := 
+  tryif (apply extensionality_refl) then eauto else unfold extensionality; (simpl; reflexivity || eauto)
+.
+
+Ltac auto_show_IsArith :=
+  match goal with
+  | |- IsArith _ plus => apply plusA; heehee
+  | |- IsArith _ mult => apply multA; heehee
+  | |- IsArith _ less => apply lessA; heehee
+  | |- IsArith _ (proj ?m ?n) => apply (projA m n); heehee
+  | |- IsArith _ (load ?m ?n ?val1 ?val2) => apply (loadA m n val1 val2); [auto_show_IsArith | auto_show_IsArith | heehee]
+  | |- IsArith _ (call ?m ?n ?val1) => apply (callA m n val1); [auto_show_IsArith | heehee]
+  | |- IsArith _ (mini ?m ?val1 ?witness) => apply (miniA m val1 witness); [auto_show_IsArith | (simpl; reflexivity || eauto) | heehee]
+  | |- IsArith (?m + S ?n) _ => tryif apply (projA m n) then heehee else eauto
+  | _ => eauto
+  end
+.
+
 Fixpoint num (i : nat) : Arity 0 w :=
   match i with
   | 0 => mini 0 (proj 0 0) 0
@@ -441,7 +481,7 @@ Qed.
 
 Lemma numIsArith (i : nat) :
   IsArith 0 (num i).
-Proof with ((unfold extensionality; simpl; reflexivity) || eauto).
+Proof with heehee.
   induction i; simpl.
   - apply (miniA 0 (fun x : w => x) 0)...
     + apply (projA 0 0)...
@@ -452,6 +492,38 @@ Proof with ((unfold extensionality; simpl; reflexivity) || eauto).
       assert (H : num i = i) by apply (num_is 0 i).
       rewrite H.
       destruct (Compare_dec.lt_dec i (S i)); [tauto | lia].
+Qed.
+
+Definition not : Arity 1 w :=
+  load 1 0 (load 1 1 (call 1 2 less) (call 1 0 (num 0))) (proj 0 0)
+.
+
+Lemma not_is (m : nat) :
+  forall val1 : Arity m w,
+  forall P1 : Arity m Prop,
+  isCharOn m (assocArity m 0 val1) P1 ->
+  isCharOn m (load m 0 (call m 1 not) val1) (apArity m (pureArity m (fun p1 : Prop => ~ p1)) P1).
+Proof with eauto.
+  induction m; simpl...
+  unfold not. intros.
+  assert (H0 : num 0 = 0) by apply (num_is 0 0). rewrite H0.
+  unfold less. simpl.
+  destruct (Nat.eq_dec val1 0); simpl.
+  - subst. simpl. tauto.
+  - destruct (Compare_dec.lt_dec 0 val1); simpl; [tauto | lia].
+Qed.
+
+Lemma not_isBoolean :
+  isBoolean 1 not.
+Proof with eauto.
+  unfold isBoolean. unfold not. unfold less. simpl.
+  intros m. destruct (Compare_dec.lt_dec (mini 0 (fun x : w => x) 0) m); tauto.
+Qed.
+
+Lemma notIsArith :
+  IsArith 1 not.
+Proof.
+  unfold not. auto_show_IsArith. apply numIsArith.
 Qed.
 
 End Arithmetic.
