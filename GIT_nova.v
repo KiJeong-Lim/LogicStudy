@@ -600,6 +600,22 @@ Proof with heehee.
   unfold and. auto_show_IsArith; [apply notIsArith | apply orIsArith | apply notIsArith | apply notIsArith].
 Qed.
 
+Definition eq : Arity 2 w :=
+  load 2 0 (load 2 1 (call 2 2 and) (load 2 0 (call 2 1 not) (load 2 0 (load 2 1 (call 2 2 less) (proj 0 1)) (proj 1 0)))) (load 2 0 (call 2 1 not) (load 2 0 (load 2 1 (call 2 2 less) (proj 1 0)) (proj 0 1)))
+.
+
+Lemma eq_is (m : nat) :
+  forall val1 : Arity m w,
+  forall val2 : Arity m w,
+  isCharOn m (load m 0 (load m 1 (call m 2 eq) val1) val2) (apArity m (apArity m (pureArity m (fun x1 : w => fun x2 : w => x1 = x2)) val1) val2).
+Proof with eauto.
+  induction m; simpl...
+  intros.
+  unfold eq. unfold and. unfold or. unfold not. simpl.
+  unfold less. unfold mini. simpl.
+  destruct (Compare_dec.lt_dec val1 val2); destruct (Compare_dec.lt_dec val2 val1); simpl; lia.
+Qed.
+
 End Arithmetic.
 
 End Goedel's_Incompleteness_Theorem.
