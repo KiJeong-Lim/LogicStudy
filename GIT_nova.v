@@ -400,6 +400,23 @@ Inductive IsArith : forall n : nat, Arity n w -> Prop :=
   IsArith m f
 .
 
+Ltac heehee := 
+  tryif (apply extensionality_refl) then eauto else unfold extensionality; (simpl; reflexivity || eauto)
+.
+
+Ltac auto_show_IsArith :=
+  match goal with
+  | |- IsArith _ plus => apply plusA; heehee
+  | |- IsArith _ mult => apply multA; heehee
+  | |- IsArith _ less => apply lessA; heehee
+  | |- IsArith _ (proj ?m ?n) => apply (projA m n); heehee
+  | |- IsArith _ (load ?m ?n ?val1 ?val2) => apply (loadA m n val1 val2); [auto_show_IsArith | auto_show_IsArith | heehee]
+  | |- IsArith _ (call ?m ?n ?val1) => apply (callA m n val1); [auto_show_IsArith | heehee]
+  | |- IsArith _ (mini ?m ?val1 ?witness) => apply (miniA m val1 witness); [auto_show_IsArith | heehee | heehee]
+  | _ => eauto
+  end
+.
+
 Definition isBoolean (n : nat) : Arity n w -> Prop :=
   fun val1 : Arity n w => universal n (apArity n (pureArity n (fun x1 : w => x1 = 0 \/ x1 = 1)) val1)
 .
@@ -422,23 +439,12 @@ Inductive IsRecursive : forall n : nat, Arity n Prop -> Prop :=
   IsRecursive m P1
 .
 
-Ltac heehee := 
-  tryif (apply extensionality_refl) then eauto else unfold extensionality; (simpl; reflexivity || eauto)
-.
-
-Ltac auto_show_IsArith :=
-  match goal with
-  | |- IsArith _ plus => apply plusA; heehee
-  | |- IsArith _ mult => apply multA; heehee
-  | |- IsArith _ less => apply lessA; heehee
-  | |- IsArith _ (proj ?m ?n) => apply (projA m n); heehee
-  | |- IsArith _ (load ?m ?n ?val1 ?val2) => apply (loadA m n val1 val2); [auto_show_IsArith | auto_show_IsArith | heehee]
-  | |- IsArith _ (call ?m ?n ?val1) => apply (callA m n val1); [auto_show_IsArith | heehee]
-  | |- IsArith _ (mini ?m ?val1 ?witness) => apply (miniA m val1 witness); [auto_show_IsArith | (simpl; reflexivity || eauto) | heehee]
-  | |- IsArith (?m + S ?n) _ => tryif apply (projA m n) then heehee else eauto
-  | _ => eauto
-  end
-.
+Lemma less_isBoolean :
+  isBoolean 2 less.
+Proof with eauto.
+  unfold isBoolean. unfold less. simpl.
+  intros. destruct (Compare_dec.lt_dec m m0); tauto.
+Qed.
 
 Fixpoint num (i : nat) : Arity 0 w :=
   match i with
@@ -482,16 +488,13 @@ Qed.
 Lemma numIsArith (i : nat) :
   IsArith 0 (num i).
 Proof with heehee.
-  induction i; simpl.
-  - apply (miniA 0 (fun x : w => x) 0)...
-    + apply (projA 0 0)...
-  - apply (miniA 0 (fun r : w => less (num i) r) (S i))...
-    + apply (loadA 0 1 less (num i))...
-      apply lessA...
-    + simpl; unfold less.
-      assert (H : num i = i) by apply (num_is 0 i).
-      rewrite H.
-      destruct (Compare_dec.lt_dec i (S i)); [tauto | lia].
+  induction i; simpl; auto_show_IsArith.
+  - apply (projA 0 0)...
+  - apply (loadA 0 1 less (num i))...
+    apply lessA...
+  - simpl. unfold less.
+    assert (H : num i = i) by apply (num_is 0 i). rewrite H.
+    destruct (Compare_dec.lt_dec i (S i)); [tauto | lia].
 Qed.
 
 Definition not : Arity 1 w :=
@@ -517,13 +520,14 @@ Lemma not_isBoolean :
   isBoolean 1 not.
 Proof with eauto.
   unfold isBoolean. unfold not. unfold less. simpl.
-  intros m. destruct (Compare_dec.lt_dec (mini 0 (fun x : w => x) 0) m); tauto.
+  apply less_isBoolean.
 Qed.
 
 Lemma notIsArith :
   IsArith 1 not.
-Proof.
-  unfold not. auto_show_IsArith. apply numIsArith.
+Proof with heehee.
+  unfold not. auto_show_IsArith.
+  apply numIsArith.
 Qed.
 
 End Arithmetic.
