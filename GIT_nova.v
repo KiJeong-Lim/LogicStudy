@@ -156,7 +156,7 @@ Proof with (lia || eauto).
       repeat (rewrite H1)...
 Qed.
 
-Theorem cantor_pairing_is :
+Lemma cantor_pairing_is :
   forall n : nat,
   forall x : nat,
   forall y : nat,
@@ -399,6 +399,48 @@ Inductive IsArith : forall n : nat, Arity n w -> Prop :=
   extensionality w m f (mini m val1 witness) ->
   IsArith m f
 .
+
+Fixpoint num (i : nat) : Arity 0 w :=
+  match i with
+  | 0 => mini 0 (proj 0 0) 0
+  | S i' => mini 0 (load 1 0 (call 1 1 (load 0 1 (call 0 2 less) (num i'))) (proj 0 0)) (S i')
+  end
+.
+
+Lemma num_is (m : nat) :
+  forall i : nat,
+  extensionality w (m + 0) (call m 0 (num i)) (pureArity (m + 0) i).
+Proof with eauto.
+  assert ( claim1 :
+    forall n : nat,
+    S n = first_nat (fun x : w => (if Compare_dec.lt_dec n x then 0 else 1) =? 0) (S n)
+  ).
+  { assert (forall n : nat, forall p : nat -> bool, first_nat p n <= n).
+    { induction n...
+      simpl.
+      intros p.
+      destruct (p (first_nat p n)) eqn: H0...
+    }
+    intros n.
+    assert (first_nat (fun x : w => (if Compare_dec.lt_dec n x then 0 else 1) =? 0) (S n) <= S n) by apply H.
+    set (p := (fun x : w => (if Compare_dec.lt_dec n x then 0 else 1) =? 0)).
+    assert (p (first_nat p (S n)) = true).
+    { apply well_ordering_principle...
+      unfold p.
+      destruct (Compare_dec.lt_dec n (S n))...
+    }
+    unfold p in H1.
+    destruct (Compare_dec.lt_dec n (first_nat (fun x : w => (if Compare_dec.lt_dec n x then 0 else 1) =? 0) (S n))).
+    - unfold p.
+      lia.
+    - inversion H1.
+  }
+  unfold extensionality.
+  induction m; simpl...
+  induction i; simpl; unfold mini; simpl...
+  rewrite IHi.
+  cut (first_nat (fun r : w => (if Compare_dec.lt_dec i r then 0 else 1) =? 0) (S i) = S i); unfold less...
+Qed.
 
 End Arithmetic.
 
