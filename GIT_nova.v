@@ -208,26 +208,6 @@ Fixpoint Arity_dec (n : nat) : Arity n Prop -> Arity n Prop -> Set :=
   end
 .
 
-Fixpoint Arity_ite {A : Type} (n : nat) : forall P : Arity n Prop, forall Q : Arity n Prop, Arity_dec n P Q -> Arity n A -> Arity n A -> Arity n A :=
-  match n with
-  | 0 => fun P : Prop => fun Q : Prop => fun PQ_dec : {P} + {Q} => fun val1 : A => fun val2 : A => if PQ_dec then val1 else val2
-  | S n' => fun P : w -> Arity n' Prop => fun Q : w -> Arity n' Prop => fun PQ_dec : forall m : nat, Arity_dec n' (P m) (Q m) => fun val1 : w -> Arity n' A => fun val2 : w -> Arity n' A => fun m : w => Arity_ite n' (P m) (Q m) (PQ_dec m) (val1 m) (val2 m)
-  end
-.
-
-Lemma Arity_ite_is {A : Type} :
-  forall n : nat,
-  forall R : Arity n Prop,
-  forall R_dec : Arity_dec n R (apArity n (pureArity n (fun r : Prop => ~ r)) R),
-  forall val1 : Arity n A,
-  forall val2 : Arity n A,
-  universal n (apArity n (apArity n (apArity n (apArity n (pureArity n (fun r : Prop => fun x1 : A => fun x2 : A => fun x : A => (r -> x = x1) /\ (~ r -> x = x2))) R) val1) val2) (Arity_ite n R (apArity n (pureArity n (fun r : Prop => ~ r)) R) R_dec val1 val2)).
-Proof with eauto.
-  induction n.
-  - simpl. intros. destruct R_dec; firstorder.
-  - simpl...
-Qed.
-
 Definition extensionality (A : Type) (n : nat) : Arity n A -> Arity n A -> Prop :=
   fun val1 : Arity n A => fun val2 : Arity n A => universal n (apArity n (apArity n (pureArity n (fun x1 : A => fun x2 : A => x1 = x2)) val1) val2)
 .
@@ -313,10 +293,10 @@ Proof.
   reflexivity.
 Qed.
 
-Fixpoint unassocArity (m : nat) : forall n : nat, Arity (m + n) w -> Arity m (Arity n w) :=
+Fixpoint unassocArity {A : Type} (m : nat) : forall n : nat, Arity (m + n) A -> Arity m (Arity n A) :=
   match m with
-  | 0 => fun n : nat => fun f : Arity n w => f
-  | S m' => fun n : nat => fun f : w -> Arity (m' + n) w => fun r : w => unassocArity m' n (f r)
+  | 0 => fun n : nat => fun f : Arity n A => f
+  | S m' => fun n : nat => fun f : w -> Arity (m' + n) A => fun r : w => unassocArity m' n (f r)
   end
 .
 
@@ -615,6 +595,33 @@ Proof with eauto.
   unfold less. unfold mini. simpl.
   destruct (Compare_dec.lt_dec val1 val2); destruct (Compare_dec.lt_dec val2 val1); simpl; lia.
 Qed.
+
+Lemma eq_isBoolean :
+  isBoolean 2 eq.
+Proof with eauto.
+  unfold isBoolean. simpl. intros. apply and_isBoolean.
+Qed.
+
+Lemma eqIsArith :
+  IsArith 2 eq.
+Proof with heehee.
+  unfold eq. auto_show_IsArith; [apply andIsArith | apply notIsArith | apply notIsArith].
+Qed.
+
+Definition ite : Arity 4 w :=
+  load 4 0 (load 4 1 (call 4 2 plus) (load 4 0 (load 4 1 (call 4 2 mult) (proj 0 3)) (proj 1 2))) (load 4 0 (load 4 1 (call 4 2 mult) (proj 2 1)) (proj 3 0))
+.
+
+Inductive RE : forall n : nat, Arity n Prop -> Prop :=
+| RecursiveEnumerable :
+  forall m : nat,
+  forall Q : Arity (m + 1) Prop,
+  forall witness : Arity m w,
+  forall P : Arity m Prop,
+  IsRecursive (m + 1) Q ->
+  universal m (apArity m (apArity m (pureArity m (fun p : Prop => fun q : Prop => p <-> q)) P) (apArity m (unassocArity m 1 Q) witness)) ->
+  RE m P
+.
 
 End Arithmetic.
 
