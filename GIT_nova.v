@@ -208,6 +208,25 @@ Fixpoint Arity_dec (n : nat) : Arity n Prop -> Arity n Prop -> Set :=
   end
 .
 
+Fixpoint Arity_ite {A : Type} (n : nat) : forall P : Arity n Prop, forall Q : Arity n Prop, Arity_dec n P Q -> Arity n A -> Arity n A -> Arity n A :=
+  match n with
+  | 0 => fun P : Prop => fun Q : Prop => fun PQ_dec : {P} + {Q} => fun val1 : A => fun val2 : A => if PQ_dec then val1 else val2
+  | S n' => fun P : w -> Arity n' Prop => fun Q : w -> Arity n' Prop => fun PQ_dec : forall m : nat, Arity_dec n' (P m) (Q m) => fun val1 : w -> Arity n' A => fun val2 : w -> Arity n' A => fun m : w => Arity_ite n' (P m) (Q m) (PQ_dec m) (val1 m) (val2 m)
+  end
+.
+
+Lemma Arity_ite_is {A : Type} :
+  forall n : nat,
+  forall R : Arity n Prop,
+  forall R_dec : Arity_dec n R (apArity n (pureArity n (fun r : Prop => ~ r)) R),
+  forall val1 : Arity n A,
+  forall val2 : Arity n A,
+  universal n (apArity n (apArity n (apArity n (apArity n (pureArity n (fun r : Prop => fun x1 : A => fun x2 : A => fun x : A => (r -> x = x1) /\ (~ r -> x = x2))) R) val1) val2) (Arity_ite n R (apArity n (pureArity n (fun r : Prop => ~ r)) R) R_dec val1 val2)).
+Proof with eauto.
+  induction n; simpl...
+  intros. destruct R_dec; firstorder.
+Qed.
+
 Definition extensionality (A : Type) (n : nat) : Arity n A -> Arity n A -> Prop :=
   fun val1 : Arity n A => fun val2 : Arity n A => universal n (apArity n (apArity n (pureArity n (fun x1 : A => fun x2 : A => x1 = x2)) val1) val2)
 .
@@ -328,8 +347,18 @@ Definition less : Arity 2 w :=
   fun x : w => fun y : w => if Compare_dec.lt_dec x y then 0 else 1
 .
 
-Definition mini (n : nat) : Arity (n + 1) w -> Arity n w -> Arity n w :=
-  fun val : Arity (n + 1) w => fun witness : Arity n w => apArity n (apArity n (pureArity n (fun f : w -> w => fun x : w => first_nat (fun r : w => Nat.eqb (f r) 0) x)) (unassocArity n 1 val)) witness
+Fixpoint witness (n : nat) : Arity (n + 1) w -> Set :=
+  match n with
+  | 0 => fun f : w -> w => {x : w | f x = 0}
+  | S n' => fun f : w -> Arity (n' + 1) w => forall r : w, witness n' (f r)
+  end
+.
+
+Fixpoint mini (n : nat) : forall f : Arity (n + 1) w, witness n f -> Arity n w :=
+  match n with
+  | 0 => fun f : w -> w => fun s : {x : w | f x = 0} => first_nat (fun x : w => Nat.eqb (f x) 0) (proj1_sig s)
+  | S n' => fun f : w -> Arity (n' + 1) w => fun s : forall r : w, witness n' (f r) => fun r : w => mini n' (f r) (s r)
+  end
 .
 
 Inductive IsArith : forall n : nat, Arity n w -> Prop :=
@@ -372,11 +401,10 @@ Inductive IsArith : forall n : nat, Arity n w -> Prop :=
 | miniA :
   forall m : nat,
   forall val1 : Arity (m + 1) w,
-  forall witness : Arity m w,
+  forall s : witness m val1,
   forall f : Arity m w,
   IsArith (m + 1) val1 ->
-  universal m (apArity m (apArity m (pureArity m (fun f : w -> w => fun x : w => f x = 0)) (unassocArity m 1 val1)) witness) ->
-  extensionality w m f (mini m val1 witness) ->
+  extensionality w m f (mini m val1 s) ->
   IsArith m f
 .
 
@@ -392,7 +420,7 @@ Ltac auto_show_IsArith :=
   | |- IsArith _ (proj ?m ?n) => apply (projA m n); heehee
   | |- IsArith _ (load ?m ?n ?val1 ?val2) => apply (loadA m n val1 val2); [auto_show_IsArith | auto_show_IsArith | heehee]
   | |- IsArith _ (call ?m ?n ?val1) => apply (callA m n val1); [auto_show_IsArith | heehee]
-  | |- IsArith _ (mini ?m ?val1 ?witness) => apply (miniA m val1 witness); [auto_show_IsArith | heehee | heehee]
+  | |- IsArith _ (mini ?m ?val1 ?s) => apply (miniA m val1 s); [auto_show_IsArith | ..]
   | _ => eauto
   end
 .
@@ -408,17 +436,6 @@ Fixpoint isCharOn (n : nat) : Arity (n + 0) w -> Arity n Prop -> Prop :=
   end
 .
 
-Inductive IsRecursive : forall n : nat, Arity n Prop -> Prop :=
-| Recursiveness :
-  forall m : nat,
-  forall val1 : Arity (m + 0) w,
-  forall P1 : Arity m Prop,
-  IsArith (m + 0) val1 ->
-  isBoolean (m + 0) val1 -> 
-  isCharOn m val1 P1 ->
-  IsRecursive m P1
-.
-
 Lemma less_isBoolean :
   isBoolean 2 less.
 Proof with eauto.
@@ -428,8 +445,8 @@ Qed.
 
 Fixpoint num (i : nat) : Arity 0 w :=
   match i with
-  | 0 => mini 0 (proj 0 0) 0
-  | S i' => mini 0 (load 1 0 (call 1 1 (load 0 1 (call 0 2 less) (num i'))) (proj 0 0)) (S i')
+  | 0 => mini 0 (proj 0 0) (exist (fun x : w => proj 0 0 x = 0) 0 eq_refl)
+  | S i' => mini 0 (load 1 0 (call 1 1 (load 0 1 (call 0 2 less) (num i'))) (proj 0 0)) (exist (fun x : w => load 1 0 (call 1 1 (load 0 1 (call 0 2 less) (num i'))) (proj 0 0) x = 0) (S i) (num_aux i))
   end
 .
 
@@ -609,19 +626,32 @@ Proof with heehee.
 Qed.
 
 Definition ite : Arity 4 w :=
-  load 4 0 (load 4 1 (call 4 2 plus) (load 4 0 (load 4 1 (call 4 2 mult) (proj 0 3)) (proj 1 2))) (load 4 0 (load 4 1 (call 4 2 mult) (proj 2 1)) (proj 3 0))
+  load 4 0 (load 4 1 (call 4 2 plus) (load 4 0 (load 4 1 (call 4 2 mult) (load 4 0 (call 4 1 not) (proj 0 3))) (proj 1 2))) (load 4 0 (load 4 1 (call 4 2 mult) (load 4 0 (call 4 1 not) (proj 2 1))) (proj 3 0))
 .
 
-Inductive RE : forall n : nat, Arity n Prop -> Prop :=
-| RecursiveEnumerable :
-  forall m : nat,
-  forall Q : Arity (m + 1) Prop,
-  forall witness : Arity m w,
+Lemma ite_is (m : nat) :
   forall P : Arity m Prop,
-  IsRecursive (m + 1) Q ->
-  universal m (apArity m (apArity m (pureArity m (fun p : Prop => fun q : Prop => p <-> q)) P) (apArity m (unassocArity m 1 Q) witness)) ->
-  RE m P
-.
+  forall Q : Arity m Prop,
+  universal m (apArity m (apArity m (pureArity m (fun p : Prop => fun q : Prop => p <-> ~ q)) P) Q) ->
+  forall chi_P : Arity m w,
+  isBoolean m chi_P ->
+  isCharOn m (assocArity m 0 chi_P) P ->
+  forall chi_Q : Arity m w,
+  isBoolean m chi_Q ->
+  isCharOn m (assocArity m 0 chi_Q) Q ->
+  forall val1 : Arity m w,
+  forall val2 : Arity m w,
+  let val : Arity (m + 0) w := (load m 0 (load m 1 (load m 2 (load m 3 (call m 4 ite) chi_P) val1) chi_Q) val2) in
+  universal m (apArity m (apArity m (apArity m (apArity m (apArity m (pureArity m (fun p : Prop => fun q : Prop => fun x1 : w => fun x2 : w => fun x : w => (x = x1 /\ p) \/ (x = x2 /\ q))) P) Q) val1) val2) (unassocArity m 0 val)).
+Proof with eauto.
+  unfold isBoolean. induction m; simpl...
+  unfold ite. simpl. intros.
+  destruct H0; destruct H2; (subst; simpl in *).
+  + tauto.
+  + left. split; [lia | tauto].
+  + right. split; [lia | tauto].
+  + tauto.
+Qed.
 
 End Arithmetic.
 
