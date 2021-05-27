@@ -961,7 +961,7 @@ Fixpoint express_relation (n : nat) : form -> relation_of_arity n -> Prop :=
   | 0 =>
     fun f : form =>
     fun pred : Prop =>
-    (forall x : vr, occursFreeIn_form x f = false) /\ (pred <-> forall va : value_assignment, eval_form va f)
+    (forall x : vr, occursFreeIn_form x f = false) /\ (~ ~ pred <-> forall va : value_assignment, eval_form va f)
   | S n' =>
     fun f : form =>
     fun pred : nat -> relation_of_arity n' =>
@@ -981,6 +981,7 @@ Proof with eauto.
     + intros H va.
       eval_vr_eq_dec.
       simpl_eval_tm_make_numeral...
+      lia.
     + intros H.
       assert (H0 := H (fun _ : vr => 0)).
       eval_in_vr_eq_dec H0.
