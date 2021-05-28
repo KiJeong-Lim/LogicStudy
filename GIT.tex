@@ -899,7 +899,7 @@
   \subsection{언어 $\mathcal{L}_{E}$}
   \hspace{12pt}
 
-  \noindent \textbf{\S 1. 구문론적 예비 사항}
+  \noindent \textbf{\S1. 구문론적 예비 사항}
 
   우리가 공부할 첫 번째 구체적인 언어는 덧셈과 곱셈 그리고 제곱을 기반으로 하는 1차 산술의 언어이다.\footnote
   {
@@ -1049,7 +1049,7 @@
     수 $\left( \left( 3 + 1 \right) \times 2^{3} \right) + 1 = 33$에 대응한다.
   \end{context}
 
-  \noindent \textbf{\S 2. $\mathcal{L}_{E}$에서의 참의 개념.}
+  \noindent \textbf{\S2. $\mathcal{L}_{E}$에서의 참의 개념.}
 
   이제 $\mathcal{L}_{E}$의 어떠한 문장들이 \textit{참}이라는 게 무엇을 의미하는지를 정의할 때가 되었다.
   이 정의는 문장의 복잡도에 대한 귀납법에 의하여 적용된다.
@@ -1114,7 +1114,7 @@
   임의의 $n_{1} \in \mathbb{N}$, ..., $n_{k} \in \mathbb{N}$에 대하여 $F \left[ v_{i_{1}} := \overline{n_{1}} , \cdots , v_{i_{k}} := \overline{n_{k}} \right]$이 동등한 문장일 때,
   $F$와 $G$를 동등한 논리식이라고 한다.
 
-  \noindent \textbf{\S 3. 싼술적인 그리고 산술적인 집합과 관계}
+  \noindent \textbf{\S3. 싼술적인 그리고 산술적인 집합과 관계}
 
   자유롭게 나타나는 개체 변수가 $v_{1}$ 뿐인 논리식 $F$에 대하여,
   $F$는 문장 $F \left[ v_{1} := \overline{n} \right]$이 참이게 하는 자연수 $n$을 모두 모은 집합을 \underline{표현한다}(\textit{express})고 한다;
@@ -1181,7 +1181,7 @@
   \subsection{접합과 괴델 넘버링}
   \hspace{12pt}
 
-  \noindent \textbf{\S 4. $b$를 기저로 하는 접합}
+  \noindent \textbf{\S4. $b$를 기저로 하는 접합}
 
   각 $b \geq 2$에 대하여, \underline{$b$를 기저로 하는 접합}(\textit{concatenation to the base $b$})라고 불릴 함수 $$\left( x , y \right) \mapsto x *_{b} y : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$$를 정의할 것인데,
   이 함수는 이 책에서 기본적인 역할을 할 것이다.
@@ -1256,7 +1256,7 @@
     관계 $y = x_1 *_b x_2 *_b \cdots *_b x_n *_b x_{n + 1}$는 싼술적이다.
   \end{proof}
 
-  \noindent \textbf{\S 5. 괴델 넘버링}
+  \noindent \textbf{\S5. 괴델 넘버링}
 
   싼술적인 문장들(즉, $\mathcal{L}_{E}$의 문장들)은 \textit{수}에 대하여 이야기하지, $\mathcal{L}_{E}$의 표현식들을 이야기하지는 않는다.
   표현식들에게 괴델 수를 할당하는 목적은 바로 문장이 문장들에 대하여 그것들의 괴델 수를 이용하여 간접적으로 말하는 것을 허용하기 위함이다.
@@ -1759,8 +1759,21 @@
       $$ \left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left( \forall z \in \mathbb{N} \right) \left[ \mathrm{Fst} \left[ v_1 := \overline{x} , v_2 := \overline{y} , v_3 := \overline{z} \right] \in \mathcal{T} \leftrightarrow \mathrm{fst} \left( x , y \right) = z \right] $$와
       $$ \left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left( \forall z \in \mathbb{N} \right) \left[ \mathrm{Snd} \left[ v_1 := \overline{x} , v_2 := \overline{y} , v_3 := \overline{z} \right] \in \mathcal{T} \leftrightarrow \mathrm{snd} \left( x , y \right) = z \right] $$가 성립한다.
       이제 논리식 $F_1$과 $F_2$를 각각 $$F_1 : \equiv \forall v_3 \left( \mathrm{Snd} \rightarrow F_A \left[ v_1 := v_3 \right] \right)$$와 $$F_2 : \equiv \forall v_3 \left( \mathrm{Fst} \rightarrow F_B \left[ v_1 := v_3 \right] \right)$$로 놓자.
-      그러면, $F_1$과 $F_2$에는 개체 변수 $v_1$와 $v_2$만이 자유롭게 나타나며, $$F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \in \mathcal{T} \iff F_A \left[ v_1 := \overline{\gnum \left( F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right)} \right] \in \mathcal{T}$$이고
-      $$F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \in \mathcal{T} \iff F_B \left[ v_1 := \overline{\gnum \left( F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right)} \right] \in \mathcal{T}$$이다.
+      그러면, $F_1$과 $F_2$에는 개체 변수 $v_1$와 $v_2$만이 자유롭게 나타나며,
+      \begin{align*}
+        F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \in \mathcal{T}
+        & \iff \left( \forall z \in \mathbb{N} \right) \left[ \mathrm{snd} \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) = z \rightarrow F_A \left[ v_1 := \overline{z} \right] \in \mathcal{T} \right] \\
+        & \iff F_A \left[ v_1 := \overline{\mathrm{snd} \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right)} \right] \in \mathcal{T} \\
+        & \iff F_A \left[ v_1 := \overline{\gnum \left( F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right)} \right] \in \mathcal{T} \\
+      \end{align*}
+      이고
+      \begin{align*}
+        F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \in \mathcal{T}
+        & \iff \left( \forall z \in \mathbb{N} \right) \left[ \mathrm{fst} \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) = z \rightarrow F_B \left[ v_1 := \overline{z} \right] \in \mathcal{T} \right] \\
+        & \iff F_B \left[ v_1 := \overline{\mathrm{fst} \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right)} \right] \in \mathcal{T} \\
+        & \iff F_B \left[ v_1 := \overline{\gnum \left( F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right)} \right] \in \mathcal{T} \\
+      \end{align*}
+      이다.
       이때 $$X : \equiv F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right)$$와 $$Y : \equiv F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right)$$를 취하자.
       그러면,
       \begin{align*}
@@ -1786,10 +1799,12 @@
   \newpage
 
   \section{제곱 연산이 있는 페아노 산술의 불완전성}
+  \hspace{12pt}
 
   \subsection{P.E. 공리계}
+  \hspace{12pt}
 
-  \textbf{\S1. P.E. 공리계}
+  \noindent \textbf{\S1. P.E. 공리계}
 
   이제 \underline{제곱 연산이 있는 페아노 산술}(\textit{Peano Arithmetic with Exponentiation})이라고 불리는 공리계로 넘어갈 것인데,
   이 형식 체계를 약어로 ``P.E.''라고 부를 것이다.
@@ -1888,6 +1903,7 @@
   \end{context}
 
   \subsection{공리계의 산술화}
+  \hspace{12pt}
 
   이제 P.E.의 모든 증명가능한 문장들의 괴델 수들을 모은 집합이 (바로 전 단원에서의 집합 $T$와 다르게) 산술적인 집합이라는 것을 증명하는 데 집중하겠다.
 
