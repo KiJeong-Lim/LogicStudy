@@ -747,28 +747,29 @@ Qed.
 Definition getMaxNumOfFreeVars_tm (t : tm) : vr :=
   fold_right_max_0 (getFreeVars_tm t)
 .
+
 Lemma getMaxNumOfFreeVars_tm_lt :
   forall t : tm,
   forall x : vr,
   getMaxNumOfFreeVars_tm t < x ->
   occursFreeIn_tm x t = false.
-Proof with eauto.
+Proof with (lia || eauto).
   unfold getMaxNumOfFreeVars_tm.
   induction t; simpl...
   - intros x H.
-    destruct (vr_eq_dec x v); [lia | reflexivity].
+    destruct (vr_eq_dec x v)...
   - intros x H.
     apply orb_false_iff.
     rewrite fold_right_max_0_app in H.
-    split; [apply IHt1; lia | apply IHt2; lia].
+    split; [apply IHt1 | apply IHt2]...
   - intros x H.
     apply orb_false_iff.
     rewrite fold_right_max_0_app in H.
-    split; [apply IHt1; lia | apply IHt2; lia].
+    split; [apply IHt1 | apply IHt2]...
   - intros x H.
     apply orb_false_iff.
     rewrite fold_right_max_0_app in H.
-    split; [apply IHt1; lia | apply IHt2; lia].
+    split; [apply IHt1 | apply IHt2]...
 Qed.
 
 Definition isFreshVarIn_substitute_tm (sigma : substitution) (z : vr) (t : tm) : Prop :=
@@ -796,22 +797,20 @@ Proof with eauto.
     occursFreeIn_tm (chi sigma f) (substitute_vr sigma x) = false
   ).
   { intros sigma f x H.
-    assert (getMaxNumOfFreeVars_tm (substitute_vr sigma x) < chi sigma f).
-    { unfold chi.
-      unfold fold_right_max_0.
-      cut (fold_right max 0 (map (fun z : vr => getMaxNumOfFreeVars_tm (substitute_vr sigma z)) (getFreeVars_form f)) >= getMaxNumOfFreeVars_tm (substitute_vr sigma x)); [lia | ].
-      rewrite <- the_rule_of_getFreeVars_form in H.
-      apply fold_right_max_0_in.
-      apply in_map_iff.
-      exists x.
-      split...
-    }
-    apply getMaxNumOfFreeVars_tm_lt...
+    cut (getMaxNumOfFreeVars_tm (substitute_vr sigma x) < chi sigma f); [now apply getMaxNumOfFreeVars_tm_lt | ..].
+    unfold chi.
+    unfold fold_right_max_0.
+    cut (fold_right max 0 (map (fun z : vr => getMaxNumOfFreeVars_tm (substitute_vr sigma z)) (getFreeVars_form f)) >= getMaxNumOfFreeVars_tm (substitute_vr sigma x)); [lia | ].
+    rewrite <- the_rule_of_getFreeVars_form in H.
+    apply fold_right_max_0_in.
+    apply in_map_iff.
+    exists x.
+    split...
   }
   unfold isFreshVarIn_substitute_form.
-  intros f sigma.
+  intros.
   apply forallb_true_iff.
-  intros x H.
+  intros.
   apply negb_true_iff.
   apply claim1.
   apply the_rule_of_getFreeVars_form...
@@ -856,15 +855,14 @@ Proof with (reflexivity || eauto).
       intros x H.
       simpl.
       destruct (vr_eq_dec v x).
-      { destruct (vr_eq_dec x v).
-        - simpl.
+      - destruct (vr_eq_dec x v).
+        + simpl.
           destruct (vr_eq_dec (chi sigma (all_form v f)) (chi sigma (all_form v f)))...
           contradiction.
-        - contradiction n0...
-      }
-      { destruct (vr_eq_dec x v).
-        - contradiction n0...
-        - apply eval_tm_extensionality.
+        + contradiction n0...
+      - destruct (vr_eq_dec x v).
+        + contradiction n0...
+        + apply eval_tm_extensionality.
           intros x' H0.
           destruct (vr_eq_dec (chi sigma (all_form v f)) x')...
           subst.
@@ -879,7 +877,6 @@ Proof with (reflexivity || eauto).
           }
           rewrite H0 in H2.
           inversion H2.
-      }
     }
     firstorder.
 Qed.
@@ -931,8 +928,12 @@ Ltac eval_in_vr_eq_dec H :=
   repeat (rewrite vr_eq_dec_is_Nat_eq_dec in H; simpl in H)
 .
 
+Ltac auto_show_it_is_sentence_loop :=
+  tryif (apply orb_false_iff; constructor) then auto_show_it_is_sentence_loop else (eval_vr_eq_dec; simplify_make_numeral)
+.
+
 Ltac auto_show_it_is_sentence :=
-  tryif (apply orb_false_iff; constructor) then auto_show_it_is_sentence else (eval_vr_eq_dec; simplify_make_numeral)
+  intros; auto_show_it_is_sentence_loop
 .
 
 Fixpoint relation_of_arity (n : nat) : Type :=
@@ -975,8 +976,7 @@ Proof with eauto.
   simpl.
   intros val1 val2.
   split.
-  - intros x.
-    auto_show_it_is_sentence.
+  - auto_show_it_is_sentence.
   - split.
     + intros H va.
       eval_vr_eq_dec.
@@ -1030,8 +1030,7 @@ Proof with eauto.
   simpl.
   intros val3 val2 val1 val0.
   split.
-  - intros x.
-    auto_show_it_is_sentence.
+  - auto_show_it_is_sentence.
   - split.
     + intros H va.
       eval_vr_eq_dec.
