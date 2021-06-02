@@ -312,10 +312,10 @@ Proof.
   reflexivity.
 Qed.
 
-Fixpoint unassocArity {A : Type} (m : nat) : forall n : nat, Arity (m + n) A -> Arity m (Arity n A) :=
+Fixpoint unassocArity (m : nat) : forall n : nat, Arity (m + n) w -> Arity m (Arity n w) :=
   match m with
-  | 0 => fun n : nat => fun f : Arity n A => f
-  | S m' => fun n : nat => fun f : w -> Arity (m' + n) A => fun r : w => unassocArity m' n (f r)
+  | 0 => fun n : nat => fun f : Arity n w => f
+  | S m' => fun n : nat => fun f : w -> Arity (m' + n) w => fun r : w => unassocArity m' n (f r)
   end
 .
 
@@ -347,18 +347,8 @@ Definition less : Arity 2 w :=
   fun x : w => fun y : w => if Compare_dec.lt_dec x y then 0 else 1
 .
 
-Fixpoint witness (n : nat) : Arity (n + 1) w -> Set :=
-  match n with
-  | 0 => fun f : w -> w => {x : w | f x = 0}
-  | S n' => fun f : w -> Arity (n' + 1) w => forall r : w, witness n' (f r)
-  end
-.
-
-Fixpoint mini (n : nat) : forall f : Arity (n + 1) w, witness n f -> Arity n w :=
-  match n with
-  | 0 => fun f : w -> w => fun s : {x : w | f x = 0} => first_nat (fun x : w => Nat.eqb (f x) 0) (proj1_sig s)
-  | S n' => fun f : w -> Arity (n' + 1) w => fun s : forall r : w, witness n' (f r) => fun r : w => mini n' (f r) (s r)
-  end
+Definition mini (n : nat) : Arity (n + 1) w -> Arity n w -> Arity n w :=
+  fun val : Arity (n + 1) w => fun witness : Arity n w => apArity n (apArity n (pureArity n (fun f : w -> w => fun x : w => first_nat (fun r : w => Nat.eqb (f r) 0) x)) (unassocArity n 1 val)) witness
 .
 
 Inductive IsArith : forall n : nat, Arity n w -> Prop :=
@@ -401,10 +391,11 @@ Inductive IsArith : forall n : nat, Arity n w -> Prop :=
 | miniA :
   forall m : nat,
   forall val1 : Arity (m + 1) w,
-  forall s : witness m val1,
+  forall witness : Arity m w,
   forall f : Arity m w,
   IsArith (m + 1) val1 ->
-  extensionality w m f (mini m val1 s) ->
+  universal m (apArity m (apArity m (pureArity m (fun f : w -> w => fun x : w => f x = 0)) (unassocArity m 1 val1)) witness) ->
+  extensionality w m f (mini m val1 witness) ->
   IsArith m f
 .
 
@@ -420,7 +411,7 @@ Ltac auto_show_IsArith :=
   | |- IsArith _ (proj ?m ?n) => apply (projA m n); heehee
   | |- IsArith _ (load ?m ?n ?val1 ?val2) => apply (loadA m n val1 val2); [auto_show_IsArith | auto_show_IsArith | heehee]
   | |- IsArith _ (call ?m ?n ?val1) => apply (callA m n val1); [auto_show_IsArith | heehee]
-  | |- IsArith _ (mini ?m ?val1 ?s) => apply (miniA m val1 s); [auto_show_IsArith | ..]
+  | |- IsArith _ (mini ?m ?val1 ?witness) => apply (miniA m val1 witness); [auto_show_IsArith | heehee | heehee]
   | _ => eauto
   end
 .
@@ -445,8 +436,8 @@ Qed.
 
 Fixpoint num (i : nat) : Arity 0 w :=
   match i with
-  | 0 => mini 0 (proj 0 0) (exist (fun x : w => proj 0 0 x = 0) 0 eq_refl)
-  | S i' => mini 0 (load 1 0 (call 1 1 (load 0 1 (call 0 2 less) (num i'))) (proj 0 0)) (exist (fun x : w => load 1 0 (call 1 1 (load 0 1 (call 0 2 less) (num i'))) (proj 0 0) x = 0) (S i) (num_aux i))
+  | 0 => mini 0 (proj 0 0) 0
+  | S i' => mini 0 (load 1 0 (call 1 1 (load 0 1 (call 0 2 less) (num i'))) (proj 0 0)) (S i')
   end
 .
 
@@ -623,34 +614,6 @@ Lemma eqIsArith :
   IsArith 2 eq.
 Proof with heehee.
   unfold eq. auto_show_IsArith; [apply andIsArith | apply notIsArith | apply notIsArith].
-Qed.
-
-Definition ite : Arity 4 w :=
-  load 4 0 (load 4 1 (call 4 2 plus) (load 4 0 (load 4 1 (call 4 2 mult) (load 4 0 (call 4 1 not) (proj 0 3))) (proj 1 2))) (load 4 0 (load 4 1 (call 4 2 mult) (load 4 0 (call 4 1 not) (proj 2 1))) (proj 3 0))
-.
-
-Lemma ite_is (m : nat) :
-  forall P : Arity m Prop,
-  forall Q : Arity m Prop,
-  universal m (apArity m (apArity m (pureArity m (fun p : Prop => fun q : Prop => p <-> ~ q)) P) Q) ->
-  forall chi_P : Arity m w,
-  isBoolean m chi_P ->
-  isCharOn m (assocArity m 0 chi_P) P ->
-  forall chi_Q : Arity m w,
-  isBoolean m chi_Q ->
-  isCharOn m (assocArity m 0 chi_Q) Q ->
-  forall val1 : Arity m w,
-  forall val2 : Arity m w,
-  let val : Arity (m + 0) w := (load m 0 (load m 1 (load m 2 (load m 3 (call m 4 ite) chi_P) val1) chi_Q) val2) in
-  universal m (apArity m (apArity m (apArity m (apArity m (apArity m (pureArity m (fun p : Prop => fun q : Prop => fun x1 : w => fun x2 : w => fun x : w => (x = x1 /\ p) \/ (x = x2 /\ q))) P) Q) val1) val2) (unassocArity m 0 val)).
-Proof with eauto.
-  unfold isBoolean. induction m; simpl...
-  unfold ite. simpl. intros.
-  destruct H0; destruct H2; (subst; simpl in *).
-  + tauto.
-  + left. split; [lia | tauto].
-  + right. split; [lia | tauto].
-  + tauto.
 Qed.
 
 End Arithmetic.
