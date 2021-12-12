@@ -1887,7 +1887,7 @@ Module mathcalL_E.
   Definition chi : substitution -> form -> vr :=
     fun sigma : substitution =>
     fun f : form =>
-    S (fold_right max 0 (map (fun x : vr => foldr max 0 (sigma x)) (getFVs_form f)))
+    S (fold_right max 0 (map (fun x : vr => fold_right max 0 (sigma x)) (getFVs_form f)))
   .
 
   Fixpoint subst_tm (sigma : substitution) (t : tm) {struct t} : tm :=
