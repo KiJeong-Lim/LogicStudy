@@ -1880,7 +1880,7 @@ Module mathcalL_E.
   Fixpoint makeSubst (items : list (prod vr tm)) {struct items} : substitution :=
     match items with
     | [] => nilSubst
-    | item :: items' => consSubst (fst item) (snd item) (makeSubst items')
+    | item :: items => consSubst (fst item) (snd item) (makeSubst items)
     end
   .
 
