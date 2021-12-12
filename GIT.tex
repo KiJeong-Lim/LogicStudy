@@ -1596,7 +1596,7 @@
 
   \begin{context}[Solutions]
     \begin{enumerate}
-      \item
+      \item[{1.}]
       \begin{itemize}
         \item[(a)] $X$와 $Y$를 문장이라고 하자.
         그러면 $\left( X \land Y \right)$는 문장 $\lnot \left( X \rightarrow \lnot Y \right)$의 약어이다.
@@ -1644,13 +1644,13 @@
         이상에서 $\exists v_i F$가 참일 때 그리고 그럴 때에만 어떤 $n \in \mathbb{N}$가 존재하여 $F \left[ v_i := \overline{n} \right]$이 참임을 알 수 있다.
       \end{itemize}
 
-      \item
+      \item[{2.}]
       \begin{itemize}
         \item[(a)] 논리식 $\exists v_3 v_2 = \left( v_1 \times v_3 \right)$이 ``$x$가 $y$의 약수이다''라는 관계를 표현하기 때문이다.
         \item[(b)] 논리식 $\left( v_1 \neq \overline{1} \land \left( \forall v_2 \forall v_3 \left( \left( v_1 = v_2 \times v_3 \right) \rightarrow \left( v_2 = \overline{1} \lor v_2 = v_1 \right) \right) \right) \right)$이 모든 소수들의 집합을 표현하기 때문이다.
       \end{itemize}
 
-      \item 집합 $A \subseteq \mathbb{N}$과 함수 $f : \mathbb{N} \to \mathbb{N}$가 싼술적이라고 하자.
+      \item[{3.}] 집합 $A \subseteq \mathbb{N}$과 함수 $f : \mathbb{N} \to \mathbb{N}$가 싼술적이라고 하자.
       그러면 자유롭게 나타나는 개체 변수가 $v_1$ 뿐인 어떤 논리식 $F_A$와 자유롭게 나타나는 개체 변수가 $v_1$과 $v_2$ 뿐인 어떤 논리식 $F_f$가 존재하여
       $$\left( \forall n \in \mathbb{N} \right) \left[ F_A \left[ v_1 := \overline{n} \right] \in \mathcal{T} \leftrightarrow n \in A \right]$$와
       $$\left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ F_f \left[ v_1 := \overline{x} , v_2 := \overline{y} \right] \in \mathcal{T} \leftrightarrow f \left( x \right) = y \right]$$가 성립한다.
@@ -1660,7 +1660,7 @@
       $A$과 $f$가 산술적인 경우에는,
       고려 중인 논리식이 산술적이게 되므로 $f^{-1} \left[ A \right]$도 산술적임을 알 수 있다.
 
-      \item
+      \item[{4.}]
       \begin{itemize}
         \item[(a)] $f : \mathbb{N} \to \mathbb{N}$와 $g : \mathbb{N} \to \mathbb{N}$ 모두 싼술적이라고 하자.
         그러면 개체 변수 $v_1$과 $v_2$만이 자유롭게 나타나는 어떤 두 논리식 $F_f$와 $F_g$가 존재하여
@@ -1684,13 +1684,13 @@
         함수 $\left( x , y \right) \mapsto f \left( g \left( x , y \right) \right)$는 $F_3$에 의하여 표현되므로, 모두 싼술적이다.
       \end{itemize}
 
-      \item $A$가 싼술적이므로, 개체 변수 $v_1$만이 자유롭게 나타나는 논리식 $F_A$가 존재하여
+      \item[{5.}] $A$가 싼술적이므로, 개체 변수 $v_1$만이 자유롭게 나타나는 논리식 $F_A$가 존재하여
       $$ \left( \forall n \in \mathbb{N} \right) \left[ F_A \left[ v_1 := \overline{n} \right] \leftrightarrow n \in A \right] $$이 성립한다.
       이때 논리식 $$\left( \left( F_A \left[ v_1 := v_2 \right] \land v_1 < v_2 \right) \land \forall v_3 \left( \left( F_A \left[ v_1 := v_3 \right] \land v_1 < v_3 \right) \rightarrow v_2 \leq v_3 \right) \right)$$을 고려하자.
-      이것은 관계 $ \left( y \in A \land x < y \right) \land \left( \forall z \in \mathbb{N} \right) \left[ \left( z \in A \land x < z \right) \rightarrow y \leq z \right] $를 표현하는데,
-      임의의 $x \in \mathbb{N}$와 임의의 $y \in \mathbb{N}$에 대하여 이 관계가 $x$와 $y$에 대하여 성립할 때 그리고 그럴 때에만 $R \left( x , y \right)$이므로, 관계 $R \subseteq \mathbb{N}^{2}$은 싼술적이다.
+      이 논리식은 관계 $ \left( y \in A \land x < y \right) \land \left( \forall z \in \mathbb{N} \right) \left[ \left( z \in A \land x < z \right) \rightarrow y \leq z \right] $를 표현하는데,
+      이 관계는 임의의 $x \in \mathbb{N}$와 $y \in \mathbb{N}$에 대하여 $R \left( x , y \right)$와 동등하므로, 관계 $R \subseteq \mathbb{N}^{2}$은 싼술적이다.
 
-      \item 문제를 풀기에 앞서, 괴델 넘버링의 기저를 $10$으로 취했을 때의 대각 함수 $d$를 계산해 보자.
+      \item[{6.}] 문제를 풀기에 앞서, 괴델 넘버링의 기저를 $10$으로 취했을 때의 대각 함수 $d$를 계산해 보자.
       임의의 $x \in \mathbb{N}$에 대하여,
       $\gnum \left( \overline{x} \right) = 10^{x}$임과 $$ \gnum \left( v_1 \right) = \gnum \left( \left( v \circ \right) \right) = 2 *_{10} 6 *_{10} 5 *_{10} 3 = 2653 $$임에 주목하면,
       \begin{align*}
@@ -1734,7 +1734,7 @@
         이 수의 $10$진 표기의 마지막 숫자는 $3$이므로 $H_B \left( h_B \right)$은 참임을 알 수 있다.
       \end{itemize}
 
-      \item 먼저 대각 함수 $d$는 싼술적이므로,
+      \item[{7.}] 먼저 대각 함수 $d$는 싼술적이므로,
       $v_1$과 $v_2$만이 자유롭게 나타나는 개체 변수인 논리식 $D$가 존재하여
       $$\left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ D \left[ v_1 := \overline{x} , v_2 := \overline{y} \right] \in \mathcal{T} \leftrightarrow d \left( x \right) = y \right]$$가 성립한다.
       임의의 $n \in \mathbb{N}$에 대하여,
@@ -1744,7 +1744,7 @@
       그러므로 $$ f \left( n \right) := \gnum \left( \forall v_1 \left( v_1 = \overline{\gnum \left( F_{n} \right)} \rightarrow F_{n} \right) \right) $$로 두자.
       그러면 $f$는 싼술적이므로 원하는 답을 얻었다.
 
-      \item \textbf{다음은 \underline{전한울}님의 풀이임을 밝힙니다:}
+      \item[{8.}] \textbf{다음은 \underline{전한울}님의 풀이임을 밝힙니다:}
 
       $A \subseteq \mathbb{N}$와 $B \subseteq \mathbb{N}$을 싼술적이라고 하자.
       그러면 개체 변수 $v_1$만이 자유롭게 나타나는 어떤 두 논리식 $F_A$와 $F_B$가 존재하여
@@ -1793,6 +1793,165 @@
       \end{align*}
       이다.
       이로써 $$X \in \mathcal{T} \leftrightarrow \gnum \left( Y \right) \in A$$와 $$Y \in \mathcal{T} \leftrightarrow \gnum \left( X \right) \in B$$가 성립함을 알 수 있다.
+    \end{enumerate}
+  \end{context}
+
+  \begin{context}[Comments]
+    \begin{enumerate}
+      \item[{1.}] 치환까지 Coq으로 형식화하면 다음과 같다:
+\begin{coqcode}
+Require Import Coq.Arith.PeanoNat.
+Require Import Coq.Lists.List.
+
+Module mathcalL_E.
+
+  Import ListNotations.
+
+  Section SyntaxOfmathcalL_E.
+
+  Definition vr : Set :=
+    nat
+  .
+
+  Definition vr_eq_dec :
+    forall x : vr,
+    forall y : vr,
+    {x = y} + {x <> y}.
+  Proof.
+    exact Nat.eq_dec.
+  Defined.
+
+  Inductive tm : Set :=
+  | ivarTm : forall x : vr, tm
+  | zeroTm : tm
+  | succTm : forall t1 : tm, tm
+  | plusTm : forall t1 : tm, forall t2 : tm, tm
+  | multTm : forall t1 : tm, forall t2 : tm, tm
+  | expnTm : forall t1 : tm, forall t2 : tm, tm
+  .
+
+  Inductive : form : Set :=
+  | eqnForm : forall t1 : tm, forall t2 : tm, form
+  | leqForm : forall t1 : tm, forall t2 : tm, form
+  | negForm : forall f1 : form, form
+  | impForm : forall f1 : form, forall f2 : form, form
+  | allForm : forall y : vr, forall f1 : form, form
+  .
+
+  Fixpoint getFVs_tm (t : tm) {struct t} : list vr :=
+    match t with
+    | ivarTm x => [x]
+    | zeroTm => []
+    | succTm t1 => getFVs_tm t1
+    | plusTm t1 t2 => getFVs_tm t1 ++ getFVs_tm t2
+    | multTm t1 t2 => getFVs_tm t1 ++ getFVs_tm t2
+    | expnTm t1 t2 => getFVs_tm t1 ++ getFVs_tm t2
+    end
+  .
+
+  Fixpoint getFVs_form (f : form) {struct f} : list vr :=
+    match f with
+    | eqnForm t1 t2 => getFVs_tm t1 ++ getFVs_tm t2
+    | leqForm t1 t2 => getFVs_tm t1 ++ getFVs_tm t2
+    | negForm f1 => getFVs_form f1
+    | impForm f1 f2 => getFVs_form f1 ++ getFVs_form f2
+    | allForm y f1 => remove vr_eq_dec y (getFVs_form f1)
+    end
+  .
+
+  Definition substitution : Set :=
+    vr -> tm
+  .
+
+  Definition nilSubst : substitution :=
+    ivarTm
+  .
+
+  Definition consSubst : vr -> tm -> substitution -> substitution :=
+    fun y : vr =>
+    fun t : tm =>
+    fun sigma : substitution =>
+    fun z : vr =>
+    if vr_eq_dec y z
+    then t
+    else sigma z
+  .
+
+  Fixpoint makeSubst (items : list (prod vr tm)) {struct items} : substitution :=
+    match items with
+    | [] => nilSubst
+    | item :: items' => consSubst (fst item) (snd item) (makeSubst items')
+    end
+  .
+
+  Definition chi : substitution -> form -> vr :=
+    fun sigma : substitution =>
+    fun f : form =>
+    S (fold_right max 0 (map (fun x : vr => foldr max 0 (sigma x)) (getFVs_form f)))
+  .
+
+  Fixpoint subst_tm (sigma : substitution) (t : tm) {struct t} : tm :=
+    match t with
+    | ivarTm x => sigma x
+    | zeroTm => zeroTm
+    | succTm t1 => succTm (subst_tm sigma t1)
+    | plusTm t1 t2 => plusTm (subst_tm sigma t1) (subst_tm sigma t2)
+    | multTm t1 t2 => multTm (subst_tm sigma t1) (subst_tm sigma t2)
+    | expnTm t1 t2 => expnTm (subst_tm sigma t1) (subst_tm sigma t2)
+    end
+  .
+
+  Fixpoint subst_form (sigma : substitution) (f : form) {struct f} : form :=
+    match f with
+    | eqnForm t1 t2 => eqnForm (subst_tm sigma t1) (subst_tm sigma t2)
+    | leqForm t1 t2 => leqForm (subst_tm sigma t1) (subst_tm sigma t2)
+    | negForm f1 => negForm (subst_form sigma f1)
+    | impForm f1 f2 => impForm (subst_form sigma f1) (subst_form sigma f2)
+    | allForm y f1 =>
+      let z : vr := chi sigma f in
+      allForm z (subst_form (consSubst y (ivarTm z) sigma) f1)
+    end
+  .
+
+  End SyntaxOfmathcalL_E.
+
+  Section SemanticsOfmathcalL_E.
+
+  Let val : Set :=
+    nat
+  .
+
+  Let env : Set :=
+    vr -> val
+  .
+
+  Fixpoint eval_tm (e : env) (t : tm) {struct t} : val :=
+    match t with
+    | ivarTm x => e x
+    | zeroTm => O
+    | succTm t1 => S (eval_tm e t1)
+    | plusTm t1 t2 => (eval_tm e t1) + (eval_tm e t2)
+    | multTm t1 t2 => (eval_tm e t1) * (eval_tm e t2)
+    | expnTm t1 t2 => (eval_tm e t1) ^ (eval_tm e t2)
+    end
+  .
+
+  Fixpoint eval_form (e : env) (f : form) {struct f} : Prop :=
+    match f with
+    | eqnForm t1 t2 => (eval_tm e t1) = (eval_tm e t2)
+    | leqForm t1 t2 => (eval_tm e t1) <= (eval_tm e t2)
+    | negForm f1 => not (eval_form e f1)
+    | impForm f1 f2 => (eval_form e f1) -> (eval_form e f2)
+    | allForm y f1 =>
+      forall n : val,
+      eval_form (fun z : vr => if vr_eq_dec y z then n else e z) f1
+    end
+  .
+
+  End SemanticsOfmathcalL_E.
+
+End mathcalL_E.
+\end{coqcode} 
     \end{enumerate}
   \end{context}
 
