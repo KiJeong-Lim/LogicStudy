@@ -1798,7 +1798,7 @@
 
   \begin{context}[Comments]
     \begin{enumerate}
-      \item[{1.}] 치환까지 Coq으로 형식화하면 다음과 같다:
+      \item[{1.}] 이 단원의 일부를 Coq으로 형식화하면 다음과 같다.
 \begin{coqcode}
 Require Import Coq.Arith.PeanoNat.
 Require Import Coq.Lists.List.
@@ -1817,9 +1817,6 @@ Module mathcalL_E.
     forall x : vr,
     forall y : vr,
     {x = y} + {x <> y}.
-  Proof.
-    exact Nat.eq_dec.
-  Defined.
 
   Inductive tm : Set :=
   | ivarTm : forall x : vr, tm
@@ -1947,6 +1944,12 @@ Module mathcalL_E.
       eval_form (fun z : vr => if vr_eq_dec y z then n else e z) f1
     end
   .
+
+  Theorem substitution_lemma :
+    forall f : form,
+    forall sigma : substitution,
+    forall e : env,
+    eval_form (fun z : vr => eval_tm e (sigma z)) f <-> eval_form e (subst_form sigma f).
 
   End SemanticsOfmathcalL_E.
 
