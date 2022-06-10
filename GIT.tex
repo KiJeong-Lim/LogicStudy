@@ -343,7 +343,7 @@
     $d$를 그 체계의 \underline{대각 함수}(\textit{diagonal function})라고 부른다.
 
     각각의 $A \subseteq \mathbb{N}$마다, $A^{*} := \left\{ n \in \mathbb{N} : d \left( n \right) \in A \right\} $로 놓자.
-    즉, $A^{*}$의 정의에 의하여 동등성 $$ \left( \forall n \in \mathbb{N} \right) \left[ n \in A^{*} \leftrightarrow \gnum \left( E_{n} \left( n \right) \right) \in A \right] $$이 성립한다.\footnote
+    즉, $A^{*}$의 정의에 의하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ n \in A^{*} \leftrightarrow \gnum \left( E_{n} \left( n \right) \right) \in A \right] $$이 성립한다.\footnote
     {
       $A^{*}$은 대각 함수 $d$ 아래의 $A$의 역상이기 때문에 $d^{-1} \left[ A \right]$로도 쓰일 수 있다.
     }
@@ -368,7 +368,7 @@
     우리는 $G$가 참이지만 증명 가능하지 않음을 보일 것이다.
     $H$가 $\mathcal{L}$에서 $\tilde{P}^{*}$를 표현하므로,
     $$ H \left( n \right) \in \mathcal{T} \iff n \in \tilde{P}^{*} \qquad \mathrm{for} \quad \forall n \in \mathbb{N} $$이다.
-    이 동등성이 임의의 $n$에 대하여 성립하므로,
+    이 명제가 임의의 $n$에 대하여 성립하므로,
     $n$이 $h$일 때도 성립한다.
     그러므로 $n$에 $h$를 대입하여 --
     이 부분의 논증은 \underline{대각화하기}(\textit{diagonalizing})라고 불린다 --
@@ -783,7 +783,7 @@
         & \iff d \left( h \right) \in A \\
         & \iff \gnum \left( H \left( h \right) \right) \in A
       \end{align*}
-      의 동등성을 얻는데,
+      를 얻는데,
       이는 $H \left( h \right)$가 $A$에 대한 괴델 문장 중 하나라는 것을 의미한다.
       
       \item[{6.}] $A \subseteq \mathbb{N}$이 주어졌다고 하자.
@@ -1796,168 +1796,6 @@
     \end{enumerate}
   \end{context}
 
-  \begin{context}[Comments]
-    \begin{enumerate}
-      \item[{1.}] 이 단원의 일부를 Coq으로 형식화하면 다음과 같다.
-\begin{coqcode}
-Require Import Coq.Arith.PeanoNat.
-Require Import Coq.Lists.List.
-
-Module mathcalL_E.
-
-  Import ListNotations.
-
-  Section SyntaxOfmathcalL_E.
-
-  Definition vr : Set :=
-    nat
-  .
-
-  Definition vr_eq_dec :
-    forall x : vr,
-    forall y : vr,
-    {x = y} + {x <> y}.
-
-  Inductive tm : Set :=
-  | ivarTm : forall x : vr, tm
-  | zeroTm : tm
-  | succTm : forall t1 : tm, tm
-  | plusTm : forall t1 : tm, forall t2 : tm, tm
-  | multTm : forall t1 : tm, forall t2 : tm, tm
-  | expnTm : forall t1 : tm, forall t2 : tm, tm
-  .
-
-  Inductive : form : Set :=
-  | eqnForm : forall t1 : tm, forall t2 : tm, form
-  | leqForm : forall t1 : tm, forall t2 : tm, form
-  | negForm : forall f1 : form, form
-  | impForm : forall f1 : form, forall f2 : form, form
-  | allForm : forall y : vr, forall f1 : form, form
-  .
-
-  Fixpoint getFVs_tm (t : tm) {struct t} : list vr :=
-    match t with
-    | ivarTm x => [x]
-    | zeroTm => []
-    | succTm t1 => getFVs_tm t1
-    | plusTm t1 t2 => getFVs_tm t1 ++ getFVs_tm t2
-    | multTm t1 t2 => getFVs_tm t1 ++ getFVs_tm t2
-    | expnTm t1 t2 => getFVs_tm t1 ++ getFVs_tm t2
-    end
-  .
-
-  Fixpoint getFVs_form (f : form) {struct f} : list vr :=
-    match f with
-    | eqnForm t1 t2 => getFVs_tm t1 ++ getFVs_tm t2
-    | leqForm t1 t2 => getFVs_tm t1 ++ getFVs_tm t2
-    | negForm f1 => getFVs_form f1
-    | impForm f1 f2 => getFVs_form f1 ++ getFVs_form f2
-    | allForm y f1 => remove vr_eq_dec y (getFVs_form f1)
-    end
-  .
-
-  Definition substitution : Set :=
-    vr -> tm
-  .
-
-  Definition nilSubst : substitution :=
-    ivarTm
-  .
-
-  Definition consSubst : vr -> tm -> substitution -> substitution :=
-    fun y : vr =>
-    fun t : tm =>
-    fun sigma : substitution =>
-    fun z : vr =>
-    if vr_eq_dec y z
-    then t
-    else sigma z
-  .
-
-  Fixpoint makeSubst (items : list (prod vr tm)) {struct items} : substitution :=
-    match items with
-    | [] => nilSubst
-    | item :: items => consSubst (fst item) (snd item) (makeSubst items)
-    end
-  .
-
-  Definition chi : substitution -> form -> vr :=
-    fun sigma : substitution =>
-    fun f : form =>
-    S (fold_right max 0 (map (fun x : vr => fold_right max 0 (sigma x)) (getFVs_form f)))
-  .
-
-  Fixpoint subst_tm (sigma : substitution) (t : tm) {struct t} : tm :=
-    match t with
-    | ivarTm x => sigma x
-    | zeroTm => zeroTm
-    | succTm t1 => succTm (subst_tm sigma t1)
-    | plusTm t1 t2 => plusTm (subst_tm sigma t1) (subst_tm sigma t2)
-    | multTm t1 t2 => multTm (subst_tm sigma t1) (subst_tm sigma t2)
-    | expnTm t1 t2 => expnTm (subst_tm sigma t1) (subst_tm sigma t2)
-    end
-  .
-
-  Fixpoint subst_form (sigma : substitution) (f : form) {struct f} : form :=
-    match f with
-    | eqnForm t1 t2 => eqnForm (subst_tm sigma t1) (subst_tm sigma t2)
-    | leqForm t1 t2 => leqForm (subst_tm sigma t1) (subst_tm sigma t2)
-    | negForm f1 => negForm (subst_form sigma f1)
-    | impForm f1 f2 => impForm (subst_form sigma f1) (subst_form sigma f2)
-    | allForm y f1 =>
-      let z : vr := chi sigma f in
-      allForm z (subst_form (consSubst y (ivarTm z) sigma) f1)
-    end
-  .
-
-  End SyntaxOfmathcalL_E.
-
-  Section SemanticsOfmathcalL_E.
-
-  Let val : Set :=
-    nat
-  .
-
-  Let env : Set :=
-    vr -> val
-  .
-
-  Fixpoint eval_tm (e : env) (t : tm) {struct t} : val :=
-    match t with
-    | ivarTm x => e x
-    | zeroTm => O
-    | succTm t1 => S (eval_tm e t1)
-    | plusTm t1 t2 => (eval_tm e t1) + (eval_tm e t2)
-    | multTm t1 t2 => (eval_tm e t1) * (eval_tm e t2)
-    | expnTm t1 t2 => (eval_tm e t1) ^ (eval_tm e t2)
-    end
-  .
-
-  Fixpoint eval_form (e : env) (f : form) {struct f} : Prop :=
-    match f with
-    | eqnForm t1 t2 => (eval_tm e t1) = (eval_tm e t2)
-    | leqForm t1 t2 => (eval_tm e t1) <= (eval_tm e t2)
-    | negForm f1 => not (eval_form e f1)
-    | impForm f1 f2 => (eval_form e f1) -> (eval_form e f2)
-    | allForm y f1 =>
-      forall n : val,
-      eval_form (fun z : vr => if vr_eq_dec y z then n else e z) f1
-    end
-  .
-
-  Theorem substitution_lemma :
-    forall f : form,
-    forall sigma : substitution,
-    forall e : env,
-    eval_form (fun z : vr => eval_tm e (sigma z)) f <-> eval_form e (subst_form sigma f).
-
-  End SemanticsOfmathcalL_E.
-
-End mathcalL_E.
-\end{coqcode} 
-    \end{enumerate}
-  \end{context}
-
   \newpage
 
   \section{제곱 연산이 있는 페아노 산술의 불완전성}
@@ -2068,5 +1906,65 @@ End mathcalL_E.
   \hspace{12pt}
 
   이제 P.E.의 모든 증명가능한 문장들의 괴델 수들을 모은 집합이 (바로 전 단원에서의 집합 $T$와 다르게) 산술적인 집합이라는 것을 증명하는 데 집중하겠다.
+
+  \noindent \textbf{\S2. 예비 사항}
+
+  우리는 (이전 장의 명제 1과 그것의 따름정리에 의하여)
+  이미 아무 기저 $ b \ge 2 $에 대하여 관계 $ x *_{b} y = z $가 싼술적이라는 것과
+  각 $n \ge 2$에 대하여 관계 $ x_1 *_{b} * x_2 *_{b} \cdots *_{b} x_n = y $가 싼술적이라는 것을 안다.
+
+  숫자 $x$의 기저 $b$ 표기가 숫자 $y$의 기저 $b$ 표기의 시작분절(initial segmemt)이라면,
+  기저 $b$ 표기에서 $x$가 $y$를 \underline{시작시킨다}(\textit{begin})고 말한다.\footnote
+  {
+    예를 들어, 기저 $10$ 표기에서 $593$은 $59348$을 시작시킨다; 또한 $593$은 $593$을 시작시킨다.
+  }
+  $0$은 $0$을 제외한 어떤 수도 시작시키지 않는다.\footnote
+  {
+    $59 = 059$임에도 불구하고, 우리는 $0$이 $59$를 시작시킨다고 말하지 \textit{않는다}.
+  }
+  ``기저 $b$ 표기에서 $x$가 $y$를 시작시킨다''를 ``$x B_{b} y$''로 적는다.
+  $x$가 $y$의 최종분절(final segment)일 때 $x$가 기저 $b$ 표기에서 $y$를 \underline{끝낸다}(\textit{end})고 한다 -- 기호로는, $x E_{b} y$라고 적는다.\footnote
+  {
+    예를 들어, 기저 $10$ 표기에서 $348$은 $59348$를 끝낸다; $48$도 $59348$을 끝낸다.
+    또한, $0$은 $570$을 끝내고 $70$과 $570$도 마찬가지로 $570$을 끝낸다.
+  }
+  (기저 $b$ 표기에서) $x$가 $y$를 시작시키는 어떤 수로 끝날 때, $x$는 $y$의 \underline{부분}(\textit{part})이라고 한다 -- 기호로는, $x P_{b} y$라고 적는다.\footnote
+  {
+    예를 들어, 기저 $10$ 표기에서 $59$는 $934$, $34$와 마찬가지로 $59348$의 부분이다.
+    또한 $0$은 $5076$의 부분이지만, $576$의 부분인 것은 아니다.
+  }
+  (기저 $b$ 표기에서) ``$x$가 $y$를 시작시킨다''는 관계를 고려하자.
+  $0$이 $y$의 부분이 아니라면, 이 관계가 성립할 때 그리고 그럴 때에만 $x = y$이거나 $x \ne 0 \land \exists z \left( x *_{b} y = z \right)$이다.
+  그러나, 일반적인 경우에서는 $0$이 $y$의 부분이 될 수 있고, $x$가 $y$를 시작시킬 때 그리고 그럴 때에만 $x = y$이거나 $x = 0$이고 어떤 $z$와 $b$의 멱 $w$에 대하여 $\left( x \times w \right) *_{b} z = y$이다.\footnote
+  {
+    예를 들어, 기저 $10$ 표기에서, $5$가 $5007$을 시작시키는 이유는 위의 조건이 $z = 7$, $w = 100$에 대하여 성립하기 때문이고,
+    $5$가 $57$을 시작시키는 이유는 위의 조건이 $z = 7$, $w = 1$에 대하여 성립하기 때문이다.
+  }
+  관련된 $z$와 $w$ 모두 $y$보다 작거나 같다(실제로는 작지만)는 사실에 주목하자 -- 이 사실은 이 장에서가 아니라 뒷 장에서 중요하다.
+  관계 ``$x$가 $y$를 끝낸다''와 ``$x$가 $y$의 부분이다''는 기술하기에 훨씬 쉽고, 다음과 같은 동치 명제들을 얻게 된다:
+  \begin{align*}
+    x B_{b} y & \iff x = y \lor \left( x \ne 0 \land \left( \exists z \le y \right) \left( \exists w \le y \right) \left[ \mathrm{Pow}_{b} \left( w \right) \land \left( x \times w \right) *_{b} z = y \right] \right) ; \\
+    x E_{b} y & \iff x = y \lor \left( \exists z \le y \right) \left[ z *_{b} x = y \right] ; \\
+    x P_{b} y & \iff \left( \exists z \le y \right) \left[ z E_{b} y \land x B_{b} z \right] .
+  \end{align*}
+
+  따라서, 관계 $x B_{b} y$, $x E_{b} y$와 $x P_{b} y$는 모두 싼술적이다. 또한
+  $$ x_{1} *_{b} x_{2} *_{b} \cdots *_{b} x_{n} P_{b} y \iff \left( \exists z \le y \right) \left[ x_{1} *_{b} x_{2} *_{b} \cdots *_{b} x_{n} = z \land z P_{b} y \right] $$이므로,
+
+  \begin{context}[Proposition 1]
+    아무 $b \ge 2$와 아무 $n \ge 2$에 대하여 다음 관계들은 싼술적이다. \setstretch{1.0}
+    \begin{enumerate}
+      \item $x B_{b} y$
+      \item $x E_{b} y$
+      \item $x P_{b} y$
+      \item $x_{1} *_{b} x_{2} *_{b} \cdots *_{b} x_{n} P_{b} y$
+    \end{enumerate} \setstretch{1.5}
+  \end{context}
+
+  \begin{context}[Remarks]
+    위의 동치명제들에서 ``$\left( \exists z \le y \right)$''라고 적지 않고 더 단순하게 ``$\exists z$''라고 적어도,
+    위의 관계들이 싼술적이라는 것을 보이는 데 무리가 없다. 우리가 더 복잡하게 적은 목적은 뒷 장에서 나타나는데,
+    위 관계들이 싼술적일 뿐만 아니라 \underline{구성적인}(\textit{constructive}) 산술적 관계라고 알려진 더 좁은 관계들의 분류에 속한다는 것을 보이기 위함이 그 목적이다.
+  \end{context}
 
 \end{document}
