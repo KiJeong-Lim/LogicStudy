@@ -1,6 +1,9 @@
 # LogicStudy
-- my notes for mathematical logic
+
+- My notes for mathematical logic
 
 ## GIT
 
 - `Goedel's Incompleteness Theorems` written by Raymond M. Smullyan
+
+- Thanks to `Junyoung Jang` and `Hanul Jeon`
