@@ -1969,7 +1969,7 @@
     위 관계들이 싼술적일 뿐만 아니라 \textit{구성적인} 산술적 관계라고 알려진 더 좁은 관계들의 분류에 속한다는 것을 보이기 위함이 그 목적이다.
   \end{context}
 
-  이 챕터의 나머지에서, $b$는 $13$이 될 것이고, 어수선함을 줄이기 위하여, 아래 첨자 $b$를 생략하고 단지 $x B y$, $x E y$ 또는 $x P y$라고만 적을 것이다.
+  이 장의 나머지에서, $b$는 $13$이 될 것이고, 어수선함을 줄이기 위하여, 아래 첨자 $b$를 생략하고 단지 $x B y$, $x E y$ 또는 $x P y$라고만 적을 것이다.
   또한 지금부터 $x *_{13} y$를 $x y$라고 적을 것이다.\footnote
   {
     이것은 어떠한 혼란도 야기하지 않는다. $x$ 곱하기 $y$를 항상 $x \cdot y$로 적기 때문이다.
@@ -2011,5 +2011,28 @@
 
   이제부터 $ \left( \forall x \in y \right) \varphi $를 $$ \forall x \left( x \in y \rightarrow \varphi \right) $$로 줄여쓰고,
   $ \left( \exists x , y \prec_{w} z \right) \varphi$를 $$ \exists x \exists y \left( x \prec_{w} w \land y \prec_{w} z \land \varphi \right) $$로 줄여쓰자.
+
+  \begin{context}[Formation Sequences]
+    이전 장에서 \textit{논리항}과 \textit{논리식}의 정의는 귀납적이었다;
+    우리는 기존의 논리항에서 새로운 논리항을 그리고 기존의 논리식에서 새로운 논리식을 구성하는 규칙을 주었다.
+    우리는 이 귀납적인 정의를 명시적인 정의로 대체하여야 한다.
+
+    아무 표현식 $X$, $Y$와 $Z$에 대하여,
+    $Z$가 $\left( X + Y \right)$, $\left( X \times Y \right)$, $X \mathbf{E} Y$, $X^{\prime}$ 중 하나일 때 그리고 그럴 때에만
+    $R_t \left( X , Y , Z \right)$라고 정의하자.\footnote
+    {
+      우리는 $R_t$를 \textit{논리항에 대한 형성 관계}라고 부를 수 있을 것이다.
+    }
+    논리항에 대한 형성 \textit{유한열}이란, 각 원소 $X_{i}$에 대하여 $X_{i}$는 변수 또는 숫자이거나 선행하는 원소 $X_{j}$와 $X_{k}$가 있어서(단, $j < i$이고 $k < i$) $R_t \left( X_{j}, X_{k}, X_{i} \right)$인 유한열 $X_1$, $\cdots$, $X_n$을 의미한다.
+    그러면 우리는 $X$가 항이라 함을 $X$가 원소인 형성 유한열이 존재한다로 정의할 수 있다.
+    
+    논리식도 마찬가지로 한다. $Z$가 $\lnot X$ 또는 $\left( X \to Y \right)$이거나 어떤 변수 $v_{i}$에 대하여 $\forall v_{i} X$일 때 그리고 그럴 때에만
+    $R_f \left( X , Y , Z \right)$라고 정의하자.\footnote
+    {
+      우리는 $R_f$를 \textit{논리에 대한 형성 관계}라고 부를 수 있을 것이다.
+    }
+    \textit{논리식}에 대한 형성 유한열을 각 $i \le n$에 대하여 $X_{i}$가 원자 논리식이거나 $j < i$와 $k < i$가 있어서 $R_f \left( X_{j} , X_{k} , X_{i} \right)$인 것으로 정의한다.
+    그러면 표현식 $X$가 논리식일 때 그리고 그럴 때에만 $X$가 원소인 논리식에 대한 형성 유한열이 존재한다.
+  \end{context}
 
 \end{document}
