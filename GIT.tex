@@ -77,1962 +77,1962 @@
 
 \begin{document}
 
-  \setstretch{1.5}
-  \maketitle
-
-  이 글에는 논리학자 Raymond M. Smullyan의 저서 ``G\"odel's Incompleteness Theorems''의 번역과 더불어 제 사견도 들어 있습니다.
-
-  \textbf{감사의 인사.} 이 글은 장준영\footnote{https://github.com/Ailrun}님과 전한울\footnote{https://github.com/hanuljeon95}님의 도움을 받아 작성되었습니다.
-
-  \newpage
-
-  \section{G\"odel의 증명 뒤의 일반적인 아이디어}
-  \hspace{12pt}
-
-  다음 몇 개의 단원에서 다양한 [산술의 공리화]에 대한 불완전성 증명들을 공부할 것이다.
-  G\"odel은 1931년 공리적 집합론에 대한 그의 원래 증명을 이끌어냈지만,
-  그 방법은 공리적 수론에도 (동등하게) 적용될 수 있다.
-  공리적 수론에 대한 불완전성은,
-  공리적 집합론의 불완전성을 쉽게 도출해 낼 수 있으므로,
-  실제로 더 강한 결과이다.
-  
-  G\"odel은 그의 기념비적인 논문을 다음의 놀라운 낱말들로 시작한다.
-
-  \begin{quotation}
-    ``더 정확한 방향으로의 [수학의 발전]은 그것의 광범위한 분야가 형식화되도록 이끌었고,
-    그리하여 증명들은 몇 개 되지 않는 기계적인 규칙들을 따라 이끌어 낼 수 있다.
-    오늘날 가장 포괄적인 형식 중 하나는 Whitehead와 Russel의 Principia Mathematica이고,
-    다른 하나는 공리적 집합론의 Zermelo-Fraenkel 체계이다.
-    두 체계 모두 너무 확장적이어서,
-    오늘날 사용되는 모든 증명 기법들이 그것들 안에서 형식화 될 수 있다 --
-    즉, 몇 가지 안 되는 공리들과 추론 규칙들로 축약될 수 있다.
-    그러므로, 이 공리들과 추론 규칙들이 관심 있는 체계 안에서 형식화될 수 있는 \textit{모든} 수학적 질문들을 결정하기에\footnote
-    {
-      여기서, ``결정''의 뜻은 증명 또는 반증을 하여 참인지 거짓인지 결정한다는 뜻이다.
-    }
-    충분하다고 받아들이는 게 합리적으로 보인다.
-    후술할 내용에서 이는 사실이 아니라는 것과,
-    오히려, 언급된 두 체계 모두에서 상대적으로 쉬운 정수론의 문제들 중에 이 공리들을 기저로 하여 결정될 수 없는 문제가 존재한다는 것을 보일 것이다.''
-  \end{quotation}
-
-  G\"odel은 그리고는 이러한 상황이 고려 중인 두 체계의 특별한 본성에 의존하지 않고,
-  어떤 수학 체계들의 대규모 모임에서 성립함을 설명하기 시작한다.
-  이 수학 체계들의 ``대규모 모임''이란 과연 무엇일까?
-  이 어구에 대하여 다양한 해석들이 있어왔고,
-  G\"odel의 그 정리는 몇 가지 방법으로 일반화될 수 있는데,
-  이 책에서 많은 그러한 일반화들을 고려할 것이다.
-  그 일반화들 중 일반적인 독자에게 가장 직접적이고 가장 쉽게 접근 가능한 하나가 가장 덜 알려져 있는 것으로 보이는데,
-  이는 매우 희한하다.
-  이를 더욱 희한하게 만드는 것은,
-  문제의 그 방법이 G\"odel 그 자신이 그의 원래 논문의 서론에서 시사한 바로 그것이라는 것이다!
-  나는 곧 이것으로 (혹은 더 일반화된 것으로) 방향을 틀 것이다.
-  그러나 그 전에 나는 독자가,
-  G\"odel의 아이디어의 본질을 단순하고 교육적인 방법으로 설명해 주는,
-  다음 퍼즐을 보길 바란다.
-
-  \begin{context}[A G\"odelian Puzzle]
-    다음의 다섯 가지 기호로 이루어진 다양한 표현식을 출력해 내는 어떤 계산하는 기계를 고려하자:
-    $$ \sim \qquad P \qquad N \qquad \left( \right. \qquad \left. \right) $$
-    
-    \underline{표현식}(\textit{expression})이란 위의 다섯 가지 기호들의 문자열 중 길이가 $0$은 아니지만 유한한 것을 의미한다.
-    그 기계가 표현식 $X$를 출력해 낼 수 있다면,
-    $X$를 \underline{출력 가능}(\textit{printable})하다고 한다.
-    그 기계는 그것이 출력해 낼 수 있는 표현식이라면 무엇이든지 언젠가는 출력해 내도록 설계되어 있다고 가정하자.
-
-    표현식 $X$의 \underline{노름}(\textit{norm})이란,
-    표현식 $X \, \left( \, X \, \right)$를 의미한다 --
-    예를 들어, $P \, \sim$의 노름은 $P \, \sim \left( P \, \sim \right)$이다.
-    \underline{문장}(\textit{sentence})이란, 다음 네 가지 꼴 중 하나의 형태를 띤 모든 표현식을 의미한다 --
-    여기서, $X$에는 임의의 표현식이 올 수 있다:
-    \begin{itemize}
-      \item[(1)] $P \left( \, X \, \right)$
-      \item[(2)] $P \, N \, \left( \, X \, \right)$
-      \item[(3)] $\sim \, P \, \left( \, X \, \right)$
-      \item[(4)] $\sim \, P \, N \, \left( \, X \, \right)$   
-    \end{itemize}
-
-    비형식적으로, $P$는 ``printable''을; $N$은 ``the norm of''를; $\sim$은 ``not''을 의미한다.
-    그런즉, 표현식 $X$에 대하여,
-    $X$가 출력 가능할 때 (그리고 그럴 때에만) $P \, \left( \, X \, \right)$를 \underline{참}(\textit{true})이라고 정의하고;
-    $X$의 노름이 출력 가능할 때 (그리고 그럴 때에만) $P \, N \, \left( \, X \, \right)$를 \underline{참}(\textit{true})이라고 정의하고;
-    $X$가 출력 가능하지 않을 때 (그리고 그럴 때에만) $\sim \, P \, \left( \, X \, \right)$를 \underline{참}(\textit{true})이라고 정의하고;
-    $X$의 노름이 출력 가능하지 않을 때 (그리고 그럴 때에만) $\sim \, P \, N \, \left( \, X \, \right)$를 \underline{참}(\textit{true})이라고 정의한다.\footnote
-    {
-      마지막 문장은 ``Not printable the norm of $X$''라고 읽거나,
-      혹은 더 좋은 영어로 ``The norm of $X$ is not printable''라고 읽는다.
-    }
-
-    이로써 무슨 문장이 참인지에 대한 완벽한 정의를 갖추었는데,
-    그것은 자기 참조의 흥미로운 경우이다:
-    그 기계는 자신이 출력할 수 있는 문장은 무엇이고 출력할 수 없는 문장은 무엇인지에 대한 여러 가지의 문장들을 출력하기 때문에,
-    자신의 행동을 기술하는 셈이다!\footnote
-    {
-      이것은 자의식 있는 생물과 다소 닮았다.
-      또한 그러한 컴퓨들이 왜 인공지능 분야에서 일하는 사람들에게 관심이 있는지를 알 수 있다.
-    }
-
-    그 기계가 완벽하게 작동하여 그 기계에 의하여 출력되는 모든 문장들이 참이라는 사실이 주어졌다.
-    그러므로, 예를 들어, 그 기계가 $P \, \left( \, X \, \right)$를 출력할 때마다 $X$가 정말로 출력 가능하다 --
-    $X$는 그 전 혹은 그 후에 출력될 것이다.
-    마찬가지로, 그 기계가 $P \, N \, \left( \, X \, \right)$를 출력할 때마다 $X$의 노름인 $X \left( \, X \, \right)$도 출력 가능하다.
-    $X$가 출력 가능하다고 가정하자.
-    그렇다면 $P \, \left( \, X \, \right)$가 출력 가능해질까?
-    그럴 필요는 없다.
-    $X$가 출력 가능하다면, $P \, \left( \, X \, \right)$는 \textit{참}이지만,
-    그 기계가 거짓인 문장을 절대로 출력하지 않을 뿐이지,
-    \textit{모든} 참인 문장을 출력할 수 있다는 사실은 주어지지 않았기 때문이다.\footnote
-    {
-      그 기계가 문장이 아닌 표현식을 출력하는지는 전혀 중요하지 않다.
-      중요한 것은 그 기계에 의하여 출력되는 \textit{문장}들은 모두 참이라는 사실이다.
-    }
-
-    그렇다면, 그 기계가 모든 참인 문장을 출력\textit{할 수 있을까}?
-    대답은 \textit{아니오}이다.
-    이제 독자를 위한 수수께기를 내겠다:
-    그 기계가 출력할 수 없지만 참인 문장을 하나 찾아라.\footnote
-    {
-      도움말: 자신의 출력 불가능성을 선언하는 문장을 찾아라 --
-      즉, 그 문장은 자신이 그 기계에 의하여 출력될 수 없을 때 그리고 그럴 때에만 참이다.
-      해답은 다음 문제 뒤에 줄 것이다.
-    }
-  \end{context}
-
-  \begin{context}[A Variant of the Puzzle]
-    위의 수수께기의 변종인 다음 문제는 독자들에게 \underline{괴델 넘버링}(\textit{G\"odel numbering})의 개념을 소개할 것이다.
-
-    이제 다음 다섯 가지의 기호들로 구성된 문자열들을 출력해 내는 또 다른 기계가 주어졌다고 하자:
-    $$ \sim \qquad P \qquad N \qquad 1 \qquad 0 $$
-
-    우리는 자연수를 이진 표기법으로 (1과 0의 문자열로서) 자연수를 나타낼 것이고,
-    이 문제의 목적에 맞추어,
-    그 둘을 나타내는 이진 숫자들을 비교함으로써 두 자연수를 식별할 것이다.
-
-    각 표현마다 \underline{괴델 수}(\textit{G\"odel number})라고 불리는 수를 할당할 것이다.
-    그렇게 하기 위하여, 다음 규칙을 따르자:
-    단일 기호 $\sim$, $P$, $N$, $1$, $0$의 괴델 수는 각각 $10$, $100$, $1000$, $10000$, $100000$이다.
-    그리고, 복합식의 괴델 수는 각 기호들을 \textit{그것의} 괴델 수로 교체하여 얻는다 --
-    예를 들어 $P \, N \, P$의 괴델 수는 $1001000100$이다.
-    표현식 $X$의 \underline{노름}(\textit{norm})을 $X$ 뒤에 $X$의 괴델 수를 붙인 표현식으로 재정의한다.
-    이제 \underline{문장}(\textit{sentence})이란 다음 네 가지 꼴 중 하나의 형태를 띤 표현식이다:
-    $P \, X$, $P \, N \, X$, $\sim \, P \, X$ 그리고 $\sim \, P \, N \, X$ --
-    여기서 $X$에는 임의의 이진 숫자가 올 수 있다.
-    이진 숫자 $X$에 대하여, 어떤 표현식의 괴델 수가 $X$이고 그 표현식이 출력 가능할 때 그리고 그럴 때에만,
-    $P \, \left( \, X \, \right)$를 참이라고 한다.
-    이진 숫자 $X$에 대하여, 어떤 표현식의 괴델 수가 $X$이고 그 표현식의 노름이 출력 가능할 때 그리고 그럴 때에만,
-    $P \, N \, \left( \, X \, \right)$를 참이라고 한다.
-    이진 숫자 $X$에 대하여, $P \, \left( \, X \, \right)$가 참이 아닐 때 그리고 그럴 때에만,
-    $\sim \, P \, \left( \, X \, \right)$를 참이라고 한다.
-    이진 숫자 $X$에 대하여, $P \, N \, \left( \, X \, \right)$가 참이 아닐 때 그리고 그럴 때에만,
-    $\sim \, P \, N \, \left( \, X \, \right)$를 참이라고 한다.
-
-    전과 마찬가지로 그 기계는 거짓인 문장을 절대로 출력하지 않는다고 한다.
-    참이지만 그 기계가 출력할 수 없는 문장을 하나 찾아라.
-  \end{context}
-
-  \begin{context}[Solutions]
-    첫 번째 문제의 답은 $ \sim \, P \, N \, \left( \, \sim \, P \, N \, \right) $이다.
-    ``참''의 정의에 의하여, 이 문장이 참일 때 그리고 그럴 때에만 $ \sim \, P \, N $의 노름이 출력 가능하지 않다.
-    그런데 $ \sim \, P \, N $의 노름이 바로 문장 $ \sim \, P \, N \, \left( \, \sim \, P \, N \, \right) $이다.
-    그런즉, 그 문장이 참일 때 그리고 그럴 때에만 그것은 출력 가능하지 않다.
-    이는 그 문장이 참이고 출력 가능하지 않는 경우와 거짓이고 출력 가능한 경우 밖에 없음을 의미한다.
-    그러나 후자는 참이지 않은 문장은 절대로 출력하지 않는다는 가정을 위반한다.
-    그러므로 그 문장은 참이지만 출력 가능하지 않다.
-
-    당연히, 다섯 가지의 기호들로 구성된 다양한 표현식들을 \textit{출력}하는 기계를 논하는 대신,
-    같은 기호들로 구성된 다양한 문장들을 \textit{증명}하는 수학 체계를 논할 수도 있다.
-    우리는 문자 $P$를, 그 기계에 의하여 출력 가능하다는 뜻 대신, 그 체계에서 \underline{증명 가능}(\textit{provable})하다는 뜻으로 재해석할 수 있다.
-    그러면, 만약 그 체계가 완전히 정확하다고 할 때 (즉, 거짓인 문장은 절대 증명 가능하지 않을 때),
-    문장 $ \sim \, P \, N \, \left( \, \sim \, P \, N \, \right) $는 참이지만 그 체계에서 증명 가능하지 않는 문장이 될 것이다.
-
-    추가로, 문장 $ P \, N \, \left( \, \sim \, P \, N \, \right) $이 거짓임을 알 수 있다 --
-    왜냐하면 그것의 부정이 참이기 때문이다.
-    그러므로 (그 체계가 정확하다고 가정할 때) 그것 또한 그 체계에서 증명 가능하지 않아야 한다.
-    그러므로 문장 $ P \, N \, \left( \, \sim \, P \, N \, \right) $는 \underline{결정 불가능}(\textit{undecidable})한 문장의 예이다 --
-    즉, 자신도 자신의 부정도 그 체계에서 증명 가능하지 않다.
-    
-    두 번째 문제의 답은 $ \sim \, P \, N \, 1 \, 0 \, 1 \, 0 \, 0 \, 1 \, 0 \, 0 \, 0 $이다.
-  \end{context}
-
-  이제 일반적인 설정에서의 몇 가지 불완전성 논증들로 방향을 틀자:
-  특정 성질이 있는 수학 체계에는 반드시 괴델의 논증이 통한다는 것을 보일 것이다.
-  뒷 단원들에서는 특정 체계들을 살펴보고 그들이 정말로 그러한 성질을 가지고 있음을 보일 것이다.
-
-  \subsection{G\"odel과 Tarski의 정리의 추상적인 형태}
-  \hspace{12pt}
-
-  괴델의 논증을 적용할 수 있는 각각의 체계 $\mathcal{L}$은 적어도 다음과 같은 물건들을 가지고 있다.
-  \begin{enumerate}
-    \item 그것의 원소가 $\mathcal{L}$의 \underline{표현식}(\textit{expression})이라고 불리는 가부번 집합 $\mathcal{E}$.
-    \item 그것의 원소가 \underline{문장}(\textit{sentence})이라고 불리는 집합 $\mathcal{S} \subseteq \mathcal{E}$.
-    \item 그것의 원소가 \underline{증명 가능한}(\textit{provable}) 문장이라고 불리는 집합 $\mathcal{P} \subseteq \mathcal{S}$.
-    \item 그것의 원소가 \underline{반증 가능한}(\textit{refutable}) 문장이라고 불리는 집합 $\mathcal{R} \subseteq \mathcal{S}$.
-    \item 그것의 원소가 $\mathcal{L}$의 \underline{술어}(\textit{predicate})라고 불리는 집합 $\mathcal{H} \subseteq \mathcal{E}$.\footnote
-    {
-      괴델의 서론에서 술어는 \textit{class name}이라고 불린다.
-      비형식적으로, 각 술어는 자연수들의 집합의 이름으로 생각할 수 있다.
-    }
-    \item $ \left( \forall H \in \mathcal{H} \right) \left( \forall n \in \mathbb{N} \right) \left[ \Phi \left( H , n \right) \in \mathcal{S} \right] $\footnote
-    {
-      비형식적으로, 문장 $H \left( n \right)$은 자연수 $n$이 $H$라는 이름을 가진 집합에 속한다는 명제를 표현한다.
-    }를 만족시키는 함수 $ \Phi : \mathcal{E} \times \mathbb{N} \to \mathcal{E} $.\footnote
-    {
-      표기법의 남용을 허용하여, 각 $E \in \mathcal{E}$와 각 $n \in \mathbb{N}$에 대하여 표현식 $\Phi \left( E , n \right)$을 ``$ E \left( n \right) $''으로 표기한다.
-    }
-    \item 그것의 원소가 \underline{참}(\textit{true})인 문장이라고 불리는 집합 $\mathcal{T} \subseteq \mathcal{S}$.
-  \end{enumerate}
-  \textit{특정} 체계 $\mathcal{L}$에 대한 제 1 불완전성을 증명할 때,
-  Alfred Tarski[1936]에 의하여 정확하게 된 \textit{참}의 개념을 사용할 것이다.
-
-  이로써, 뒤의 여러 단원에서 공부할 체계들의 유형에 대한 추상적인 묘사를 마무리 짓겠다.
-
-  \begin{context}[Expressibility in $\mathcal{L}$]
-    우리가 곧 정의할 $\mathcal{L}$에서의 \underline{표현 가능성}(\textit{expressibility})의 개념은 진리 집합 $\mathcal{T}$를 다루지만 $\mathcal{P}$나 $\mathcal{R}$은 다루지 않는다.
-
-    이 책의 나머지 부분에서 ``수''라는 단어는 \underline{자연수}(\textit{natural number})를 의미한다.
-    술어 $H$와 수 $n$에 대하여, $\Phi \left( H , n \right)$이 참인 문장일 때 --
-    즉, $ H \left( n \right) \in \mathcal{T} $일 때 --
-    $H$가 $n$에 대하여 \underline{참}(\textit{true})이라고 하거나,
-    $n$이 $H$를 만족시킨다고 한다.
-    술어 $H$에 의하여 \underline{표현된}(\textit{expressed}) 집합이란, $H$를 만족시키는 모든 수들의 집합을 의미한다.
-    그러므로, 임의의 $H \in \mathcal{H}$와 임의의 $A \subseteq \mathbb{N}$에 대하여,
-    $H$가 $A$를 표현할 때 그리고 그럴 때에만 $$ \left( \forall n \in \mathbb{N} \right) \left[ H \left( n \right) \in \mathcal{T} \leftrightarrow n \in A \right] $$가 성립한다.
-  \end{context}
-
-  \begin{context}[Definition]
-    $\mathcal{L}$에서 집합 $A \subseteq \mathbb{N}$를 표현하는 술어가 존재할 때 그리고 그럴 때에만
-    $A$를 $\mathcal{L}$에서 \underline{표현될 수 있다}(\textit{expressible})고 하거나,
-    $A$가 $\mathcal{L}$에서 \underline{이름을 가진다}(\textit{nameable})고 한다.
-  \end{context}
-
-  $\mathcal{E}$는 가부번 집합이므로,
-  $\mathcal{H}$는 유한 집합이거나 가부번 집합이다.
-  그러나 Cantor의 잘 알려진 정리에 의하여,
-  모든 $\mathbb{N}$의 부분 집합들의 집합은 비가산 집합이다.
-  그러므로, 모든 집합들이 $\mathcal{L}$에서 표현될 수 있는 것은 아니다.
-  
-  \begin{context}[Definition]
-    체계 $\mathcal{L}$의 모든 증명 가능한 문장들이 참이고 모든 반증 가능한 문장들이 거짓이면,
-    $\mathcal{L}$이 \underline{정확}(\textit{correct})하다고 한다.
-    이것은 $\mathcal{P}$이 $\mathcal{T}$의 부분 집합이고 $\mathcal{R}$이 $\mathcal{T}$와 서로소 집합이라는 것을 의미한다.
-    이제 충분한 조건들 안에서 $\mathcal{L}$이 정확하다면 참이지만 증명 가능하지 않은 문장을 포함한다는 데 집중하자.
-  \end{context}
-
-  \begin{context}[G\"odel Numbering and Diagonalization]
-    $\gnum$를 각 $E \in \mathcal{E}$에게 \underline{괴델 수}(\textit{G\"odel number})라고 불리는 자연수 $\gnum \left( E \right)$를 부여하는 단사 함수라고 하자.
-    이 단원의 나머지 부분에서 $\gnum$는 고정될 것이다.\footnote
-    {
-      뒷 단원들에서 공부할 구체적인 체계에서는 특정 괴델 넘버링이 주어질 것이다.
-      지금 다루는 순수하게 추상적인 논의에서는 임의의 괴델 넘버링에 대하여 적용될 수 있다.
-    }
-    $\gnum$가 전사함수라고 가정하는 것이 기술적으로 편리할 것이다.\footnote
-    {
-      괴델의 원래 넘버링은 이러한 성질이 없지만,
-      뒷 단원들에서 사용할 괴델 넘버링은 이러한 성질을 가진다.
-      그러나, 이 단원의 결과들은, 소소한 수정을 거치면,
-      이러한 제한 없이도 증명될 수 있다.
-      (cf. Ex. 5).
-    }
-    이제 각각의 수 $n$마다 $n$을 괴델 수로 하는 표현식이 유일하다고 가정하고,
-    그 유일한 표현식을 $E_{n}$이라 하겠다.
-    즉, 임의의 $n \in \mathbb{N}$에 대하여 $\gnum \left( E_{n} \right) = n$이다.
-
-    $E_{n}$의 대각화란, 표현식 $E_{n} \left( n \right)$을 의미한다.
-    $E_{n}$이 술어라면, 그것의 대각화는 당연히 문장이다;
-    이 문장은, $E_{n}$이 그것의 괴델 수 $n$에 의하여 만족할 때 그리고 그럴 때에만, 참이다.
-
-    각각의 $n \in \mathbb{N}$마다, $d \left( n \right)$을 $E_{n} \left( n \right)$의 괴델 수로 둔다.
-    함수 $d : \mathbb{N} \to \mathbb{N}$은 뒤의 내용에서 항상 핵심적인 역할을 할 것이다;
-    $d$를 그 체계의 \underline{대각 함수}(\textit{diagonal function})라고 부른다.
-
-    각각의 $A \subseteq \mathbb{N}$마다, $A^{*} := \left\{ n \in \mathbb{N} : d \left( n \right) \in A \right\} $로 놓자.
-    즉, $A^{*}$의 정의에 의하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ n \in A^{*} \leftrightarrow \gnum \left( E_{n} \left( n \right) \right) \in A \right] $$이 성립한다.\footnote
-    {
-      $A^{*}$은 대각 함수 $d$ 아래의 $A$의 역상이기 때문에 $d^{-1} \left[ A \right]$로도 쓰일 수 있다.
-    }
-  \end{context}
-
-  \begin{context}[An Abstract Form of G\"odel's Theorem]
-    $P$를 모든 증명 가능한 문장들의 괴델 수를 모은 집합이라고 하자.
-    그리고, 각 $A \subseteq \mathbb{N}$마다 $\tilde{A}$를 $\mathbb{N} \setminus A$로 두자 --
-    즉, $\tilde{A}$는 $A$의 여집합이다.
-  \end{context}
-
-  \begin{context}[Theorem (GT)--After G\"odel with shades of Tarski]
-    집합 $\tilde{P}^{*}$가 $\mathcal{L}$에서 표현될 수 있고 $\mathcal{L}$이 정확하다면,
-    $\mathcal{L}$에서 참이지만 증명 가능하지 않은 문장이 있다.
-  \end{context}
-
-  \begin{proof}
-    $\mathcal{L}$이 정확하고 $\tilde{P}^{*}$가 $\mathcal{L}$에서 표현될 수 있다고 가정하자.
-    그러면 $\mathcal{L}$에서 $\tilde{P}^{*}$를 표현하는 술어 $H$가 존재한다.
-    이때 $h$를 $H$의 괴델 수라고 하고,
-    $G$를 $H$의 대각화(즉, 문장 $ H \left( h \right) $)라고 하자.
-    우리는 $G$가 참이지만 증명 가능하지 않음을 보일 것이다.
-    $H$가 $\mathcal{L}$에서 $\tilde{P}^{*}$를 표현하므로,
-    $$ H \left( n \right) \in \mathcal{T} \iff n \in \tilde{P}^{*} \qquad \mathrm{for} \quad \forall n \in \mathbb{N} $$이다.
-    이 명제가 임의의 $n$에 대하여 성립하므로,
-    $n$이 $h$일 때도 성립한다.
-    그러므로 $n$에 $h$를 대입하여 --
-    이 부분의 논증은 \underline{대각화하기}(\textit{diagonalizing})라고 불린다 --
-    $$ H \left( h \right) \in \mathcal{T} \iff h \in \tilde{P}^{*}$$를 얻는다.
-    한편, $$h \in \tilde{P}^{*} \iff d \left( h \right) \in \tilde{P} \iff d \left( h \right) \notin P$$인데,
-    $H$의 괴델 수가 $h$이기 때문에 $d \left( h \right)$의 괴델 수가 $H \left( h \right)$이므로,
-    $ H \left( h \right) \in \mathcal{T} \iff H \left( h \right) \notin \mathcal{P}$이다.
-    그러므로,
-    \begin{enumerate}
-      \item $H \left( h \right)$가 참일 때 그리고 그럴 때에만 $H \left( h \right)$가 증명 가능하지 않다.
-      이것은 $H \left( h \right)$가 참이고 증명 가능하지 않은 경우와 거짓이고 증명 가능한 경우 밖에 없음을 의미한다.
-      그런데 후자는 $\mathcal{L}$이 정확하다는 가정을 위반한다.
-      따라서 $H \left( h \right)$는 참이지만 증명 가능하지 않아야 한다.
-    \end{enumerate}
-    라는 결론을 얻는다.
-  \end{proof}
-
-  우리가 공부할 특정 체계 $\mathcal{L}$에 대하여,
-  $\tilde{P}^{*}$가 $\mathcal{L}$에서 표현 될 수 있다는 전제 조건이 성립함을,
-  다음 세 조건을 따로따로 검사함으로써, 입증할 것이다:
-  \begin{itemize}
-    \item[$G_1$:] 임의의 $A \subseteq \mathbb{N}$에 대하여, $A$가 $\mathcal{L}$에서 표현될 수 있으면 $A^{*}$도 $\mathcal{L}$에서 표현될 수 있다.
-    \item[$G_2$:] 임의의 $A \subseteq \mathbb{N}$에 대하여, $A$가 $\mathcal{L}$에서 표현될 수 있으면 $\tilde{A}$도 $\mathcal{L}$에서 표현될 수 있다.
-    \item[$G_3$:] $P$가 $\mathcal{L}$에서 표현될 수 있다.
-  \end{itemize}
-
-  조건 $G_{1}$과 $G_{2}$가 성립하면,
-  $\mathcal{L}$에서 표현될 수 있는 임의의 $A \subseteq \mathbb{N}$에 대하여 $A^{*}$도 $\mathcal{L}$에서 표현될 수 있다.
-  그러므로 $P$가 $\mathcal{L}$에서 표현될 수 있으면,
-  $\tilde{P}^{*}$도 $\mathcal{L}$에서 표현될 수 있다.
-
-  우리는 $G_{1}$의 검증은 상대적으로 단순한 것으로 밝혀지고; $G_{2}$의 검증은 완전히 사소하지만; $G_{3}$의 증명은 극도로 정교하다고 밝혀지는 데 주목할 수 있다.
-
-  \begin{context}[G\"odel Sentences]
-    Rudolf Carnap [1934]에 의하여 명시화된 매우 중요한 원리가 정리 GT의 증명에 얽혀있는데,
-    이것은 곧 다룰 Tarski의 정리와도 밀접한 관련이 있다.
-
-    $A \subseteq \mathbb{N}$와 $X \in \mathcal{S}$에 대하여,
-    $$X \in \mathcal{T} \leftrightarrow \gnum \left( X \right) \in A$$가 성립하면,
-    $X$를 $A$에 대한 괴델 문장이라고 부른다.\footnote
-    {
-      비형식적으로, $A$에 대한 괴델 문장은 그 자신의 괴델 수가 $A$에 속한다고 선언하는 문장으로 볼 수 있다.
-      그 문장이 참이면 그것의 괴델 수가 $A$에 속하고, 그 문장이 거짓이면 그것의 괴델 수가 $A$에 속하지 않는다.
-    }
-  \end{context}
-
-  다음 보조정리는 $\mathcal{T}$와만 관련이 있다.
-  집합 $\mathcal{P}$와 집합 $\mathcal{R}$과는 무관하다.
-
-  \begin{context}[Lemma (D)--A Diagonal Lemma]
-    \begin{itemize}
-      \item[(a)] 임의의 $A \subseteq \mathbb{N}$에 대하여, $A^{*}$가 $\mathcal{L}$에서 표현될 수 있으면 $A$에 대한 괴델 문장이 존재한다.
-      더 자세히는, 술어 $H$가 $A^{*}$를 $\mathcal{L}$에서 표현할 때, $H$의 대각화 $H \left( h \right)$는 $A$에 대한 괴델 문장이다 --
-      여기서 $h$는 $H$의 괴델 수이다.
-      \item[(b)] $\mathcal{L}$이 조건 $G_{1}$을 만족시키면, $\mathcal{L}$에서 표현될 수 있는 임의의 $A \subseteq \mathbb{N}$에 대하여 $A$에 대한 괴델 문장이 존재한다.
-    \end{itemize}
-  \end{context}
-
-  \begin{proof}
-    \begin{itemize}
-      \item[(a)] $d \left( h \right)$는 $H \left( h \right)$의 괴델 수이다.
-      술어 $H$가 $A^{*}$를 $\mathcal{L}$에서 표현하므로,
-      $$ H \left( n \right) \iff n \in A^{*} \qquad \mathrm{for} \quad \forall n \in \mathbb{N} $$이다.
-      따라서, $H \left( h \right)$가 참일 때 그리고 그럴 때에만 $h \in A^{*}$이다.
-      그런데 $d \left( h \right) \in A \leftrightarrow h^{*} \in A$가 성립하므로,
-      $H \left( h \right)$가 참일 때 그리고 그럴 때에만 $d \left( h \right) \in A$이다.
-      그런데 $\gnum \left( H \left( h \right) \right) = d \left( h \right)$이므로,
-      $H \left( h \right)$가 $A$에 대한 괴델 문장임을 알 수 있다.
-      
-      \item[(b)] (a)에 의하여 즉각적으로 따라온다.
-    \end{itemize}
-  \end{proof}
-
-  만일 보조정리 D를 먼저 증명했다면, 다음과 같은 신속한 증명을 얻었을 것이다:
-  $\tilde{P}^{*}$가 이름을 가진다면, D의 (a)에 의하여, $\tilde{P}$에 대한 괴델 문장 $\mathfrak{G}$가 존재한다.
-  $\tilde{P}$에 대한 괴델 문장은 자신이 참일 때 그리고 그럴 때에만 증명 가능하지 않은 문장 그 이상도 그 이하도 아니다.
-  그러므로, 임의의 정확한 체계 $\mathcal{L}$에서, $\tilde{P}$에 대한 괴델 문장은 $\mathcal{L}$에서 참이지만 증명 가능하지 않은 문장이다.\footnote
-  {
-    그러한 문장은 $\mathcal{L}$에서의 자신의 증명 불가능성을 선언하는 문장으로 생각할 수 있다.
-  }
-
-  \begin{context}[An Abstract Form of Tarski's Theorem]
-    보조정리 D는 또다른 중요한 결과를 낳는다:
-    $T$를 모든 참인 문장들의 괴델 수를 모은 집합이라고 하자.
-    그러면 다음 정리가 성립한다.
-  \end{context}
-
-  \begin{context}[Theorem (T) (After Tarski)]
-    \begin{enumerate}
-      \item 집합 $\tilde{T}^{*}$는 $\mathcal{L}$에서 이름을 가지지 않는다.
-      \item 조건 $G_1$이 성립하면, $\tilde{T}$는 $\mathcal{L}$에서 이름을 가지지 않는다.
-      \item 조건 $G_1$과 $G_2$가 성립하면, $T$는 $\mathcal{L}$에서 이름을 가지지 않는다.
-    \end{enumerate}
-  \end{context}
-
-  \begin{proof}
-    시작하기에 앞서, $\tilde{T}$에 대한 괴델 문장은 없다는 것에 주목하자 --
-    왜냐하면, 그러한 문장은 자신의 괴델 수가 참인 문장의 괴델 수가 아닐 때 그리고 그럴 때에만 참인 문장이기 때문이다.
-    \begin{enumerate}
-      \item $\tilde{T}^{*}$가 $\mathcal{L}$에서 이름을 가진다면, 보조정리 D의 (a)에 의하여,
-      $\tilde{T}$에 대한 괴델 문장이 존재하는데, 이는 방금 보인 바에 따르면 불가능하다.
-      그러므로 $\tilde{T}^{*}$가 $\mathcal{L}$에서 이름을 가지지 않는다.
-      
-      \item 조건 $G_1$이 성립한다고 가정하자.
-      그러면, $\tilde{T}$가 $\mathcal{L}$에서 이름을 가질 때,
-      $\tilde{T}^{*}$도 $\mathcal{L}$에서 이름을 가지는데,
-      이는 (1)을 위반한다.
-      
-      \item 조건 $G_2$ 역시 성립한다면,
-      $T$가 $\mathcal{L}$에서 이름을 가질 때,
-      $\tilde{T}$도 $\mathcal{L}$에서 이름을 가지는데,
-      이는 (2)를 위반한다.
-    \end{enumerate}
-  \end{proof}
-
-  \begin{context}[Remarks]
-    \begin{enumerate}
-      \item 위의 결론 (3)은 종종 다음과 같이 비유된다:
-      충분히 강력한 체계에서는, 그 체계 안에서의 진리는 그 체계 안에서 정의될 수 없다.
-      어구 ``충분히 강력한''은 몇 가지 방법으로 해석될 수 있다.
-      $G_1$과 $G_2$가 ``충분히 강력한''에 부합되기에 충분하다는 것을 짚고 넘어간다.
-
-      \item G\"odel(1931)은 [크레타인들은 모두 거짓말쟁이라고 말하는 어떤 크레타인]의 유명한 역설에 빗댄다.\footnote
-      {
-        실제로는, 거짓말쟁이의 역설은 G\"odel의 정리보다는 Tarski의 정리에 더 가깝다.
-      }
-      괴델의 비유에 조금 더 근접한 비유는 이것이다:
-      항상 참말만을 말하는 주민들과 항상 거짓말만을 말하는 주민들 밖에 없는 나라를 상상하여라.
-      주민들 중 일부는 아테네인이고 또다른 일부는 크레타인이다.
-      그 나라의 모든 아테네인들은 참말만을 말하고 그 나라의 모든 크레타인들은 거짓말만을 말한다고 한다.
-      한 주민이 자신은 항상 참말만을 말하지만 아테네인이 아니라는 것을 너에게 설득시키기 위하여 그 주민이 무슨 말을 하면 될까?
-
-      그는 ``나는 아테네인이 아니다''라고만 말하면 된다.
-      거짓말쟁이는 그러한 주장을 만들 수 없기 때문이다 --
-      왜냐하면, 거짓말쟁이는 실제로 아테네인이 \textit{아니기} 때문이다;
-      아테네인들은 참말쟁이 밖에 없기 때문이다.
-      그러므로 그의 말을 믿을 수 있다.
-      그가 말한 문장이 참이었기 때문에 그는 정말로 아테네인이 아니다.
-      그러므로 그는 참말쟁이이지만 아테네인이 아니다.
-
-      아테네인들이 $\mathcal{L}$에서 참이면서 증명 가능한 문장들의 역할을 하는 것으로 간주하면,
-      자신이 아테네인이 아니라고 주장하는 주민은 $\tilde{P}$에 대한 괴델 문장 $\mathfrak{G}$의 역할을 하는 셈인데,
-      이는 $\mathcal{L}$에서의 자신의 증명 불가능성을 선언하기 때문이다.\footnote
-      {
-        크레타인들은 당연히 $\mathcal{L}$의 반증 가능한 문장들의 역할을 하는데,
-        그것의 기능이 잠시 뒤에 나타날 것이다.
-      }
-    \end{enumerate}
-  \end{context}
-
-  \subsection{$\mathcal{L}$의 결정 불가능한 문제들}
-  \hspace{12pt}
-
-  지금까지 모든 \textit{반증 가능한} 문장들의 집합 $\mathcal{R}$은 아무 역할도 하지 않았다.
-  이제 그것은 중요한 역할을 할 것이다.
-
-  $\mathcal{L}$의 문장 중 증명 가능한 동시에 반증 가능한 문장이 없을 때 $\mathcal{L}$이 \underline{일관성 있다}(\textit{consistent})고 하고 --
-  즉, $\mathcal{P}$와 $\mathcal{R}$이 서로소임을 의미한다 --
-  그렇지 않을 경우 \underline{일관성 없다}(\textit{inconsistent})고 한다.
-  이 정의는 집합 $\mathcal{P}$와 $\mathcal{R}$을 언급하지만 $\mathcal{T}$는 언급하지 않는다.
-  그럼에도 불구하고, $\mathcal{L}$이 정확하면, 자동적으로 일관성 있게 된다 --
-  왜냐하면 $\mathcal{P}$가 $\mathcal{T}$의 부분 집합이고 $\mathcal{R}$이 $\mathcal{T}$와 서로소 집합이면 $\mathcal{P}$는 $\mathcal{R}$과 서로소 집합이어야 하기 때문이다.
-  그 역이 참일 필요는 없다 --
-  우리는 후에 일관성 있지만 정확하지 않은 체계들을 다룰 것이다.
-  
-  문장 $X$가 $\mathcal{L}$에서 증명 가능하거나 반증 가능할 경우 $X$를 \underline{결정 가능}(\textit{decidable})하다고 하고,
-  그렇지 않으면 \underline{결정 불가능}(\textit{undecidable})하다고 한다.
-  체계 $\mathcal{L}$의 모든 문장이 결정 가능하면 \underline{완전}(\textit{complete})하다고 하고 그렇지 않으면 \underline{불완전}(\textit{incomplete})하다고 한다.
-
-  이제 $\mathcal{L}$이 정리 GT의 전제 조건들을 만족시킨다고 가정하자.
-  그러면 어떤 문장 $G$가 $\mathcal{L}$에서 참이지만 증명 가능하지 않다.
-  $G$는 참이므로 반증 역시 가능하지 않다 --
-  정확성을 가정하였기 때문이다.
-  그러므로 $G$는 $\mathcal{L}$에서 결정 불가능하다.
-  그리고 즉시 다음 정리를 얻는다.
-
-  \begin{context}[Theorem 1]
-    $\mathcal{L}$이 정확하고 $\mathcal{L}$에서 $\tilde{P}^{*}$가 표현될 수 있으면,
-    $\mathcal{L}$은 불완전하다.
-  \end{context}
-
-  \begin{context}[A Dual of Theorem 1]
-    T.F.S.(Theory of Formal Systems, 1961)에서 나는 G\"odel의 논증의 ``쌍대 형식''이라고 부르는 것이 적절한 무언가를 도입했는데,
-    이를 먼저 비형식적으로 설명하겠다.
-    ``나는 증명 가능하지 않아''라고 말하는 문장을 구성하는 대신에,
-    ``나는 반증 가능\textit{해}''라고 말하는 문장을 구성하겠다.
-    그러한 문장 역시 ($\mathcal{L}$이 정확하다면) 결정 불가능해야 함을 곧 보게 될 것이다.
-
-    집합 $P$를 모든 증명 가능한 문장들의 괴델 수로 정의해왔다.
-    이제 집합 $R$을 모든 반증 가능한 문장들의 괴델 수로 정의하자.
-  \end{context}
-
-  \begin{context}[Theorem ($1^{\circ}$)--(A Dual of Theorem 1)]
-    $\mathcal{L}$이 정확하고 $R^{*}$가 $\mathcal{L}$에서 표현될 수 있으면,
-    $\mathcal{L}$은 불완전하다.
-    더 구체적으로는, $\mathcal{L}$이 정확하고 술어 $K$가 $\mathcal{L}$에서 $R^{*}$를 표현하면,
-    그것의 대각화 $K \left( k \right)$는 $\mathcal{L}$에서 결정 불가능하다 --
-    여기서 $k$는 $K$의 괴델 수이다.
-  \end{context}
-
-  \begin{proof}
-    전제 조건들을 가정하자.
-    $K$가 $R^{*}$를 표현하기에, 보조정리 D의 (a)에 의하여,
-    문장 $K \left( k \right)$는 $R$에 대한 괴델 문장이다.
-    즉, $K \left( k \right)$는 그것의 괴델 수가 $R$에 속할 때 그리고 그럴 때에만 참이다.
-    다시 말해, $K \left( k \right)$가 참일 때 그리고 그럴 때에만 $K \left( k \right)$가 반증 가능하다.
-    이는 $K \left( k \right)$가 참이고 반증 가능한 경우와 거짓이고 반증 불가능한 경우 밖에 없음을 의미한다.
-    정확성을 가정하였으므로, $K \left( k \right)$는 참이면서 반증 가능할 수는 없다.
-    따라서 그것은 거짓이며 반증 가능하지 않다.
-    (또다시 $\mathcal{L}$이 정확하다는 가정에 의하여) 그 문장은 거짓이기에 증명 역시 가능하지 않다.
-    그러므로 $K \left( k \right)$는 $\mathcal{L}$에서 증명도 반증도 가능하지 않다.
-  \end{proof}
-
-  \begin{context}[Remarks]
-    $\tilde{P}$에 대한 괴델 문장 $H \left( h \right)$가 ``나는 $\mathcal{L}$에서 증명 가능하지 않아''라고 말한다고 생각할 수 있는 것처럼,
-    $K \left( k \right)$는 ``나는 $\mathcal{L}$에서 반증 가능해''라고 말하는 것으로 생각할 수 있다.
-    아테네인들과 크레타인들에 관한 비유로 돌아가자.
-    자신이 아테네인이 아니라고 말하는 주민이 $H \left( h \right)$에 대응하는 것처럼,
-    문장 $K \left( k \right)$는 자신이 크레타인\textit{이라고} 말하는 주민에 대응된다.
-    그는 거짓말쟁이지만 크레타인이 아니어야 한다.
-    따라서 (자신이 아테네인이 아니라고 주장하는 주민의 경우와 같이) 그는 아테네인도 크레타인도 아니어야 한다.
-
-    정확한 체계 $\mathcal{L}$이 다음 두 조건을 만족시킨다고 가정하자:
-    \begin{itemize}
-      \item[$G_{1}$:] 임의의 $A \subseteq \mathbb{N}$에 대하여, $A$가 $\mathcal{L}$에서 표현될 수 있으면 $A^{*}$도 $\mathcal{L}$에서 표현될 수 있다.
-      \item[$G_{3}^{\prime}$:] $R$을 $\mathcal{L}$에서 표현될 수 있다.
-    \end{itemize}
-
-    그러면 당연히 $R^{*}$은 $\mathcal{L}$에서 표현될 수 있다.
-    그렇기 때문에, 정리 $1^{\circ}$에 의하여, 정확하지 않거나 불완전하다.
-    여집합 조건 $G_{2}$는 이 증명에서 필요하지 않음에 주목하자.
-  \end{context}
-
-  다음 첫 번째 연습문제는 정리 $1^{\circ}$의 흥미로운 변종이다.
-
-  \begin{context}[Exercise 1]
-    정확한 체계 $\mathcal{L}$이 다음 두 조건을 만족시킨다고 가정하자.
-    \begin{enumerate}
-      \item 집합 $P^{*}$이 $\mathcal{L}$에서 표현될 수 있다.
-      \item 임의의 술어 $H$에 대하여, 어떤 술어 $H^{\prime}$이 존재하여 $$\left( \forall n \in \mathbb{N} \right) \left[ H^{\prime} \left( n \right) \in \mathcal{P} \leftrightarrow H \left( n \right) \in \mathcal{R} \right]$$이 성립한다.
-    \end{enumerate}
-
-    이때 $\mathcal{L}$이 불완전함을 증명하여라.
-  \end{context}
-
-  \begin{context}[Exercise 2]
-    $H \in \mathcal{H}$와 $A \subseteq \mathbb{N}$가
-    $$ \left( \forall n \in \mathbb{N} \right) \left[ H \left( n \right) \in \mathcal{P} \leftrightarrow n \in A \right] $$를 만족시키면
-    $H$가 $\mathcal{L}$에서 $A$를 \underline{나타낸다}(\textit{represent})고 한다.\footnote
-    {
-      이 정의는 진리 집합 $\mathcal{T}$를 언급하지 않고 오직 증명가능성 집합 $\mathcal{P}$만을 언급한다.
-    }
-
-    정확한 체계 $\mathcal{L}$에서 집합 $R^{*}$를 나타낼 수 있으면, $\mathcal{L}$은 불완전함을 보여라.
-  \end{context}
-
-  \begin{context}[Exercise 3]
-    어떤 $R^{*}$의 상위 집합 $A \subseteq \mathbb{N}$가 존재하여 $P^{*}$가 $A$와 서로소 집합이고 $\mathcal{L}$에서 $A$를 나타낼 수 있으면,
-    $\mathcal{L}$은 불완전함을 보여라.\footnote
-    {
-      집합 $A$가 집합 $B$의 부분 집합이면, $B$를 $A$의 \underline{상위 집합}(\textit{superset})이라고 한다.
-    }
-  \end{context}
-
-  \begin{context}[Exercise 4]
-    $H \in \mathcal{H}$와 $A \subseteq \mathbb{N}$가
-    $$ \left( \forall n \in \mathbb{N} \right) \left[ H \left( n \right) \in \mathcal{R} \leftrightarrow n \in A \right] $$를 만족시키면
-    $H$가 $\mathcal{L}$에서 $A$를 \underline{거꾸로 나타낸다}(\textit{contrarepresent})고 한다.
-    일관성 있는 체계 $\mathcal{L}$에서 집합 $P^{*}$를 거꾸로 나타낼 수 있다면,
-    $\mathcal{L}$은 불완전함을 보여라.\footnote
-    {
-      이 결과와 연습문제 2의 결과는 5단원에서 확장될 것이다;
-      연습문제 3의 결과는 6단원에서 배울 Rosser의 불완전성 정리와 관련 있다.
-    }
-  \end{context}
-
-  \begin{context}[Exercise 5]
-    괴델 넘버링 $\gnum$가 전사 함수가 아닌 경우를 고려하자.
-    이때 $$ \left( \forall E \in \mathcal{E} \right) \left( \forall e \in \mathbb{N} \right) \left[ \gnum \left( E \right) = e \rightarrow \gnum \left( \Phi \left( E , e \right) \right) = d \left( e \right) \right] $$를
-    만족시키는 함수 $d : \mathbb{N} \to \mathbb{N}$를 한 대각 함수로 보자.
-    대각 함수 $d$가 주어졌을 때, 임의의 $A \subseteq \mathbb{N}$에 대하여 $d^{-1} \left[ A \right]$가 $\mathcal{L}$에서 표현될 수 있다면 $A$에 대한 괴델 문장이 존재한다는 것을 보여라.
-  \end{context}
-
-  \begin{context}[Exercise 6]
-    임의의 $A \subseteq \mathbb{N}$에 대하여,
-    $\tilde{A}^{*}$와 $\widetilde{A^{*}}$가 같은 집합일 필요가 있을까?
-  \end{context}
-
-  \begin{context}[Exercise 7]
-    G\"odel의 증명의 온전히 구성적인 본질을 강조하기 위하여,
-    $\mathcal{L}$이 다음 세 조건을 만족시키는 정확한 체계라고 하자.
-    \begin{enumerate}
-      \item 표현식 $E_{7}$는 $P$를 표현하는 술어이다.
-      \item 임의의 $n \in \mathbb{N}$와 임의의 $A \subseteq \mathbb{N}$에 대하여, 표현식 $E_{n}$이 $A$를 표현하는 술어이면 표현식 $E_{3 n}$은 $\tilde{A}$를 표현하는 술어이다.
-      \item 임의의 $n \in \mathbb{N}$와 임의의 $A \subseteq \mathbb{N}$에 대하여, 표현식 $E_{n}$이 $A$를 표현하는 술어이면 표현식 $E_{3 n + 1}$은 $A^{*}$를 표현하는 술어이다.
-    \end{enumerate}
-    
-    이때 다음 세 물음에 답하여라:
-    \begin{itemize}
-      \item[(a)] 문장 $E_{a} \left( b \right)$가 참이지만 증명 가능하지 않은 문장임을 보장할 수 있는 $a \in \mathbb{N}$와 $b \in \mathbb{N}$의 순서쌍 $\left( a , b \right)$를 찾아라.\footnote
-      {
-        $a$와 $b$ 모두 $100$ 미만인 해는 두 개 있다.
-        과연 독자가 둘 다 찾아낼 수 있을까?
-      }
-      \item[(b)] 문장 $E_{a} \left( b \right)$가 참이지만 증명 가능하지 않은 문장임을 보장할 수 있는 $a \in \mathbb{N}$와 $b \in \mathbb{N}$의 순서쌍 $\left( a , b \right)$이 무한히 많음을 보여라.
-      \item[(c)] 표현식 $E_{10}$이 술어일 때, $E_{c} \left( d \right)$가 $E_{10}$이 표현하는 집합에 대한 괴델 문장임을 보장할 수 있는 $c \in \mathbb{N}$와 $d \in \mathbb{N}$의 순서쌍 $\left( c , d \right)$를 하나 찾아라.
-    \end{itemize}
-  \end{context}
-
-  \begin{context}[Solutions]
-    \begin{enumerate}
-      \item[{1.}] 모든 전제 조건들을 가정하자.
-      먼저, 조건 1에 의하여, 어떤 술어 $H$가 $\mathcal{L}$에서 $P^{*}$를 표현하는 것을 알 수 있다. --
-      즉, $$ \left( \forall n \in \mathbb{N} \right) \left[ H \left( n \right) \in \mathcal{T} \leftrightarrow n \in P^{*} \right] $$이 성립한다.
-      또한, 조건 2에 의하여, 어떤 술어 $H^{\prime}$이 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ H^{\prime} \left( n \right) \in \mathcal{P} \leftrightarrow H \left( n \right) \in \mathcal{R} \right] $$이 성립한다.
-      이제, $h^{\prime} := \gnum \left( H^{\prime} \right)$에 대하여, $H \left( h^{\prime} \right)$이 $\mathcal{L}$에서 증명도 반증도 가능하지 않다는 것을 보일 것이다.
-      먼저, $H \left( h^{\prime} \right)$이 $\mathcal{L}$에서 증명 가능한 경우,
-      \begin{align*}
-        H \left( h^{\prime} \right) \in \mathcal{P}
-        & \implies H \left( h^{\prime} \right) \in \mathcal{T} \\
-        & \implies h^{\prime} \in P^{*} \\
-        & \implies H^{\prime} \left( h^{\prime} \right) \in \mathcal{P} \\
-        & \implies H \left( h^{\prime} \right) \in \mathcal{R}
-      \end{align*}
-      인데, 이는 $\mathcal{L}$이 정확하다는 가정에 모순이다.
-      한편, $H \left( h^{\prime} \right)$이 $\mathcal{L}$에서 반증 가능한 경우,
-      \begin{align*}
-        H \left( h^{\prime} \right) \in \mathcal{R}
-        & \implies H^{\prime} \left( h^{\prime} \right) \in \mathcal{P} \\
-        & \implies h^{\prime} \in P^{*} \\
-        & \implies H \left( h^{\prime} \right) \in \mathcal{T}
-      \end{align*}
-      인데, 이것 역시 $\mathcal{L}$이 정확하다는 가정에 모순이다.
-      그러므로, $H \left( h^{\prime} \right)$이 $\mathcal{L}$에서 결정 불가능하기 때문에, $\mathcal{L}$은 불완전하다.
-
-      \item[{2.}] 모든 전제 조건들을 가정하자.
-      $R^{*}$를 $\mathcal{L}$에서 나타낼 수 있으므로,
-      어떤 술어 $K$가 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ K \left( n \right) \in \mathcal{P} \leftrightarrow n \in R^{*} \right] $$이 성립한다.
-      이제, $k := \gnum \left( K \right)$에 대하여, $K \left( k \right)$가 $\mathcal{L}$에서 증명도 반증도 가능하지 않다는 것을 보일 것이다.
-      먼저, $K \left( k \right)$가 증명 가능한 경우,
-      \begin{align*}
-        K \left( k \right) \in \mathcal{P}
-        & \implies k \in R^{*} \\
-        & \implies K \left( k \right) \in \mathcal{R}
-      \end{align*}
-      인데, 이는 $\mathcal{L}$이 정확하다는 가정에 모순이다.
-      한편, $K \left( k \right)$가 반증 가능한 경우,
-      \begin{align*}
-        K \left( k \right) \in \mathcal{R}
-        & \implies K \in R^{*} \\
-        & \implies K \left( k \right) \in \mathcal{P}
-      \end{align*}
-      인데, 이것 역시 $\mathcal{L}$이 정확하다는 가정에 모순이다.
-      그러므로, $K \left( k \right)$이 $\mathcal{L}$에서 결정 불가능하기 때문에, $\mathcal{L}$은 불완전하다.
-
-      \item[{3.}] 전제 조건들을 가정하자.
-      $A$를 $\mathcal{L}$에서 나타낼 수 있으므로,
-      어떤 술어 $K$가 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ K \left( n \right) \in \mathcal{P} \leftrightarrow n \in A \right] $$이 성립한다.
-      이제, $k := \gnum \left( K \right)$에 대하여, $K \left( k \right)$가 $\mathcal{L}$에서 증명도 반증도 가능하지 않다는 것을 보일 것이다.
-      먼저, $K \left( k \right)$가 증명 가능하다고 가정하자.
-      그러면, $$ K \left( k \right) \in \mathcal{P} \implies k \in P^{*} $$이고 $$ K \left( k \right) \in \mathcal{P} \implies k \in A $$인데,
-      이는 $P^{*}$가 $A$와 서로소 집합이라는 가정에 모순이다.
-      한편, $K \left( k \right)$가 반증 가능하다고 가정하자.
-      그러면, $R^{*} \subseteq A$임을 이용하여,
-      \begin{align*}
-        K \left( k \right) \in \mathcal{R}
-        & \implies k \in R^{*} \\
-        & \implies k \in A \\
-        & \implies K \left( k \right) \in \mathcal{P} \\
-        & \implies k \in P^{*}
-      \end{align*}
-      임과
-      \begin{align*}
-        K \left( k \right) \in \mathcal{R}
-        & \implies k \in R^{*} \\
-        & \implies k \in A
-      \end{align*}
-      임을 알 수 있다.
-      그러나 이것 역시 $P^{*}$가 $A$와 서로소 집합이라는 가정에 모순이다.
-
-      \item[{4.}] 전제 조건들을 가정하자.
-      $P^{*}$를 $\mathcal{L}$에서 거꾸로 나타낼 수 있으므로,
-      어떤 술어 $K$가 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ K \left( n \right) \in \mathcal{R} \leftrightarrow n \in P^{*} \right] $$이 성립한다.
-      이제, $k := \gnum \left( K \right)$에 대하여, 문장 $K \left( k \right)$가 $\mathcal{L}$에서 결정 불가능함을 보이겠다.
-      먼저, $K \left( k \right)$를 $\mathcal{L}$에서 증명 가능한 경우,
-      \begin{align*}
-        K \left( k \right) \in \mathcal{P}
-        & \implies k \in P^{*} \\
-        & \implies K \left( k \right) \in \mathcal{R}
-      \end{align*}
-      인데, 이는 $\mathcal{L}$이 일관성 있다는 가정에 모순이다.
-      한편, $K \left( k \right)$를 $\mathcal{L}$에서 반증 가능한 경우,
-      \begin{align*}
-        K \left( k \right) \in \mathcal{R}
-        & \implies k \in P^{*} \\
-        & \implies K \left( k \right) \in \mathcal{P}
-      \end{align*}
-      인데, 이것 역시 $\mathcal{L}$이 일관성 있다는 가정에 모순이다.
-      그러므로, $K \left( k \right)$가 $\mathcal{L}$에서 결정 불가능하기 때문에, $\mathcal{L}$은 불완전하다.
-
-      \item[{5.}] 대각 함수 $d$와 집합 $A$이 주어졌다고 하고,
-      $d^{-1} \left[ A \right]$가 $\mathcal{L}$에서 표현될 수 있다고 하자.
-      그러면 어떤 술어 $H$가 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ H \left( n \right) \in \mathcal{T} \leftrightarrow n \in d^{-1} \left[ A \right] \right]$$이 성립한다.
-      이제, $h := \gnum \left( H \right)$에 대하여, $H \left( h \right)$가 $A$에 대한 괴델 문장이라는 것을 보일 것이다.
-      먼저, $h = \gnum \left( H \right)$이므로,
-      대각 함수의 제약 조건 $$ \left( \forall E \in \mathcal{E} \right) \left( \forall e \in \mathbb{N} \right) \left[ g \left( E \right) = e \rightarrow g \left( E \left( e \right) \right) = d \left( e \right) \right] $$로부터,
-      $ g \left( H \left( h \right) \right) = d \left( h \right) $를 얻는다.
-      그러면,
-      \begin{align*}
-        H \left( h \right) \in \mathcal{T}
-        & \iff h \in d^{-1} \left[ A \right] \\
-        & \iff d \left( h \right) \in A \\
-        & \iff \gnum \left( H \left( h \right) \right) \in A
-      \end{align*}
-      를 얻는데,
-      이는 $H \left( h \right)$가 $A$에 대한 괴델 문장 중 하나라는 것을 의미한다.
-      
-      \item[{6.}] $A \subseteq \mathbb{N}$이 주어졌다고 하자.
-      그러면, 임의의 $n \in \mathbb{N}$에 대하여
-      \begin{align*}
-        n \in \tilde{A}^{*}
-        & \iff n \in d^{-1} \left[ \tilde{A} \right] \\
-        & \iff d \left( n \right) \in \tilde{A} \\
-        & \iff d \left( n \right) \notin A \\
-        & \iff n \notin d^{-1} \left[ A \right] \\
-        & \iff n \notin A^{*} \\
-        & \iff n \in \widetilde{A^{*}}
-      \end{align*}
-      이므로, $\tilde{A}^{*} = \widetilde{A^{*}}$이어야 한다.
-
-      \item[{7.}]
-      \begin{itemize}
-        \item[(a)] 먼저, $\left( a , b \right) = \left( 64 , 64 \right)$가 한 해임을 보이겠다. 
-        $64 = 3 \times \left( 3 \times \left( 7 \right) \right) + 1$이므로,
-        $E_{64}$는 집합 $\tilde{P}^{*}$을 표현하는 술어이다.
-        정리 GT에 의하여, $E_{64}$는 $\mathcal{L}$에서 참이지만 증명 가능하지 않다.
-        그리고, $\left( a , b \right) = \left( 66 , 66 \right)$이 또다른 해임을 보이겠다.
-        $66 = 3 \times \left( 3 \times \left( 7 \right) + 1 \right)$이므로,
-        $E_{66}$은 집합 $\widetilde{P^{*}}$를 표현하는 술어이다 --
-        즉, $$ E_{66} \left( n \right) \in \mathcal{T} \iff n \in \widetilde{P^{*}} \qquad \mathrm{for} \quad \forall n \in \mathbb{N} $$이다.
-        따라서,
-        \begin{align*}
-          E_{66} \left( 66 \right) \in \mathcal{T}
-          & \iff 66 \in \widetilde{P^{*}} \\
-          & \iff 66 \notin P^{*} \\
-          & \iff d \left( 66 \right) \notin P \\
-          & \iff \gnum \left( E_{66} \left( 66 \right) \right) \notin P \\
-          & \iff E_{66} \left( 66 \right) \notin \mathcal{P}
-        \end{align*}
-        인데, $\mathcal{L}$의 정확성을 가정하였으므로,
-        문장 $E_{66} \left( 66 \right)$은 $\mathcal{L}$에서 참이지만 증명 가능하지 않아야 한다.
-
-        \item[(b)] $n \geq 1$에 대하여, $a_{n} := 7 \times 9^{n} + 1$라고 하고 $b_{n} := 7 \times 9^{n} + 1$라고 하자.
-        이제, 임의의 $n \geq 1$에 대하여, $E_{a_{n}} \left( b_{n} \right)$이 $\mathcal{L}$에서 참이지만 증명 가능하지 않다는 것을 보이겠다.
-        $ n \geq 1 $을 임의로 잡자.
-        그러면 술어 $E_{a_{n}}$은 집합 $\tilde{P}^{*}$를 표현한다.
-        그러므로,
-        \begin{align*}
-          E_{a_{n}} \left( b_{n} \right) \in \mathcal{T}
-          & \iff b_{n} \in \tilde{P}^{*} \\
-          & \iff d \left( b_{n} \right) \in \tilde{P} \\
-          & \iff \gnum \left( E_{a_{n}} \left( b_{n} \right) \right) \in \tilde{P} \\
-          & \iff \gnum \left( E_{a_{n}} \left( b_{n} \right) \right) \notin P \\
-          & \iff E_{a_{n}} \left( b_{n} \right) \notin \mathcal{P}
-        \end{align*}
-        인데, $\mathcal{L}$의 정확성에 의하여,
-        $E_{a_{n}} \left( b_{n} \right)$은 $\mathcal{L}$에서 참이지만 증명 가능하지 않아야 한다.
-        그런데 $ n \mapsto \left( a_{n} , b_{n} \right) : \mathbb{N}_{+} \to \mathbb{N} \times \mathbb{N} $은 정의역이 $\mathbb{N}_{+}$인 단사 함수이므로,
-        $E_{a} \left( b \right)$가 $\mathcal{L}$에서 참이지만 증명 가능하지 않다는 것을 보장할 수 있는,
-        $a \in \mathbb{N}$와 $b \in \mathbb{N}$의 순서쌍 $\left( a , b \right)$은 무한히 많음을 알 수 있다.
-
-        \item[(c)] 집합 $A \subseteq \mathbb{N}$가 술어 $E_{10}$에 의하여 표현된다고 하자.
-        그러면 $$ \left( \forall n \in \mathbb{N} \right) \left[ E_{10} \left( n \right) \in \mathcal{T} \leftrightarrow n \in A \right] $$이 성립한다.
-        이제, $E_{31} \left( 31 \right)$이 $A$에 대한 괴델 문장임을 보이겠다.
-        먼저, $31 = 3 \times \left( 10 \right) + 1$이므로,
-        술어 $E_{31}$는 집합 $A^{*}$를 표현한다 --
-        즉, $$E_{31} \left( n \right) \in \mathcal{T} \iff n \in A^{*} \qquad \mathrm{for} \quad \forall n \in \mathbb{N}$$이다.
-        따라서,
-        \begin{align*}
-          E_{31} \left( 31 \right) \in \mathcal{T}
-          & \iff 31 \in A^{*} \\
-          & \iff d \left( 31 \right) \in A \\
-          & \iff \gnum \left( E_{31} \left( 31 \right) \right) \in A
-        \end{align*}
-        인데,
-        이는 $E_{31} \left( 31 \right)$이 $A$에 대한 괴델 문장이라는 것을 의미한다.
-        그러므로 $$\left( c , d \right) = \left( 31 , 31 \right)$$이 해 중 하나이다.
-      \end{itemize}
-    \end{enumerate}
-  \end{context}
-
-  \begin{context}[Comments]
-    \begin{enumerate}
-      \item 정리 GT의 증명에서,
-      문장 $G$가 참일 때 그리고 그럴 때에만 증명 가능하지 않다는 것으로부터 $G$는 참이지만 증명 가능하지 않음을 보일 때,
-      배중률을 이용하여 증명했지만, 직관주의 논리에서도 증명할 수 있다 --
-      즉, 명제 $H_{1}$과 명제 $H_{2}$를 각각
-      $$H_{1} : \equiv \left( G \in \mathcal{T} \right) \leftrightarrow \lnot \left( G \in \mathcal{P} \right) $$와
-      $$ H_{2} : \equiv \left( \forall X \in \mathcal{S} \right) \left[ X \in \mathcal{P} \rightarrow X \in \mathcal{T} \right]$$로
-      두었을 때,
-      직관주의 체계에서 $H_{1} , H_{2} \vdash G \in \mathcal{T} \land G \notin \mathcal{P}$를 도출할 수 있다.
-
-      \begin{proof}
-        먼저, $H_{1}$과 $H_{2}$를 가정하자.
-        추가로, 명제 $$H_{3} : \equiv G \in \mathcal{P}$$가 성립한다고 가정하자.
-        그러면 $H_{2}$에 $H_{3}$를 적용하여 $G \in \mathcal{T}$를 얻는데,
-        이것을 $H_{3}$와 함께 $H_{1}$의 순방향에 적용하면 모순을 얻는다.
-        이때 가정 $H_{3}$을 해제하면 $\lnot H_{3}$를 얻는데,
-        이것을 $H_{1}$의 역방향에 적용하면 $G \in \mathcal{T}$를 얻는다.
-        그러나 $\lnot H_{3} \equiv G \notin \mathcal{P}$이므로,
-        원하던 $G \in \mathcal{T} \land G \notin \mathcal{P}$를 얻게 된다.
-      \end{proof}
-    \end{enumerate}
-  \end{context}
-
-  \newpage
-
-  \section{산술에 대한 Tarski의 정리}
-  \hspace{12pt}
-
-  전 단원에서, 상당히 일반적인 방법으로 수학적 언어를 다루었다.
-  이제는 특정 수학적 언어를 다루겠다.
-  \underline{페아노 산술}(\textit{Peano Arithmetic})으로 알려진 체계에 대한
-  G\"odel의 불완전성 정리에 도달하는 것이 우리의 목표 중 하나인데,
-  이 중요한 결과에 대한 몇 가지 증명을 볼 것이다;
-  그 중 가장 간단한 것은, 곧 다룰, Tarski의 정리를 부분적인 기반으로 삼는다.
-
-  \subsection{언어 $\mathcal{L}_{E}$}
-  \hspace{12pt}
-
-  \noindent \textbf{\S1. 구문론적 예비 사항}
-
-  우리가 공부할 첫 번째 구체적인 언어는 덧셈과 곱셈 그리고 제곱을 기반으로 하는 1차 산술의 언어이다.\footnote
-  {
-    다음 수 함수와 이하의 관계도 넣을 것이지만, 이것들은 불필요하다.
-  }
-  (편리한 괴델 넘버링을 구현하기 위하여) 오직 유한한 알파벳만을 사용하여 그 언어를 형식화할 것이다;
-  구체적으로는 다음 13개의 기호들을 사용할 것이다.
-  $$ 0 \quad ' \quad \left( \quad \right) \quad f \quad \circ \quad v \quad \lnot \quad \rightarrow \quad \forall \quad = \quad \le \quad \sharp $$
-
-  표현식 $0$, $0'$, $0''$, $0'''$, ...은
-  각각 자연수 $0$, $1$, $2$, $3$, ...의 형식적인 이름으로서 \underline{숫자}(\textit{numeral})라고 불린다.
-  악센트 기호는 \underline{프라임}(\textit{prime})이라고도 불리는데,
-  다음 수 함수의 형식적인 이름이다.
-  또한 덧셈과 곱셈 그리고 제곱 연산의 이름이 필요한데;
-  $f \circ$, $f \! \circ \! \circ$, $f \! \circ \! \circ \circ$을 각각 이 세 함수의 이름이라 하자.
-  그러나 $f \circ$을 ``$+$''로, $f \! \circ \! \circ$을 ``$\times$''로, $f \! \circ \! \circ \circ$을 ``$\mathop{\mathbf{E}}$''로 줄여서 표기하자.
-
-  기호 $\lnot$과 $\rightarrow$는 명제 논리의 친숙한 기호로서,
-  각각 부정과 실질 함축을 의미한다.\footnote
-  {
-    화살표 기호가 익숙하지 않은 독자에게: 두 명제 $p$와 $q$에 대하여, $p \rightarrow q$는 $p$가 거짓인 경우와 $p$와 $q$ 모두 참인 경우에 그리고 이 두 경우에만 참인 명제이다.
-  }
-  기호 $\forall$는 \underline{전칭 양화사}(\textit{universal quantifier})라고 불리는데, ``for all''을 의미한다.
-  우리는 집합이나 자연수들 사이의 관계 위에 양화하지 않고 오직 자연수만을 양화한다.\footnote
-  {
-    기술적으로, 우리는 1차 산술을 다루는 것이지, 2차 산술을 다루는 것은 아니다.
-  }
-
-  여느 때처럼, 기호 ``$=$''는 좌변과 우변이 같다는 관계를 의미하고 기호 ``$\leq$''는 좌변이 우변보다 같거나 작은 관계를 의미한다.
-
-  또한 \underline{개체 변수}(\textit{individual variable})라고들 불리는 가부번하게 많은 표현식들 $v_{1}$, $v_{2}$, ..., $v_{n}$, ...이 필요하다.
-  이 표현식들을 13 개의 알파벳만으로 표현하기 위하여, $v_{1}$, $v_{2}$, $v_{3}$, ...을 각각 $\left( v \circ \right)$, $\left( v \! \circ \! \circ \right)$, $\left( v \! \circ \! \circ \circ \right)$, ...로 표현하자.\footnote
-  {
-    그러므로 $v_{n}$은 ``$v$'' 뒤에 $n$개의 $\circ$가 따라온 표현식에 괄호를 감싼 것이다.
-  }
-
-  \begin{context}[Terms and Formulas]
-    다음 두 규칙들의 결과로서 존재하는 표현식을 \underline{논리항}(\textit{term})이라고 부른다.
-    \begin{enumerate}
-      \item 모든 개체 변수들과 숫자들은 논리항이다.
-      \item $t_{1}$과 $t_{2}$가 논리항일 때, $\left( t_{1} + t_{2} \right)$, $\left( t_{1} \times t_{2} \right)$, $\left( t_{1} \mathop{\mathbf{E}} t_{2} \right)$와 $t_{1} '$도 항이다.
-    \end{enumerate}
-
-    논리항이 개체 변수를 포함하고 있지 않으면, 그것을 \underline{상항}(\textit{constant term})이라고 부르거나 \underline{닫혀 있다}(\textit{closed})고 한다.
-
-    \underline{원자 논리식}(\textit{atomic formula})이란,
-    $t_{1} = t_{2}$와 $t_{1} \leq t_{2}$ 중 한 형태의 표현식을 의미한다 --
-    여기서 $t_{1}$과 $t_{2}$에는 임의의 논리항이 올 수 있다.
-
-    모든 \underline{논리식}(\textit{formula})들의 집합은 다음 규칙에 의하여 귀납적으로 정의된다:
-    \begin{enumerate}
-      \item 모든 원자 논리식은 논리식이다.
-      \item $F$와 $G$가 논리식이라면, $\lnot F$과 $F \rightarrow G$ 그리고 $\forall v_{i} F$도 논리식이다 --
-      여기서 $v_{i}$는 임의의 개체 변수이다.
-    \end{enumerate}
-  \end{context}
-
-  \begin{context}[Free and Bound Occurrences of Variables]
-    $v_{i}$를 개체 변수라고 하자.
-    항 $t$에 대하여, $t$에서의 $v_{i}$의 모든 나타남들은 \underline{자유 나타남}(\textit{free occurrence})이라고 불린다.
-    또한, \textit{원자} 논리식 $A$에 대하여서도, $A$에서의 $v_{i}$의 모든 나타남들은 자유 나타남이다.
-    논리식 $F$와 $G$에 대하여, $F \rightarrow G$에서의 $v_{i}$의 모든 자유 나타남들은 $F$와 $G$의 그것과 같다.
-    논리식 $F$에 대하여, $\lnot F$에서의 $v_{i}$의 모든 자유 나타남들은 $F$의 그것과 같다.
-    이때 $v_{i}$는 $\forall v_{i} F$에서 자유롭게 나타나지 않는다;
-    $\forall v_{i} F$에서의 $v_{i}$의 모든 나타남들은 \underline{속박 나타남}(\textit{bound occurrence})이라고 불린다.
-    $j \neq i$인 각 $j \in \mathbb{N}_{+}$마다 $\forall v_{j} F$에서의 $v_{i}$의 모든 자유 나타남들은 $F$의 그것과 같다.
-  \end{context}
-
-  \begin{context}[Sentences]
-    \underline{문장}(\textit{sentence})이란, 어떤 개체 변수도 자유롭게 나타나지 않는 논리식을 의미한다.
-    문장들은 때때로 \underline{닫힌}(\textit{closed}) 논리식이라고도 불린다.
-    \underline{열린}(\textit{open}) 논리식이란, 닫히지 않은 논리식을 의미한다 --
-    즉, 적어도 하나의 개체 변수가 자유롭게 나타나는 논리식이다.
-  \end{context}
-
-  \begin{context}[Substitution of Numerals for Variables]
-    자연수 $n$에 대하여, $\overline{n}$은 $n$을 가르키는 숫자를 의미한다 --
-    즉, 기호 ``$0$'' 뒤에 $n$개의 악센트 기호가 따라오는 표현식이다.\footnote
-    {
-      예를 들어, $\overline{5}$는 표현식 $0'''''$이다.
-    }
-
-    개체 변수 $v_{i}$에 대하여, 우리는 논리식 $F$에서 $v_{i}$의 모든 자유 나타남들을 $\overline{n}$으로 대체한 논리식을 $F \left[ v_{i} := \overline{n} \right]$으로 적을 것이다.
-    더 일반적으로, $F \left[ v_{i_{1}} := \overline{n_{1}} , \cdots , v_{i_{k}} := \overline{n_{k}} \right]$은 논리식 $F$에서 $v_{i_{1}}$, ..., $v_{i_{k}}$을 동시에 각각 $\overline{n_{1}}$, ..., $\overline{n_{k}}$으로 치환한 결과를 의미한다.
-
-    자유롭게 나타나는 개체 변수가 $v_{1}$, ..., $v_{n}$ 뿐인 논리식을 \underline{정규}(\textit{regular}) 논리식이라고 한다.
-    그러므로, 정규 논리식 $F$에서 개체 변수 $v_{i}$가 자유롭게 나타난다면,
-    $j \leq i$인 임의의 $j \in \mathbb{N}_{+}$에 대하여 $v_{j}$도 $F$에서 자유롭게 나타나는 개체 변수이다.
-  \end{context}
-
-  \begin{context}[Degrees and Induction]
-    논리식의 \underline{복잡도}(\textit{degree})란, 그 논리식에서 $\lnot$, $\rightarrow$, $\forall$이 나타나는 횟수이다.
-    그러므로,
-    \begin{enumerate}
-      \item 원자 논리식의 복잡도는 $0$이다.
-      \item 논리식 $F$의 복잡도가 $d_{1}$이고 논리식 $G$의 복잡도가 $d_{2}$이면,
-      $\lnot F$의 복잡도는 $d_{1} + 1$이고;
-      $\left( F \rightarrow G \right)$의 복잡도는 $d_{1} + d_{2} + 1$이고;
-      $\forall v_{i} F$의 복잡도는 $d_{1} + 1$이다 --
-      여기서 $v_{i}$는 임의의 개체 변수이다.
-    \end{enumerate}
-
-    다음의 수학적 귀납법에 익숙하다고 가정하겠다:
-    주어진 성질이 모든 논리식에 대하여 성립함을 보이기 위하여
-    모든 원자 논리식에 대하여 그 성질이 성립함과
-    임의의 논리식 $F$에 대하여 $F$보다 낮은 복잡도의 모든 논리식들에 대하여 그 성질이 성립한다고 가정하고
-    $F$에서도 성립함을 보이면 충분하다.
-  \end{context}
-
-  \begin{context}[Abbreviations]
-    우리는 다음의 표준적인 약어를 쓸 것이다:
-    \begin{align*}
-      \left( F \lor G \right) & : \equiv \left( \lnot F \rightarrow G \right) \\
-      \left( F \land G \right) & : \equiv \lnot \left( F \rightarrow \lnot G \right) \\
-      \left( F \leftrightarrow G \right) & : \equiv \left( \left( F \rightarrow G \right) \land \left( G \rightarrow F \right) \right) \\
-      \exists v_{i} F & : \equiv \lnot \forall v_{i} \lnot F \\
-      t_{1} \neq t_{2} & : \equiv \lnot t_{1} = t_{2} \\
-      t_{1} < t_{2} & : \equiv \left( t_{1} \leq t_{2} \land t_{1} \neq t_{2} \right) \\
-      t_{1}^{t_{2}} & : \equiv \left( t_{1} \mathop{\mathbf{E}} t_{2} \right) \\
-      \left( \forall v_{i} \leq t \right) F & : \equiv \forall v_{i} \left( v_{i} \leq t \rightarrow F \right) \\
-      \left( \exists v_{i} \leq t \right) F & : \equiv \lnot \left( \forall v_{i} \leq t \right) \lnot F
-    \end{align*}
-    여기서 $F$와 $G$에는 임의의 논리식이 올 수 있고,
-    $t_{1}$과 $t_{2}$에는 임의의 논리항이 올 수 있으며,
-    $v_{i}$에는 임의의 개체 변수가 올 수 있다.
-
-    논리항과 논리식을 표기할 때,
-    괄호를 생략하여도 모호함이 생기지 않는 경우에는 종종 괄호를 생략할 것이다.
-    예를 들어, 독립적인 논리항과 논리식을 표기할 때, 가장 바깥쪽 괄호를 떨어뜨릴 수 있다 --
-    [예 1] $\left( F \rightarrow G \right)$ 대신에 $F \rightarrow G$라고 쓴다;
-    [예 2] 독립적인 항 $\left( v_{1} + v_{2} \right)$는 $v_{1} + v_{2}$로 단축할 수 있다;
-    [예 3] $\left( \left( v_{1} + v_{2} \right) \times v_{3} \right)$은 $\left( v_{1} + v_{2} \right) \times v_{3}$으로 단축될 수 있다.
-  \end{context}
-
-  \begin{context}[Designation]
-    \textit{상항}이 개체 변수가 나타나지 않는 항이라는 사실을 상기하자.
-    임의의 상항은 다음 규칙에 따라 유일한 자연수에 대응한다.
-    \begin{enumerate}
-      \item 숫자 $\overline{n}$은 $n$에 대응한다.
-      \item 두 상항 $c_{1}$과 $c_{2}$가 각각 $n_{1}$과 $n_{2}$에 대응할 때,
-      $\left( c_{1} + c_{2} \right)$는 $n_{1}$과 $n_{2}$의 합에 대응하고;
-      $\left( c_{1} \times c_{2} \right)$는 $n_{1}$과 $n_{2}$의 곱에 대응하고;
-      $\left( c_{1} \mathop{\mathbf{E}} c_{2} \right)$은 $n_{1}$의 $n_{2}$ 제곱에 대응한다.
-    \end{enumerate}
-
-    한 예로, 상항 $\left( \left( 0''' + 0' \right) \times \left( 0'' \mathop{\mathbf{E}} 0''' \right) \right) '$는
-    수 $\left( \left( 3 + 1 \right) \times 2^{3} \right) + 1 = 33$에 대응한다.
-  \end{context}
-
-  \noindent \textbf{\S2. $\mathcal{L}_{E}$에서의 참의 개념.}
-
-  이제 $\mathcal{L}_{E}$의 어떠한 문장들이 \textit{참}이라는 게 무엇을 의미하는지를 정의할 때가 되었다.
-  이 정의는 문장의 복잡도에 대한 귀납법에 의하여 적용된다.
-  다음 조건들은 진리에 대한 귀납적인 정의를 제공한다.
-  \begin{itemize}
-    \item[$T_{0}$:]
-    \begin{enumerate}
-      \item 상항 $c_{1}$과 $c_{2}$에 대하여, 원자 논리식인 문장 $c_{1} = c_{2}$는 $c_{1}$과 $c_{2}$가 같은 자연수에 대응할 때 그리고 그럴 때에만 참이다.
-      \item 상항 $c_{1}$과 $c_{2}$에 대하여, 원자 논리식인 문장 $c_{1} \leq c_{2}$는 $c_{1}$이 대응하는 자연수가 $c_{2}$가 대응하는 자연수보다 작거나 같을 때 그리고 그럴 때에만 참이다.
-    \end{enumerate}
-    \item[$T_{1}$:] $\lnot X$ 꼴의 문장은 $X$가 참이 아닐 때 그리고 그럴 때에만 참이다.
-    \item[$T_{2}$:] $X \rightarrow Y$는 $X$가 참이 아닌 경우 또는 $X$와 $Y$ 모두 참인 경우에 그리고 이 두 경우에만 참이다.
-    \item[$T_{3}$:] $\forall v_{i} F$은 모든 자연수 $n$에 대하여 문장 $F \left[ v_{i} := \overline{n} \right]$이 참일 때 그리고 그럴 때에만 참이다.
-  \end{itemize}
-
-  조건 $T_{0}$는 노골적으로 원자 논리식인 문장이 참일 조건을 진술한다.
-  조건 $T_{1}$, $T_{2}$과 $T_{3}$은,
-  더 낮은 복잡도의 문장들에 대한 진리를 이용하여,
-  원자 논리식이 아닌 문장이 참일 조건을 기술한다.\footnote
-  {
-    $T_{3}$에서 $F \left[ v_{i} := n \right] $의 복잡도가 $\forall v_{i} F$의 복잡도보다 낮은 것과
-    $\forall v_{i} F$가 문장이므로 $F \left[ v_{i} := n \right]$도 문장임에 주목하여라.
-  }
-
-  열린 논리식은 참이라고 혹은 거짓이라고 말할 수는 없지만,
-  임의의 $n_{1} \in \mathbb{N}$, ..., $n_{k} \in \mathbb{N}$에 대하여 $F \left[ v_{i_{1}} := \overline{n_{1}} , \cdots , v_{i_{k}} := \overline{n_{k}} \right]$가 참일 때
-  자유롭게 나타나는 개체 변수가 $v_{i_{1}}$, ..., $v_{i_{k}}$ 뿐인 논리식 $F$를 \underline{정확}(\textit{correct})하다고 한다 --
-  단, $k \geq 1$이다.
-
-  \begin{context}[Exercise 1]
-    \begin{enumerate}
-      \item[(a)] 임의의 문장 $X$와 $Y$에 대하여, $X \land Y$는 $X$와 $Y$ 모두 참일 때 그리고 그럴 때에만 참이다.
-      \item[(b)] 임의의 문장 $X$와 $Y$에 대하여, $X \lor Y$는 $X$와 $Y$ 중 적어도 하나가 참일 때 그리고 그럴 때에만 참이다.
-      \item[(c)] 자유롭게 나타나는 개체 변수가 $v_{i}$ 뿐인 논리식 $F$에 대하여, $\exists v_{i} F$는 어떤 자연수 $n$이 존재하여 $F \left[ v_{i} := \overline{n} \right]$이 참일 때 그리고 그럴 때에만 참이다.
-    \end{enumerate}
-
-    위의 세 명제가 모두 참임을 보여라.
-  \end{context}
-
-  \begin{context}[Substitution of Variables]
-    자유롭게 나타나는 개체 변수가 $v_{1}$ 뿐인 논리식 $F$를 고려하자.
-    $i > 1$일 때, 개체 변수 $v_{i}$에 대하여, $F \left[ v_{1} := v_{i} \right]$를 다음과 같이 정의한다:
-    \begin{enumerate}
-      \item $v_{i}$가 $F$에서 속박되어 나타나지 않을 때, $F \left[ v_{1} := v_{i} \right]$는 $v_{1}$의 모든 자유 나타남을 $v_{i}$로 치환한 결과이다.
-      \item $v_{i}$가 $F$에서 속박되어 나타날 때, $v_{j}$가 $F$에서 나타나지 않는 개체 변수가 되게 하는 가장 작은 $j$를 취하여,
-      $v_{i}$의 모든 나타남을 $v_{j}$으로 치환한 논리식에서 $v_{j}$의 모든 자유 나타남을 $v_{i}$로 치환한 결과이다.
-    \end{enumerate}
-
-    예를 들어, 논리식 $\exists v_{2} v_{2} \neq v_{1}$을 $F$라고 하자.
-    그러면 $F$는 정확하다.
-    $F \left[ v_{1} := v_{2} \right]$이란 정확한 논리식 $\exists v_{3} v_{3} \neq v_{2}$를 의미하지, 정확하지 않은 논리식 $\exists v_{2} v_{2} \neq v_{2}$를 의미하지는 않는다.
-
-    자유롭게 나타나는 개체 변수가 $n$ 개인 정규 논리식에 대하여서도 비슷한 정의를 적용한다.
-    개체 변수 $v_{i_{1}}$, ..., $v_{i_{n}}$에 대하여,
-    $F \left[ v_{1} := v_{i_{1}} , \cdots , v_{n} := v_{i_{n}} \right]$을
-    $v_{i_{1}}$, ..., $v_{i_{n}}$ 중 어느 것도 $F$에서 속박되어 나타나지 않도록 $F$를 재작성하여 얻은 논리식에
-    $v_{1}$, ..., $v_{n}$을 동시에 $v_{i_{1}}$, ..., $v_{i_{n}}$으로 치환하여 얻은 논리식으로 정의한다. 
-  \end{context}
-
-  두 문장이 동시에 참이거나 거짓일 때, 두 문장이 (산술적으로) \underline{동등}(\textit{equivalent})하다고 한다.
-  자유롭게 나타나는 개체 변수가 $v_{i_{1}}$, ..., $v_{i_{k}}$ 뿐인 논리식 $F$와 $G$에 대하여,
-  임의의 $n_{1} \in \mathbb{N}$, ..., $n_{k} \in \mathbb{N}$에 대하여 $F \left[ v_{i_{1}} := \overline{n_{1}} , \cdots , v_{i_{k}} := \overline{n_{k}} \right]$이 동등한 문장일 때,
-  $F$와 $G$를 동등한 논리식이라고 한다.
-
-  \noindent \textbf{\S3. 싼술적인 그리고 산술적인 집합과 관계}
-
-  자유롭게 나타나는 개체 변수가 $v_{1}$ 뿐인 논리식 $F$에 대하여,
-  $F$는 문장 $F \left[ v_{1} := \overline{n} \right]$이 참이게 하는 자연수 $n$을 모두 모은 집합을 \underline{표현한다}(\textit{express})고 한다;
-  즉, 임의의 집합 $A \subseteq \mathbb{N}$에 대하여, $$ \left( \forall n \in \mathbb{N} \right) \left[ F \left[ v_{1} := \overline{n} \right] \in \mathcal{T} \leftrightarrow n \in A \right] $$이 성립할 때 그리고 그럴 때에만 $F$는 $A$를 표현한다.
-  자유롭게 나타나는 개체 변수가 $k$개인 정규 논리식 $F$에 대하여,
-  $F$는 문장 $F \left[ v_{i_{1}} := \overline{n_{1}} , \cdots , v_{i_{k}} := \overline{n_{k}} \right]$이 참이게 하는 $k$-튜플 $\left( n_{1} , \cdots , n_{k} \right)$을 모두 모은 집합을 \underline{표현한다}(\textit{express})고 한다;
-  즉, 임의의 관계 $R \subseteq \mathbb{N}^{k}$에 대하여, $$ \left( \forall n_{1} \in \mathbb{N} \right) \cdots \left( \forall n_{k} \in \mathbb{N} \right) \left[ F \left[ v_{i_{1}} := \overline{n_{1}} , \cdots , v_{i_{k}} := \overline{n_{k}} \right] \in \mathcal{T} \leftrightarrow R \left( n_{1} , \cdots , n_{k} \right) \right] $$이 성립할 때 그리고 그럴 때에만 $F$는 $R$을 표현한다.
-
-  예를 들어, 모든 자연수는 짝수일 때 그리고 그럴 때에만 2로 나누어 떨어지므로, 모든 짝수들의 집합은 논리식 $\exists v_{2} v_{1} = 0'' \times v_{2}$에 의하여 표현된다.
-
-  집합이나 관계가 어떤 $\mathcal{L}_{E}$의 논리식에 의하여 표현될 때 그것을 \underline{싼술적}(\textit{Arithmetic})이라고 한다.
-  그리고 집합이나 관계가 $\mathbf{E}$를 포함하지 않는 어떤 $\mathcal{L}_{E}$의 논리식에 의하여 표현될 때 그것을 \underline{산술적}(\textit{arithmetic})이라고 한다.
-  비형식적으로, 싼술적인 집합과 관계는 1차 논리에서 덧셈과 곱셈 그리고 제곱에 의하여 정의될 수 있다는 특성을 가지고 있다;
-  그리고 산술적인 집합과 관계는 1차 논리에서 덧셈과 곱셈에만 의하여 정의될 수 있다는 특성을 가지고 있다.\footnote
-  {
-    관계 $\leq$를 넣지 않은 이유는 다음과 같다:
-    논리식 $\left( v_{1} \leq v_{2} \leftrightarrow \left( \exists v_{3} v_{1} + v_{3} = v_{2} \right) \right)$이 정확하기 때문에,
-    $\leq$는 덧셈만으로 표현될 수 있다.
-  }
-
-  뒷 단원에서, 관계 $x^{y} = z$를 덧셈과 곱셈만으로 정의할 수 있기 때문에 모든 싼술적인 관계가 산술적인 관계라는,
-  자명하지 않은 G\"odel의 결론을 증명할 것이다.
-  그러나 이것을 증명하기 전까지, ``싼술적인''이라는 용어를 계속 사용할 것이다.
-
-  함수 $f : \mathbb{N}^{k} \to \mathbb{N}$를, 관계 $$f \left( x_{1} , \cdots , x_{k} \right) = y$$가 싼술적일 때, \underline{싼술적}(\textit{Arithmetic})이라고 부를 것이다.
-  다시 말해, 임의의 함수 $f : \mathbb{N}^{k} \to \mathbb{N}$에 대하여, $f$가 싼술적일 때 그리고 그럴 때에만 자유롭게 나타나는 개체 변수가 $k + 1$개인 어떤 정규 논리식 $F$가 존재하여
-  임의의 $x_{1} \in \mathbb{N}$, ..., $x_{k} \in \mathbb{N}$, $y \in \mathbb{N}$에 대하여 $$ F \left[ v_{1} := \overline{x_1} , \cdots , v_{k} := \overline{x_k} , v_{k + 1} := \overline{y} \right] \in \mathcal{T} \leftrightarrow f \left( x_{1} , \cdots , x_{k} \right) = y $$가 성립한다.
-
-  \underline{성질}(\textit{property}) $P$를 만족시키는 모든 자연수들의 집합이 싼술적일 때 $P$를 싼술적이라고 할 것이다.
-  또한 ``조건''이란 용어를 관계나 성질을 의미하는 용어로서 사용할 것이다.
-
-  \begin{context}[Exercise 2]
-    \begin{enumerate}
-      \item[(a)] 관계 ``$x$가 $y$의 약수이다''는 산술적이다.
-      \item[(b)] 모든 소수들의 집합은 산술적이다.
-    \end{enumerate}
-
-    위의 두 명제가 모두 참임을 보여라.
-  \end{context}
-
-  \begin{context}[Exercise 3]
-    임의의 싼술적인 집합 $A \subseteq \mathbb{N}$와 임의의 싼술적인 함수 $f : \mathbb{N} \to \mathbb{N}$에 대하여, 집합 $$f^{-1} \left[ A \right] = \left\{ n \in \mathbb{N} : f \left( n \right) \in A \right\}$$도 싼술적임을 보여라.
-    ``산술적인''에 대하여 같은 것을 보여라.
-  \end{context}
-
-  \begin{context}[Exercise 4]
-    \begin{enumerate}
-      \item[(a)] 임의의 두 함수 $f : \mathbb{N} \to \mathbb{N}$과 $g : \mathbb{N} \to \mathbb{N}$가 싼술적일 때
-      함수 $x \mapsto f \left( g \left( x \right) \right)$도 싼술적이다.
-      \item[(b)] 임의의 두 함수 $f : \mathbb{N} \to \mathbb{N}$과 $g : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$가 싼술적일 때
-      세 함수 $ \left( x , y \right) \mapsto g \left( f \left( x \right) , y \right) $와 $ \left( x , y \right) \mapsto g \left( x , f \left( y \right) \right) $ 그리고 $ \left( x , y \right) \mapsto f \left( g \left( x , y \right) \right) $ 모두 싼술적이다.
-    \end{enumerate}
-
-    위의 두 명제가 모두 참임을 보여라.
-  \end{context}
-
-  \begin{context}[Exercise 5]
-    무한 집합 $A \subseteq \mathbb{N}$가 싼술적이라고 하자.
-    그러면 $A$가 무한 집합이므로 $$\left( \forall x \in \mathbb{N} \right) \left( \exists y \in \mathbb{N} \right) \left[ y \in A \land x \leq y \right]$$가 성립한다.
-    이제 $R \left( x , y \right)$를 ``$x$보다 큰 $A$의 원소들의 최솟값이 $y$이다''는 관계로 두자.
-    그러면 관계 $R \subseteq \mathbb{N}^{2}$이 싼술적임을 보여라.
-  \end{context}
-
-  \subsection{접합과 괴델 넘버링}
-  \hspace{12pt}
-
-  \noindent \textbf{\S4. $b$를 기저로 하는 접합}
-
-  각 $b \geq 2$에 대하여, \underline{$b$를 기저로 하는 접합}(\textit{concatenation to the base $b$})라고 불릴 함수 $$\left( x , y \right) \mapsto x *_{b} y : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$$를 정의할 것인데,
-  이 함수는 이 책에서 기본적인 역할을 할 것이다.
-
-  저 정의에 친숙한 기저인 $10$을 주자.
-  임의의 $m \in \mathbb{N}$과 $n \in \mathbb{N}$에 대하여,
-  $m *_{10} n$을 $m$의 십진법 표기 뒤에 $n$의 십진법 표기를 붙인 수로 정의하자.
-  예를 들어, $53 *_{10} 792 = 53792$이다.
-  우리는 $53792 = 53000 + 792 = 53 \times 10^{3} + 792$임에 주목한다.
-  $3$은 (십진법으로 표기된) $792$의 자릿수이다 --
-  또는, 우리는 $3$을 $792$의 \underline{길이}(\textit{length})라고 말할 것이다.
-
-  더 일반적으로는, $m *_{10} n = m \times 10^{\mathrm{len}_{10} \left( n \right)} + n$이다 --
-  여기서 $\mathrm{len}_{10} \left( n \right)$은 (십진법으로 표기된) $n$의 길이이다.
-
-  더욱 일반적으로는, 각 $b \geq 2$에 대하여,
-  우리는 $b$진 표기법에서 $m *_{b} n$을 $m$ 뒤에 $n$을 붙인 수로 정의할 것이다.
-  그러면 $m *_{b} n = m \times b^{\mathrm{len}_{b} \left( n \right)} + n$이다 --
-  여기서 $\mathrm{len}_{b} \left( n \right)$는 $n$을 $b$진 표기법으로 나타냈을 때 그것의 자릿수이다.
-  다음 정리는 기본적이다.
-
-  \begin{context}[Proposition 1]
-    각각의 $b \geq 2$에 대하여, 관계 $x *_{b} y = z$는 싼술적이다.
-  \end{context}
-  
-  증명을 하기에 앞서, 우리는 본질적인 아이디어를 진술한다.
-  먼저 친숙한 기저인 $10$을 고려하자.
-  임의의 $n > 0$에 대하여, $\mathrm{len}_{10} \left( n \right)$은 $10^{k} > n$을 만족시키는 가장 작은 $k$이고,
-  $10^{\mathrm{len}_{10} \left( n \right)}$은 $n$보다 큰 $10$의 거듭제곱 중 가장 작은 것이다.
-  (예를 들어, $10^{\mathrm{len}_{10} \left( 5368 \right)} = 10^4 = 10,000$인데, 이는 $5368$보다 큰 $10$의 거듭제곱 중 가장 작은 것이다.)
-  일반적으로, 임의의 $b \geq 2$와 임의의 $n \in \mathbb{N}$에 대하여,
-  $b^{\mathrm{len}_{b} \left( n \right)}$은 $n > 0$이면 $n$보다 $b$의 거듭제곱 중 가장 작은 것과 같고 그렇지 않으면 $b$와 같다.
-
-  \begin{proof}
-    $b \geq 2$를 잡자.
-    \begin{enumerate}
-      \item $\mathrm{Pow}_{b} \left( x \right)$을 $x$가 $b$의 거듭제곱 중 하나라는 조건으로 두자.
-      이 조건은 싼술적이다. 왜냐하면 $\left( \exists y \in \mathbb{N} \right) \left[ x = b^{y} \right]$일 때 그리고 그럴 때에만 $\mathrm{Pow}_{b} \left( x \right)$가 성립하기 때문이다.\footnote
-      {
-        더 형식적으로는, 논리식 $\exists v_2 v_1 = \left( \overline{b} \mathop{\mathbf{E}} v_2 \right)$을 모든 $b$의 거듭제곱들의 집합을 표현한다.
-        앞으로는 이렇게 형식적으로 나타내지 않을 것이다.
-      }
-      \item ($x$와 $y$ 사이의 관계로서의) 관계 $b^{\mathrm{len}_{b} \left( x \right)} = y$는,
-      우리가 주목했듯이, 조건 $$ \left( x = 0 \land y = b \right) \lor \left( x \neq 0 \land s \left( x , y \right) \right) $$과 동등하다 --
-      여기서, $s \left( x , y \right)$는 ``$y$가 $x$보다 큰 거듭제곱 중 가장 작다''는 관계이다.
-      이것은 싼술적인데, 왜냐하면 $$\left( \mathrm{Pow}_{b} \left( y \right) \land x < y \right) \land \left( \forall z \in \mathbb{N} \right) \left[ \left( \mathrm{Pow}_{b} \left( z \right) \land x < z \right) \rightarrow y \leq z \right]$$일 때 그리고 그럴 때에만 $s \left( x , y \right)$가 성립하기 때문이다.
-      \item 최종적으로, 관계 $x \times b^{\mathrm{len}_{b} \left( y \right)} + y = z$(즉, $x *_{b} y = z$)는 다음 조건과 같다:
-      $$ \left( \exists w \in \mathbb{N} \right) \left[ b^{\mathrm{len}_{b} \left( y \right)} = w \land x \times w + y = z \right] . $$
-      따라서, 관계 $x *_{b} y = z$는 싼술적이다.
-    \end{enumerate}
-  \end{proof}
-
-  임의의 $x > 0$와 $y > 0$ 그리고 $z > 0$에 대하여, $$ \left( x *_{b} y \right) *_{b} z = x *_{b} \left( y *_{b} z \right) $$임에 주목하자.
-  그러나 $y = 0$이면, 이것은 실패할 수도 있다.\footnote
-  {
-    Quine의 예를 빌리자면, $\left( 5 *_{10} 0 \right) *_{10} 3 = 50 *_{10} 3 = 503$이지만,
-    $0 *_{10} 3 = 3$이므로 $5 *_{10} \left( 0 *_{10} 3 \right) = 5 *_{10} 3 = 53$이기 때문에 실패한다.
-  }
-  그러므로 괄호를 생략하는 경우 그 식에 좌측으로 결합하는 괄호가 있는 것으로 간주하겠다.
-  (예를 들어, $x *_{b} y *_{b} z$는 $\left( x *_{b} y \right) *_b z$를 의미하지만 $x *_{b} \left( y *_{b} z \right)$를 의미하지는 않는다.)
-
-  \begin{context}[Corollary 1]
-    각각의 $n \geq 2$과 각각의 $b \geq 2$에 대하여, ($y$, $x_1$, $x_2$, ..., $x_n$ 사이의 $\left( n + 1 \right)$-항 관계로서의) 관계 $$ y = x_1 *_b x_2 *_b \cdots *_b x_n $$는 싼술적이다.
-  \end{context}
-
-  \begin{proof}
-    $n$에 대한 귀납법을 적용하자.
-    우리는 이미 $n = 2$인 경우에 대하여 증명했다.
-    이제 $n \geq 2$에 대하여 관계 $y = x_1 *_b x_2 *_b \cdots *_b x_n$가 싼술적이라고 하자.
-    그러면 $$y = x_1 *_b x_2 *_b \cdots *_b x_n *_b x_{n + 1}$$일 때 그리고 그럴 때에만
-    $$ \left( \exists z \in \mathbb{N} \right) \left[ z = x_1 *_b x_2 *_b \cdots *_b x_n \land y = z *_b x_{n + 1} \right] $$이므로,
-    관계 $y = x_1 *_b x_2 *_b \cdots *_b x_n *_b x_{n + 1}$는 싼술적이다.
-  \end{proof}
-
-  \noindent \textbf{\S5. 괴델 넘버링}
-
-  싼술적인 문장들(즉, $\mathcal{L}_{E}$의 문장들)은 \textit{수}에 대하여 이야기하지, $\mathcal{L}_{E}$의 표현식들을 이야기하지는 않는다.
-  표현식들에게 괴델 수를 할당하는 목적은 바로 문장이 문장들에 대하여 그것들의 괴델 수를 이용하여 간접적으로 말하는 것을 허용하기 위함이다.
-
-  우리가 사용할 괴델 넘버링은 Quine[1940]을 수정한 것이다.
-  Quine은 그의 언어를 9개의 알파벳 $S_1$, $S_2$, ..., $S_9$으로 이루어진 언어로 형식화하였다.
-  그리고서는 각 표현식 $S_{i_{1}} S_{i_{2}} \cdots S_{i_{n}}$에 십진 표기의 $i_{1} i_{2} \cdots i_{n}$를 괴델 수를 할당하였다.
-  (예를 들어, 표현식 $S_{3} S_{1} S_{2}$는 괴델 수로 $312$를 할당받는다.)
-
-  우리의 언어 $\mathcal{L}_{E}$는 13개의 기호들을 사용하므로,
-  접합의 기저로서 10 대신 13을 취하여 Quine의 아이디어를 차용할 것이다.\footnote
-  {
-    13이라는 수는 우연히도 소수인데, 우리는 뒷 단원에서 합성수를 접합의 기저로 취하는 것보다 기술적 이득이 있음을 보게 될 것이다.
-  }
-
-  우리는 13진수의 숫자로서 $10$, $11$, $12$로서 각각 ``$\eta$'', ``$\varepsilon$'', ``$\delta$''를 사용할 것이다.
-  그리고 13개의 기호에 각각 다음과 같은 괴델 수를 할당하겠다:
-  $$ \begin{matrix}
-    0 \\
-    1
-  \end{matrix} \quad
-  \begin{matrix}
-    ' \\
-    0
-  \end{matrix} \quad
-  \begin{matrix}
-    ( \\
-    2
-  \end{matrix} \quad
-  \begin{matrix}
-    ) \\
-    3
-  \end{matrix} \quad
-  \begin{matrix}
-    f \\
-    4
-  \end{matrix} \quad
-  \begin{matrix}
-    \circ \\
-    5
-  \end{matrix} \quad
-  \begin{matrix}
-    v \\
-    6  
-  \end{matrix} \quad
-  \begin{matrix}
-    \lnot \\
-    7
-  \end{matrix} \quad
-  \begin{matrix}
-    \rightarrow \\
-    8
-  \end{matrix} \quad
-  \begin{matrix}
-    \forall \\
-    9
-  \end{matrix} \quad
-  \begin{matrix}
-    = \\
-    \eta
-  \end{matrix} \quad
-  \begin{matrix}
-    \leq \\
-    \varepsilon
-  \end{matrix} \quad
-  \begin{matrix}
-    \sharp \\
-    \delta
-  \end{matrix} $$
-
-  그 다음, 이 기호들의 임의의 문자열에 대하여,
-  그것의 괴델 수로 그것의 각 기호를 그에 대응하는 13진법 숫자로 대체하여 13진법으로 읽은 수를 부여한다.
-  예를 들어 4번째 기호 다음에 7번째 기호 다음에 3번째 기호가 나오는 길이 3의 문자열의 괴델 수를 13진법으로 표기한 것은 ``$362$''이다 --
-  즉, 수 $2 + 6 \times 13 + 3 \times 13^{2}$이다.
-
-  각 $n > 0$에 대하여, $E_{n}$을 $n$을 괴델 수로 할당받은 유일한 문자열로 정의하자.
-  한편, 악센트 기호로만 이루어진 문자열은 모두 괴델 수로 $0$을 부여받는데, $E_{0}$을 악센트 기호 한 개 그 자체로 정의하겠다.
-  그러므로 우리는 \underline{표현식}(\textit{expression})이라는 단어를 악센트 기호로 시작하지 않거나 악센트 기호 한 개 그 자체인 그 13개의 기호들의 문자열이라는 뜻으로 사용하겠다.
-
-  $0$을 악센트 기호의 괴델 수로 택한 까닭은 다음과 같다:
-  임의의 $n \in \mathbb{N}$에 대하여, (다른 표현식들과 마찬가지로) 숫자 $\overline{n}$은 괴델 수를 가진다.
-  이때 함수 $n \mapsto \gnum \left( \overline{n} \right) : \mathbb{N} \to \mathbb{N}$이 싼술적이기를 원한다.
-  당연히, $\overline{n}$은 ``$0$'' 뒤에 $n$개의 악센트 기호가 붙은 것이므로,
-  그것의 괴델 수를 13진법으로 표기하면 ``$1$'' 뒤에 ``$0$''이 $n$번 나타나는 문자열과 같다.
-  따라서 $\gnum \left( \overline{n} \right) = 13^{n}$이다.
-
-  \begin{context}[Discussion]
-    실제로, 이 단원과 다음 두 단원의 모든 결과들은 다음 두 성질을 가지는 임의의 괴델 수에 대하여 통한다:
-    \begin{enumerate}
-      \item 싼술적인 함수 $\left( x , y \right) \mapsto x \bullet y : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$가 존재하여,
-      $$ \left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left( \forall z \in \mathbb{N} \right) \left[ E_x E_y \equiv E_z \rightarrow x \bullet y = z \right] $$가 성립한다.
-      \item 함수 $n \mapsto \gnum \left( \overline{n} \right) : \mathbb{N} \to \mathbb{N}$가 싼술적이다.
-    \end{enumerate}
-
-    저 두 성질을 최대한 빨리 달성하기 위하여 저러한 특정 괴델 넘버링을 택하였다.
-    또한 첫 번째 성질을 가지는 괴델 넘버링은 두 번째 성질도 가진다는 데에 주목할 수 있다.
-    (이것은 다음 몇 개의 단원 전까지는 분명하지 않다;
-    그것은 우리가 자연수의 이름을 선택한 특정 방식에 달려있다.)
-  \end{context}
-
-  당연히, 기호들에게 다음과 같은 괴델 수를 부여함으로써, 13 대신 10을 괴델 넘버링의 기저로 취할 \textit{수 있었고},
-  $$ \begin{matrix}
-    0 \\
-    1
-  \end{matrix} \quad
-  \begin{matrix}
-    ' \\
-    0
-  \end{matrix} \quad
-  \begin{matrix}
-    ( \\
-    2
-  \end{matrix} \quad
-  \begin{matrix}
-    ) \\
-    3
-  \end{matrix} \quad
-  \begin{matrix}
-    f \\
-    4
-  \end{matrix} \quad
-  \begin{matrix}
-    \circ \\
-    5
-  \end{matrix} \quad
-  \begin{matrix}
-    v \\
-    6  
-  \end{matrix} \quad
-  \begin{matrix}
-    \lnot \\
-    7
-  \end{matrix} \quad
-  \begin{matrix}
-    \rightarrow \\
-    89
-  \end{matrix} \quad
-  \begin{matrix}
-    \forall \\
-    899
-  \end{matrix} \quad
-  \begin{matrix}
-    = \\
-    8999
-  \end{matrix} \quad
-  \begin{matrix}
-    \leq \\
-    89999
-  \end{matrix} \quad
-  \begin{matrix}
-    \sharp \\
-    899999
-  \end{matrix} $$
-  십진 표기법을 더 편안하게 여기는 독자들은 그가 원하면 이러한 괴델 넘버링을 쓸 수 있다.
-  이러한 괴델 넘버링 하에서는, $\overline{n}$의 괴델 수는 $13^{n}$이 아니라 $10^{n}$이 된다.
-  그러나 우리가 전에 주목했듯이, 소수인 $13$을 기저로 하는 데에 특정한 기술적 이득이 있다.
-
-  이 장의 나머지 부분(과 다음 나머지 단원들)에서,
-  기저를 $13$으로 하는 괴델 수만을 다룰 것이며,
-  따라서, $x * y$는 $x *_{13} y$를 의미할 것이다.\footnote
-  {
-    $10$을 기저로 취하고자 하는 독자는 ``$x * y$''를 $x *_{10} y$로 읽을 수 있어도 좋다.
-    그러나 $13^{n}$이 쓰일 때마다 그 또는 그녀는 $10^{n}$을 써야할 것이다.
-  }
-
-  \subsection{Tarski의 정리}
-  \hspace{12pt}
-
-  \noindent \textbf{\S 6. 대각화와 괴델 문장}
-
-  집합 $T \subseteq \mathbb{N}$을 $T := \left\{ \gnum \left( X \right) : X \in \mathcal{T} \right\}$으로 놓자.
-  이 $T$라는 집합은 완벽하게 정의된 [자연수들의 집합]이다.
-  그런데 이것이 싼술적일까?
-  우리는 그렇지 않다는 것을 보일 것이다 -- Tarski의 정리.
-
-  1단원에서처럼, 집합 $A \subseteq \mathbb{N}$에 대하여
-  $X$가 참이고 그것의 괴델 수가 $A$에 속하거나 $X$가 거짓이고 그것의 괴델 수가 $A$에 속하지 않을 때
-  문장 $X$을 $A$에 대한 \underline{괴델 문장}(\textit{G\"odel sentence})이라고 하겠다.
-  이제 (Tarski의 정리가 쉽게 따라오도록)
-  임의의 싼술적인 집합 $A \subseteq \mathbb{N}$에 대하여
-  $A$에 대한 괴델 문장이 있음을 보이는 데 초점을 맞추겠다.
-
-  거의 모든 책이 괴델 문장을 구성하는 여러 가지 영리한 방법으로 쓰여질 수 있다.
-  G\"odel의 원래 방법은 임의의 논리식 $F$와 $G$ 그리고 임의의 수 $n$에 대하여,
-  $$F \left[ v_1 := \overline{n} \right] \equiv G \rightarrow \mathrm{sub} \left( \gnum \left( F \right) , n \right) = \gnum \left( G \right)$$
-  만족시키는 싼술적인 함수 $\mathrm{sub} : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$의 존재를 보이는 것을 수반한다.
-  이것을 수행하는 것은 개체 변수를 숫자로 치환하는 연산을 산술화하는 것과 관련되어 있는데,
-  이것은 꽤나 복잡한 일이다.
-  대신에, Tarski[1953]의 단순하지만 영리한 생각을 활용할 것이다.
-
-  비형식적으로, 성질 $P$가 수 $n$에 대하여 성립한다고 말하는 것은
-  임의의 수 $x$에 대하여 $x$가 $n$과 같을 때마다 $P$가 $x$에 대하여 성립한다고 말하는 것과 같다.
-  형식적으로, 개체 변수 $v_1$만이 자유롭게 나타나는 논리식 $F$에 대하여,
-  문장 $F \left[ v_1 := \overline{n} \right]$은 문장 $\forall v_1 \left( v_1 = \overline{n} \rightarrow F \right)$와 동등하다.\footnote
-  {
-    덧붙여서, 이는 $\exists v_1 \left( v_1 = \overline{n} \land F \right)$와도 동등하다.
-  }
-  이제 문장 $\forall v_1 \left( v_1 = \overline{n} \rightarrow F \right)$의 괴델 수가 $F$의 괴델 수와 $n$의 싼술적인 함수라는 게 중점이다.
-
-  각각의 논리식 $F$와 각각의 수 $n$에 대하여 $F \left( n \right) : \equiv \forall v_1 \left( v_1 = \overline{n} \rightarrow F \right)$로 표기하자.
-  재차 강조하자면, 논리식 $F$에 $v_1$만이 자유롭게 나타나는 개체 변수라면,
-  $F \left[ v_1 := \overline{n} \right]$과 $F \left( n \right)$은 같진 않더라도 \textit{동등한} 문장이라는 것이다 --
-  즉, 동시에 참이거나 동시에 거짓이다.
-  사실, \textit{임의의} 표현식 $E$에 대하여, $E$가 논리식이든 아니든,
-  $\forall v_1 \left( v_1 = \overline{n} \rightarrow E \right)$은 ($E$가 논리식이 아닐 경우 의미 없는 표현식일지라도) 잘 정의된 표현식이고,
-  (표현식 $E \left( n \right)$의 의미가 없을 수도 있지만) $$E \left( n \right) : \equiv \forall v_1 \left( v_1 = \overline{n} \rightarrow E \right)$$로 단축하겠다.
-  이때, $E$가 논리식일 경우 $E \left( n \right)$은 논리식이지만 문장일 필요는 없으며,
-  $E$가 변수 $v_1$만이 자유롭게 나타나는 논리식인 경우 당연히 $E \left( n \right)$은 문장이나,
-  이 모든 경우에서 $E \left( n \right)$은 잘 정의된 논리식이다.
-
-  함수 $r : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$을 $$ r \left( x , y \right) := \gnum \left( E_x \left( y \right) \right) $$으로 정의하자.
-  즉, 임의의 $e \in \mathbb{N}$과 임의의 $n \in \mathbb{N}$에 대하여,
-  $e$를 괴델 수로 받은 표현식을 $E$라 하면, $r \left( e , n \right)$은 표현식 $E \left( n \right)$의 괴델 수이다.
-  $r$은 이 책에서 매우 중요한 역할을 하는 함수이며, 우리는 곧 이 함수가 싼술적임을 보이겠다.
-
-  $x \in \mathbb{N}$과 $y \in \mathbb{N}$을 임의로 잡자.
-  $E_x \left( y \right)$는 곧 $\forall v_1 \left( v_1 = \overline{y} \rightarrow E_x \right)$이라는 표현식과 같다.
-  표현식 ``$ \forall v_1 ( v_1 = $''의 괴델 수를 $k$라고 하자.\footnote
-  {
-    독자는 원한다면 $k$를 계산할 수 있다.
-  }
-  함의 기호 ``$\rightarrow$''는 괴델 수 $8$을 부여받았고
-  오른쪽 괄호 ``$)$''는 괴델 수 $3$을 부여받았고
-  $\overline{y}$의 괴델 수는 $13^{y}$이며 $E_x$의 괴델 수는 $x$이기 때문에,
-  $E_x \left( y \right)$의 괴델 수는 $k *_{13} 13^{y} *_{13} * 8 *_{13} x *_{13} 3$이다.
-  즉, 그림으로 나타내면 다음과 같다: $$ \underbrace{\forall v_1 ( v_1 =}_{k} \underbrace{\overline{y}}_{13^{y}} \underbrace{\rightarrow}_{8} \underbrace{E_x}_{x} \underbrace{)}_{3}$$
-
-  결국, $$\left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ r \left( x , y \right) = k *_{13} 13^{y} *_{13} * 8 *_{13} x *_{13} 3 \right]$$이므로,
-  관계 $r \left( x , y \right) = z$는, $\left( \exists w \in \mathbb{N} \right) \left[ w = 13^{y} \land z = k *_{13} w *_{13} *_{13} 8 *_{13} x *_{13} 3 \right]$으로 나타낼 수 있기 때문에, 명백하게 싼술적이다.
-  따라서 다음 명제를 얻는다.
-
-  \begin{context}[Proposition 2]
-    $r$은 싼술적인 함수이다.
-  \end{context}
-
-  함수 $r$은 이 책에서 많이 튀어나올 것인데, 그것을 $\mathcal{L}_{E}$의 \underline{나타내기}(\textit{representation}) 함수라고 부를 것이다.
-
-  \begin{context}[Diagonalization]
-    함수 $d : \mathbb{N} \to \mathbb{N}$를 $$d \left( x \right) := r \left( x , x \right) \quad \mathop{\mathrm{for}} x \in \mathbb{N} $$으로 정의하고
-    이것을 \underline{대각}(\textit{diagonal})함수라고 부르겠다.
-    $r$이 싼술적이었기 때문에 $d$ 또한 싼술적이다.
-    임의의 $n \in \mathbb{N}$에 대하여 $d \left( n \right) = \gnum \left( E_{n} \left( n \right) \right)$이다.
-  \end{context}
-
-  집합 $A \subseteq \mathbb{N}$에 대하여 $A^{*} := \left\{ n \in \mathbb{N} : d \left( n \right) \in A \right\}$로 정의하자.\footnote
-  {
-    즉, $A^{*} = d^{-1} \left[ A \right]$이다.
-  }
-
-  \begin{context}[Lemma 1]
-    $A$가 싼술적이면 $A^{*}$도 그러하다.
-  \end{context}
-
-  \begin{proof}
-    전제 조건을 가정하자.
-    $A^{*}$은 $\left( \exists y \in \mathbb{N} \right) \left[ d \left( x \right) = y \land y \in A \right]$을 만족시키는 모든 $x \in \mathbb{N}$들의 집합이다.
-    대각함수 $d$는 싼술적이므로 어떤 논리식 $D$가 존재하여 $$ \left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ D \left[ v_1 := \overline{x} , v_2 := \overline{y} \right] \in \mathcal{T} \leftrightarrow d \left( x \right) = y \right] $$이 성립한다.
-    한편, $A$가 싼술적이라고 가정하였으므로, 어떤 논리식 $F$가 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ F \left[ v_1 := \overline{n} \right] \in \mathcal{T} \leftrightarrow n \in A \right]$$이 성립한다.
-    그러면 $A^{*}$는 논리식 $\exists v_2 \left( D \land F \left[ v_1 := v_2 \right] \right)$에 의하여 표현되기 때문에 싼술적이다.\footnote
-    {
-      대안으로 $\forall v_2 \left( D \rightarrow F \left[ v_1 := v_2 \right] \right)$가 있다.
-    }
-  \end{proof}
-
-  \begin{context}[Theorem 1]
-    임의의 $A \subseteq \mathbb{N}$에 대하여 $A$가 싼술적이면 $A$에 대한 괴델 문장이 존재한다.
-  \end{context}
-
-  \begin{proof}
-    정말로 이것은 위의 보조정리와 1단원의 보조정리 D에 의하여 따라온다 -- 밑의 주목을 보라.
-    그러나 $\mathcal{L}_{E}$이라는 특정 언어에서 반복하기 위하여, $A$를 싼술적이라고 가정하자.
-    그러면 $A^{*}$은 위의 보조정리에 의하여 싼술적이다.
-    그러므로 어떤 술어 $H$가 존재하여 $A^{*}$를 표현한다.
-    $H$의 괴델 수를 $h$라 하자.
-    그러면 $$H \left( h \right) \in \mathcal{T} \iff h \in A^{*} \iff d \left( h \right) \in A$$인데,
-    $d \left( h \right)$은 문장 $H \left( h \right)$의 괴델 수이므로,
-    $H \left( h \right)$가 $A^{*}$에 대한 괴델 문장이다.
-  \end{proof}
-
-  \begin{context}[Remarks]
-    지금 우리가 다루는 언어 $\mathcal{L}_{E}$를 1단원의 추상적인 프레임워크에 적용하기에 앞서,
-    각각의 수 $n$에 대하여 각 표현식 $E$에 표현식 $E \left( n \right)$을 할당했던 함수 $\Phi : \mathcal{E} \times \mathbb{N} \to \mathcal{E}$를 떠올려 보자.
-    언어 $\mathcal{L}_{E}$에서는 $\Phi \left( E , n \right) : \equiv \forall v_1 \left( v_1 = \overline{n} \rightarrow E \right)$로 취했다.
-    그러면 ``술어''는 개체 변수 $v_1$만이 자유롭게 나타나는 논리식이 되어야 할 것이다.
-    그러면 정리 1에 쓰이는 보조정리는 1단원에 있던 조건 $G_1$이 체계 $\mathcal{L}_{E}$에서 적용됨을 말해준다.
-    그러므로, 정리 1은 1단원의 보조정리 D의 (b)의 특별한 경우이다.
-  \end{context}
-
-  \begin{context}[Tarski's Theorem]
-    임의의 $A \subseteq \mathbb{N}$에 대하여 논리식 $F$가 $A$를 표현하면 $\lnot F$는 $\tilde{A}$를 표현하기 때문에,
-    모든 싼술적인 집합들의 모임은 명백히 여집합에 대하여 닫혀있다.
-    따라서 $\mathcal{L}_{E}$에서는 1단원에서의 조건 $G_1$과 $G_2$이 모두 성립한다.
-    그러므로, 1단원의 정리 T에 의하여 $\mathcal{L}_{E}$의 모든 참인 문장들의 괴델 수들의 집합 $T$는 $\mathcal{L}_{E}$에서 표현 가능하지 않다 --
-    즉, 그것은 싼술적이지 않다.
-  \end{context}
-
-  $\mathcal{L}_{E}$의 특별한 경우에서 증명을 반복하자.
-  $\tilde{T}$에 대한 괴델 문장은 그것이 참일 때 그리고 그럴 때에만 거짓이어야 하기 때문에 존재하지 않는다.
-  그러나 $\tilde{T}$가 싼술적인 집합이었다면 정리 1에 의하여 그것에 대한 괴델 문장이 존재한다.
-  그러므로 집합 $\tilde{T}$은 싼술적일 수 없고 $T$도 싼술적이지 않다.
-  따라서 다음 정리를 얻는다.
-
-  \begin{context}[Theorem 2--Tarski's Theorem]
-    모든 싼술적인 문장들 중 참인 문장의 괴델 수를 모은 집합은 싼술적이지 않다.
-  \end{context}
-
-  다음 단원에서 우리는 산술을 위한 형식적인 공리 시스템으로 넘어갈 것이다.
-  표면적으로는 모든 참인 문장이 시스템에서 증명 될 수 있다는 것이 그럴 듯해 보이지만,
-  집합 $T$와는 다르게 체계에서 \textit{증명 가능한} 모든 문장들의 괴델 수를 모은 집합은 싼술적이라는 것이 밝혀질 것이다.
-  그러므로, 정리 2에 의하여, 진실과 증명가능성은 일치하지 않는다.
-  사실 정리 1을 사용하면 체계에서 참이지만 증명 가능하지 않은 문장을 보일 수 있다.
-
-  \begin{context}[Exercise 6]
-    \begin{enumerate}
-      \item[(1)] 기저를 $10$으로 취한 괴델 넘버링을 이용하여, 우리가 방금 공부했던 방법으로, 모든 짝수들의 집합에 대한 괴델 문장을 하나 찾아라.
-      그것은 참인가 거짓인가?
-      \item[(2)] 같은 것을 모든 홀수들의 집합에 대하여서도 하라.
-    \end{enumerate}
-    
-    위 두 물음에 대하여 답하여라.
-  \end{context}
-
-  \begin{context}[Exercise 7]
-    임의의 논리식 $F$와 임의의 수 $n$에 대하여 $F$에 자유롭게 나타나는 개체 변수가 $v_1$ 뿐이고 $F$의 괴델 수가 $n$일 때 $f \left( n \right)$이 $F$가 표현하는 집합에 대한 괴델 문장의 괴델 수가 되게 하는 싼술적인 함수 $f : \mathbb{N} \to \mathbb{N}$을 찾아라.\footnote
-    {
-      그러한 $f$는 \underline{괴델라이저}(\textit{G\"odelizer})라고 적절하게 불릴 수 있을 것이다.
-    }
-  \end{context}
-
-  \begin{context}[Exercise 8]
-    \textbf{[어려움 주의!]} 임의의 $A \subseteq \mathbb{N}$과 임의의 $B \subseteq \mathbb{N}$에 대하여,
-    $A$와 $B$ 모두 싼술적이면 어떤 두 문장 $X$와 $Y$가 존재하여 $X \in \mathcal{T} \leftrightarrow g \left( Y \right) \in A$와 $Y \in \mathcal{T} \leftrightarrow g \left( X \right) \in B$가 성립함을 보여라.
-    이것은 \underline{상호 참조}(\textit{cross-reference})의 한 예로 생각될 수 있다;
-    $X$를 $Y$의 괴델 수가 $A$에 속한다고 선언하는 문장으로 생각할 수 있고,
-    $Y$를 $X$의 괴델 수가 $B$에 속한다고 선언하는 문장으로 생각할 수 있다.
-  \end{context}
-
-  \begin{context}[Solutions]
-    \begin{enumerate}
-      \item[{1.}]
-      \begin{itemize}
-        \item[(a)] $X$와 $Y$를 문장이라고 하자.
-        그러면 $\left( X \land Y \right)$는 문장 $\lnot \left( X \rightarrow \lnot Y \right)$의 약어이다.
-        \begin{enumerate}
-          \item[(\textit{i})] $X$와 $Y$ 모두 참인 경우를 고려하자.
-          이때 $\lnot Y$는 거짓이고, 또한 $X \rightarrow \lnot Y$는 거짓이다.
-          따라서 $\lnot \left( X \rightarrow \lnot Y \right)$는 참이고 $\left( X \land Y \right)$도 참이다.
-          \item[(\textit{ii})] $X$는 참이지만 $Y$는 참이 아닌 경우를 고려하자.
-          이때 $\lnot Y$는 참이고 $X \rightarrow \lnot Y$도 참이다.
-          따라서 $\lnot \left( X \rightarrow \lnot Y \right)$는 거짓이고 $\left( X \land Y \right)$도 거짓이다.
-          \item[(\textit{iii})] $X$는 참이 아니지만 $Y$는 참인 경우를 고려하자.
-          이때 $X \rightarrow \lnot Y$는 참이다.
-          따라서 $\lnot \left( X \rightarrow \lnot Y \right)$는 거짓이고 $\left( X \land Y \right)$도 거짓이다.
-          \item[(\textit{iv})] $X$와 $Y$ 모두 참이 아닌 경우를 고려하자.
-          이때 $X \rightarrow \lnot Y$는 참이다.
-          따라서 $\lnot \left( X \rightarrow \lnot Y \right)$는 거짓이고 $\left( X \land Y \right)$도 거짓이다.
-        \end{enumerate}
-        그러므로 위의 네 경우로부터 $\left( X \land Y \right)$가 참일 때 그리고 그럴 때에만 $X$와 $Y$ 모두 참임을 알 수 있다.
-        \item[(b)] $X$와 $Y$를 문장이라고 하자.
-        그러면 $\left( X \lor Y \right)$는 문장 $\left( \lnot X \rightarrow Y \right)$의 약어이다.
-        \begin{enumerate}
-          \item[(\textit{i})] $X$와 $Y$ 모두 참인 경우를 고려하자.
-          $\lnot X$가 거짓이므로 $\left( \lnot X \rightarrow Y \right)$는 참이다.
-          따라서 $\left( X \lor Y \right)$도 참이다.
-          \item[(\textit{ii})] $X$는 참이지만 $Y$는 참이 아닌 경우를 고려하자.
-          $\lnot X$가 거짓이므로 $\left( \lnot X \rightarrow Y \right)$는 참이다.
-          따라서 $\left( X \lor Y \right)$도 참이다.
-          \item[(\textit{iii})] $X$는 참이 아니지만 $Y$는 참인 경우를 고려하자.
-          $\lnot X$가 참이고 $\left( \lnot X \rightarrow Y \right)$도 참이므로, $\left( X \lor Y \right)$도 참이다.
-          \item[(\textit{iv})] $X$와 $Y$ 모두 참이 아닌 경우를 고려하자.
-          그러면 $\lnot X$가 참이지만 $\left( \lnot X \rightarrow Y \right)$는 거짓이다.
-          따라서 $\left( X \lor Y \right)$도 거짓이다.
-        \end{enumerate}
-        그러므로 위의 네 경우로부터 $\left( X \lor Y \right)$가 참일 때 그리고 그럴 때에만 $X$와 $Y$ 중 적어도 하나가 참임을 알 수 있다.
-        \item[(c)] $F$를 자유롭게 나타나는 개체 변수가 $v_i$ 뿐인 논리식이라고 하자.
-        그러면 $\exists v_i F$는 문장 $\lnot \forall v_i \lnot F$의 약어이다.
-        먼저 $\lnot \forall v_i \lnot F$가 참이라고 하자.
-        그러면 $\forall v_i \lnot F$는 거짓이다.
-        이때, 모든 $n \in \mathbb{N}$에 대하여 $F \left[ v_i := \overline{n} \right]$이 거짓이라면,
-        $\forall v_i \lnot F$는 거짓임에 모순이다.
-        따라서 어떤 $n \in \mathbb{N}$가 존재하여 $F \left[ v_i := \overline{n} \right]$이 거짓이 아니어야 한다.
-        이제 어떤 $n \in \mathbb{N}$가 존재하여 $F \left[ v_i := \overline{n} \right]$이 참이라고 하자.
-        그러면 $\forall v_i \lnot F$은 거짓이다.
-        따라서 $\lnot \forall v_i \lnot F$는 거짓이다.
-        이상에서 $\exists v_i F$가 참일 때 그리고 그럴 때에만 어떤 $n \in \mathbb{N}$가 존재하여 $F \left[ v_i := \overline{n} \right]$이 참임을 알 수 있다.
-      \end{itemize}
-
-      \item[{2.}]
-      \begin{itemize}
-        \item[(a)] 논리식 $\exists v_3 v_2 = \left( v_1 \times v_3 \right)$이 ``$x$가 $y$의 약수이다''라는 관계를 표현하기 때문이다.
-        \item[(b)] 논리식 $\left( v_1 \neq \overline{1} \land \left( \forall v_2 \forall v_3 \left( \left( v_1 = v_2 \times v_3 \right) \rightarrow \left( v_2 = \overline{1} \lor v_2 = v_1 \right) \right) \right) \right)$이 모든 소수들의 집합을 표현하기 때문이다.
-      \end{itemize}
-
-      \item[{3.}] 집합 $A \subseteq \mathbb{N}$과 함수 $f : \mathbb{N} \to \mathbb{N}$가 싼술적이라고 하자.
-      그러면 자유롭게 나타나는 개체 변수가 $v_1$ 뿐인 어떤 논리식 $F_A$와 자유롭게 나타나는 개체 변수가 $v_1$과 $v_2$ 뿐인 어떤 논리식 $F_f$가 존재하여
-      $$\left( \forall n \in \mathbb{N} \right) \left[ F_A \left[ v_1 := \overline{n} \right] \in \mathcal{T} \leftrightarrow n \in A \right]$$와
-      $$\left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ F_f \left[ v_1 := \overline{x} , v_2 := \overline{y} \right] \in \mathcal{T} \leftrightarrow f \left( x \right) = y \right]$$가 성립한다.
-      이때 논리식 $\exists v_2 \left( F_f \land F_A \left[ v_1 := v_2 \right] \right)$을 고려하자.
-      이 논리식은 $$\left( \exists y \in \mathbb{N} \right) \left[ f \left( x \right) = y \land y \in A \right]$$을 만족시키는 모든 $x \in \mathbb{N}$들의 집합을 표현한다.
-      그런데 그 집합은 결국 $f^{-1} \left[ A \right]$를 표현하므로, $f^{-1} \left[ A \right]$는 싼술적임을 알 수 있다.
-      $A$과 $f$가 산술적인 경우에는,
-      고려 중인 논리식이 산술적이게 되므로 $f^{-1} \left[ A \right]$도 산술적임을 알 수 있다.
-
-      \item[{4.}]
-      \begin{itemize}
-        \item[(a)] $f : \mathbb{N} \to \mathbb{N}$와 $g : \mathbb{N} \to \mathbb{N}$ 모두 싼술적이라고 하자.
-        그러면 개체 변수 $v_1$과 $v_2$만이 자유롭게 나타나는 어떤 두 논리식 $F_f$와 $F_g$가 존재하여
-        $$\left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ F_f \left[ v_1 := \overline{x} , v_2 := \overline{y} \right] \in \mathcal{T} \leftrightarrow f \left( x \right) = y \right]$$와
-        $$\left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ F_g \left[ v_1 := \overline{x} , v_2 := \overline{y} \right] \in \mathcal{T} \leftrightarrow g \left( x \right) = y \right]$$가 성립한다.
-        이제 논리식 $\forall v_3 \left( F_f \left[ v_2 := v_3 \right] \rightarrow F_g \left[ v_1 := v_3 \right] \right)$를 고려하자.
-        이것은 관계 $$\forall z \left( f \left( x \right) = z \rightarrow g \left( z \right) = y \right)$$을 표현하므로,
-        함수 $x \mapsto f \left( g \left( x \right) \right) : \mathbb{N} \to \mathbb{N}$도 싼술적이다.
-        \item[(b)] $f : \mathbb{N} \to \mathbb{N}$와 $g : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$ 모두 싼술적이라고 하자.
-        그러면 개체 변수 $v_1$과 $v_2$만이 자유롭게 나타나는 어떤 논리식 $F_f$와 개체 변수 $v_1$, $v_2$와 $v_3$만이 자유롭게 나타나는 어떤 논리식 $F_g$가 존재하여
-        $$\left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ F_f \left[ v_1 := \overline{x} , v_2 := \overline{y} \right] \in \mathcal{T} \leftrightarrow f \left( x \right) = y \right]$$와
-        $$\left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left( \forall z \in \mathbb{N} \right) \left[ F_g \left[ v_1 := \overline{x} , v_2 := \overline{y} , v_3 := \overline{z} \right] \in \mathcal{T} \leftrightarrow g \left( x , y \right) = z \right]$$가 성립한다.
-        이때 세 논리식 $F_1$, $F_2$와 $F_3$를 개체 변수 $v_1$, $v_2$와 $v_3$만이 자유롭게 나타나도록 다음과 같이 정의하자:
-        \begin{align*}
-          F_1 & : \equiv \forall v_4 \left( F_f \left[ v_2 := v_4 \right] \rightarrow F_g \left[ v_1 := v_4 \right] \right) \\
-          F_2 & : \equiv \forall v_4 \left( F_f \left[ v_2 := v_4 \right] \left[ v_1 := v_2 \right] \rightarrow F_g \left[ v_2 := v_4 \right] \right) \\
-          F_3 & : \equiv \forall v_4 \left( F_g \left[ v_3 := v_4 \right] \rightarrow F_f \left[ v_1 := v_4 \right] \left[ v_2 := v_3 \right] \right)
-        \end{align*}
-        그러면, 함수 $\left( x , y \right) \mapsto g \left( f \left( x \right) , y \right) : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$은 $F_1$에 의하여 표현되고
-        함수 $\left( x , y \right) \mapsto g \left( x , f \left( y \right) \right) : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$는 $F_2$에 의하여 표현되고
-        함수 $\left( x , y \right) \mapsto f \left( g \left( x , y \right) \right)$는 $F_3$에 의하여 표현되므로, 모두 싼술적이다.
-      \end{itemize}
-
-      \item[{5.}] $A$가 싼술적이므로, 개체 변수 $v_1$만이 자유롭게 나타나는 논리식 $F_A$가 존재하여
-      $$ \left( \forall n \in \mathbb{N} \right) \left[ F_A \left[ v_1 := \overline{n} \right] \leftrightarrow n \in A \right] $$이 성립한다.
-      이때 논리식 $$\left( \left( F_A \left[ v_1 := v_2 \right] \land v_1 < v_2 \right) \land \forall v_3 \left( \left( F_A \left[ v_1 := v_3 \right] \land v_1 < v_3 \right) \rightarrow v_2 \leq v_3 \right) \right)$$을 고려하자.
-      이 논리식은 관계 $ \left( y \in A \land x < y \right) \land \left( \forall z \in \mathbb{N} \right) \left[ \left( z \in A \land x < z \right) \rightarrow y \leq z \right] $를 표현하는데,
-      이 관계는 임의의 $x \in \mathbb{N}$와 $y \in \mathbb{N}$에 대하여 $R \left( x , y \right)$와 동등하므로, 관계 $R \subseteq \mathbb{N}^{2}$은 싼술적이다.
-
-      \item[{6.}] 문제를 풀기에 앞서, 괴델 넘버링의 기저를 $10$으로 취했을 때의 대각 함수 $d$를 계산해 보자.
-      임의의 $x \in \mathbb{N}$에 대하여,
-      $\gnum \left( \overline{x} \right) = 10^{x}$임과 $$ \gnum \left( v_1 \right) = \gnum \left( \left( v \circ \right) \right) = 2 *_{10} 6 *_{10} 5 *_{10} 3 = 2653 $$임에 주목하면,
-      \begin{align*}
-        d \left( x \right)
-        & = r \left( x , x \right) \\
-        & = \gnum \left( \forall v_1 \left( v_1 = \overline{x} \rightarrow E_x \right) \right) \\
-        & = \gnum \left( \forall \right) *_{10} \gnum \left( v_1 \right) *_{10} \gnum \left( ( \right) *_{10} \gnum \left( v_1 \right) *_{10} \gnum \left( = \right) *_{10} \gnum \left( \overline{x} \right) *_{10} \gnum \left( \rightarrow \right) *_{10} \gnum \left( E_x \right) * \gnum \left( ) \right) \\
-        & = 899 *_{10} 2653 *_{10} 2 *_{10} 2653 *_{10} 10^{x} *_{10} 89 *_{10} x *_{10} 3 \\
-        & = 899265322653 *_{10} 10^{x} *_{10} 89 *_{10} x *_{10} 3
-      \end{align*}
-      를 얻는다.
-      $k := 899265322653$로 놓자.
-      그러면, 관계 $k *_{10} 10^{x} *_{10} 89 *_{10} x *_{10} 3 = y$는 싼술적이므로,
-      개체 변수 $v_1$과 $v_2$만이 자유롭게 나타나는 논리식 $D$가 존재하여 $$ \left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ D \left[ v_1 := \overline{x} , v_2 := \overline{y} \right] \in \mathcal{T} \leftrightarrow k *_{10} 10^{x} *_{10} 89 *_{10} x *_{10} 3 = y \right] $$가 성립한다.
-      \begin{itemize}
-        \item[(1)] 이제 모든 짝수들의 집합을 $A$라고 하자.
-        임의의 $x \in \mathbb{N}$에 대하여
-        \begin{align*}
-          x \in A^{*}
-          & \iff \left( \exists y \in \mathbb{N} \right) \left[ d \left( x \right) = y \land y \in A \right] \\
-          & \iff \left( \exists y \in \mathbb{N} \right) \left[ k *_{10} 10^{x} *_{10} 89 *_{10} x *_{10} 3 = y \land \left( \exists z \in \mathbb{N} \right) \left[ y = 2 z \right] \right]
-        \end{align*}
-        이므로,
-        논리식 $$ H_A : \equiv \exists v_2 \left( D \land \exists v_3 \left( v_2 = \overline{2} \times v_3 \right) \right) $$은 집합 $A^{*}$를 표현한다.
-        이때 $H_A$의 괴델 수를 $h_A$라 하자.
-        그러면 $ H_A \left( h_A \right) $은 원하던 $A$의 괴델 문장이 된다.
-        한편, $k *_{10} 10^{h_A} *_{10} 89 *_{10} h_A *_{10} 3$가 짝수일 때 그리고 그럴 때에만 이 문장이 참인데,
-        이 수의 $10$진 표기의 마지막 숫자는 $3$이므로 $H_A \left( h_A \right)$는 거짓임을 알 수 있다.
-        \item[(2)] 이제 모든 홀수들의 집합을 $B$라고 하자.
-        임의의 $x \in \mathbb{N}$에 대하여
-        \begin{align*}
-          x \in B^{*}
-          & \iff \left( \exists y \in \mathbb{N} \right) \left[ d \left( x \right) = y \land y \in B \right] \\
-          & \iff \left( \exists y \in \mathbb{N} \right) \left[ k *_{10} 10^{x} *_{10} 89 *_{10} x *_{10} 3 = y \land \left( \forall z \in \mathbb{N} \right) \left[ y \neq 2 z \right] \right]
-        \end{align*}
-        이므로,
-        논리식 $$ H_B : \equiv \exists v_2 \left( D \land \forall v_3 \lnot \left( v_2 = \overline{2} \times v_3 \right) \right) $$은 집합 $B^{*}$를 표현한다.
-        이때 $H_B$의 괴델 수를 $h_B$라 하자.
-        그러면 $H_B \left( h_B \right)$은 원하던 $B$의 괴델 문장이 된다.
-        한편, $k *_{10} 10^{h_B} *_{10} 89 *_{10} h_B *_{10} 3$가 홀수일 때 그리고 그럴 때에만 이 문장이 참인데,
-        이 수의 $10$진 표기의 마지막 숫자는 $3$이므로 $H_B \left( h_B \right)$은 참임을 알 수 있다.
-      \end{itemize}
-
-      \item[{7.}] 먼저 대각 함수 $d$는 싼술적이므로,
-      $v_1$과 $v_2$만이 자유롭게 나타나는 개체 변수인 논리식 $D$가 존재하여
-      $$\left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ D \left[ v_1 := \overline{x} , v_2 := \overline{y} \right] \in \mathcal{T} \leftrightarrow d \left( x \right) = y \right]$$가 성립한다.
-      임의의 $n \in \mathbb{N}$에 대하여,
-      표현식 $E_{n}$이 자유롭게 나타나는 개체 변수가 $v_1$ 뿐인 논리식일 때,
-      논리식 $$ F_{n} : \equiv \exists v_2 \left( D \land \forall v_1 \left( v_1 = v_2 \rightarrow E_{n} \right) \right) $$에 대하여
-      $F_{n} \left( \gnum \left( F_{n} \right) \right)$은 $E_{n}$이 표현하는 집합의 괴델 문장이다.
-      그러므로 $$ f \left( n \right) := \gnum \left( \forall v_1 \left( v_1 = \overline{\gnum \left( F_{n} \right)} \rightarrow F_{n} \right) \right) $$로 두자.
-      그러면 $f$는 싼술적이므로 원하는 답을 얻었다.
-
-      \item[{8.}] \textbf{다음은 \underline{전한울}님의 풀이임을 밝힙니다:}
-
-      $A \subseteq \mathbb{N}$와 $B \subseteq \mathbb{N}$을 싼술적이라고 하자.
-      그러면 개체 변수 $v_1$만이 자유롭게 나타나는 어떤 두 논리식 $F_A$와 $F_B$가 존재하여
-      $$ \left( \forall n \in \mathbb{N} \right) \left[ F_A \left[ v_1 := \overline{n} \right] \in \mathcal{T} \leftrightarrow n \in A \right]$$와
-      $$ \left( \forall n \in \mathbb{N} \right) \left[ F_B \left[ v_1 := \overline{n} \right] \in \mathcal{T} \leftrightarrow n \in B \right]$$가 성립한다.
-      각각의 표현식 $E$에 대하여 각 $x \in \mathbb{N}$와 각 $y \in \mathbb{N}$마다 $$E \left( x , y \right) : \equiv \forall v_1 \forall v_2 \left( v_1 = \overline{x} \rightarrow \left( v_2 = \overline{y} \rightarrow E \right) \right)$$라고 표기하자.
-      그리고 함수 $\mathrm{fst} : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$와 $\mathrm{snd} : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$을
-      각각 $$ \mathrm{fst} \left( x , y \right) := \gnum \left( E_x \left( x , y \right) \right)$$와
-      $$\mathrm{snd} \left( x , y \right) := \gnum \left( E_y \left( x , y \right) \right)$$로 두자.
-      그런데 $\mathrm{fst}$와 $\mathrm{snd}$는 모두 싼술적인 함수이므로,
-      개체 변수 $v_1$, $v_2$와 $v_3$만이 자유롭게 나타나는 어떤 두 논리식 $\mathrm{Fst}$와 $\mathrm{Snd}$가 존재하여
-      $$ \left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left( \forall z \in \mathbb{N} \right) \left[ \mathrm{Fst} \left[ v_1 := \overline{x} , v_2 := \overline{y} , v_3 := \overline{z} \right] \in \mathcal{T} \leftrightarrow \mathrm{fst} \left( x , y \right) = z \right] $$와
-      $$ \left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left( \forall z \in \mathbb{N} \right) \left[ \mathrm{Snd} \left[ v_1 := \overline{x} , v_2 := \overline{y} , v_3 := \overline{z} \right] \in \mathcal{T} \leftrightarrow \mathrm{snd} \left( x , y \right) = z \right] $$가 성립한다.
-      이제 논리식 $F_1$과 $F_2$를 각각 $$F_1 : \equiv \forall v_3 \left( \mathrm{Snd} \rightarrow F_A \left[ v_1 := v_3 \right] \right)$$와 $$F_2 : \equiv \forall v_3 \left( \mathrm{Fst} \rightarrow F_B \left[ v_1 := v_3 \right] \right)$$로 놓자.
-      그러면, $F_1$과 $F_2$에는 개체 변수 $v_1$와 $v_2$만이 자유롭게 나타나며,
-      \begin{align*}
-        F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \in \mathcal{T}
-        & \iff \left( \forall z \in \mathbb{N} \right) \left[ \mathrm{snd} \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) = z \rightarrow F_A \left[ v_1 := \overline{z} \right] \in \mathcal{T} \right] \\
-        & \iff F_A \left[ v_1 := \overline{\mathrm{snd} \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right)} \right] \in \mathcal{T} \\
-        & \iff F_A \left[ v_1 := \overline{\gnum \left( F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right)} \right] \in \mathcal{T} \\
-      \end{align*}
-      이고
-      \begin{align*}
-        F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \in \mathcal{T}
-        & \iff \left( \forall z \in \mathbb{N} \right) \left[ \mathrm{fst} \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) = z \rightarrow F_B \left[ v_1 := \overline{z} \right] \in \mathcal{T} \right] \\
-        & \iff F_B \left[ v_1 := \overline{\mathrm{fst} \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right)} \right] \in \mathcal{T} \\
-        & \iff F_B \left[ v_1 := \overline{\gnum \left( F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right)} \right] \in \mathcal{T} \\
-      \end{align*}
-      이다.
-      이때 $$X : \equiv F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right)$$와 $$Y : \equiv F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right)$$를 취하자.
-      그러면,
-      \begin{align*}
-        X \in \mathcal{T}
-        & \iff F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \in \mathcal{T} \\
-        & \iff F_A \left[ v_1 := \overline{\gnum \left( F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right)} \right] \in \mathcal{T} \\
-        & \iff \gnum \left( F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right) \in A \\
-        & \iff \gnum \left( Y \right) \in A
-      \end{align*}
-      이고,
-      \begin{align*}
-        Y \in \mathcal{T}
-        & \iff F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \in \mathcal{T} \\
-        & \iff F_B \left[ v_1 := \overline{\gnum \left( F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right)} \right] \in \mathcal{T} \\
-        & \iff \gnum \left( F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right) \in B \\
-        & \iff \gnum \left( X \right) \in B
-      \end{align*}
-      이다.
-      이로써 $$X \in \mathcal{T} \leftrightarrow \gnum \left( Y \right) \in A$$와 $$Y \in \mathcal{T} \leftrightarrow \gnum \left( X \right) \in B$$가 성립함을 알 수 있다.
-    \end{enumerate}
-  \end{context}
-
-  \newpage
-
-  \section{제곱 연산이 있는 페아노 산술의 불완전성}
-  \hspace{12pt}
-
-  \subsection{P.E. 공리계}
-  \hspace{12pt}
-
-  \noindent \textbf{\S1. P.E. 공리계}
-
-  이제 \underline{제곱 연산이 있는 페아노 산술}(\textit{Peano Arithmetic with Exponentiation})이라고 불리는 공리계로 넘어갈 것인데,
-  이 형식 체계를 약어로 ``P.E.''라고 부를 것이다.
-  \underline{공리}(\textit{axiom})라고 불리는, 정확한 특정 논리식들을 잡고;
-  이미 증명된 [정확한 논리식]들로부터 새로운 [정확한 논리식]을 증명할 수 있게 하는 두 \underline{추론 규칙}(\textit{inference rule})을 제공한다.
-  공리의 개수는 무한히 많지만,
-  각 공리는 쉽게 인식할 수 있는 열아홉 가지의 꼴 중 하나이다;
-  이러한 꼴들을 \underline{공리꼴}(\textit{axiom schemes})라고 한다.
-  19가지의 공리꼴을 4개의 그룹으로 분류하는 것은 편리하다. (cf. 공리꼴이 소개된 다음의 논의)
-  그룹 I와 II는 이른바 \underline{논리적 공리}(\textit{logical axioms})라고 하는데,
-  Tarski[1965]을 기초로 한 Kalish, Montague[1965]의 등호가 있는 일차논리의 적절한 형식화의 기둥이 된다.
-  그룹 III와 그룹 IV는 \underline{산술}(\textit{arithmetic}) 공리라고 불린다.
-
-  여기서
-  $F$, $G$, $H$는 임의의 논리식이며,
-  $v_i$, $v_j$는 임의의 변수이며,
-  $t$는 임의의 항이다.
-  예를 들어, 첫 번째 공리꼴 $L_1$은 \textit{임의의} 논리식 $F$와 $G$에 대하여 논리식 $$\left( F \rightarrow \left( G \rightarrow F \right) \right)$$를 공리 중 하나로 둔다는 걸 의미하고;
-  공리꼴 $L_4$는 \textit{임의의} 변수 $v_i$와 \textit{임의의} 논리식 $F$와 $G$에 대하여 논리식 $$\left( \forall v_i \left( F \rightarrow G \right) \rightarrow \left( \forall v_i F \rightarrow \forall v_i G \right) \right)$$를 공리 중 하나로 둔다는 것을 의미한다.
-
-  \noindent \textbf{Group I--Axiom Schemes for Propositional Logic}
-  \begin{enumerate}
-    \item[$L_{1}$ :] $\left( F \rightarrow \left( G \rightarrow F \right) \right)$
-    \item[$L_{2}$ :] $\left( \left( F \rightarrow \left( G \rightarrow H \right) \right) \rightarrow \left( \left( F \rightarrow H \right) \rightarrow \left( G \rightarrow H \right) \right) \right)$
-    \item[$L_{3}$ :] $\left( \left( \lnot F \rightarrow \lnot G \right) \rightarrow \left( G \rightarrow F \right) \right)$
-  \end{enumerate}
-
-  \noindent \textbf{Group II--Additional Axiom Schemes for First-Order Logic with Identity}
-  \begin{enumerate}
-    \item[$L_{4}$ :] $\left( \forall v_i \left( F \rightarrow G \right) \rightarrow \left( \forall v_i F \rightarrow \forall v_i G \right) \right)$
-    \item[$L_{5}$ :] $\left( F \rightarrow \forall v_i F \right)$ (단, $v_i$는 $F$에서 자유롭게 나타나지 않아야 함)
-    \item[$L_{6}$ :] $\exists v_i v_i = t$ (단, $v_i$는 $t$에 자유롭게 나타나지 않아아 함)
-    \item[$L_{7}$ :] $\left( v_i = t \rightarrow \left( X_1 v_i X_2 \rightarrow X_1 t X_2 \right) \right)$ (단, $X_1$과 $X_2$는 $X_1 v_i X_2$가 원자 논리식이 되게 하는 임의의 표현식임)\footnote
-    {
-      이 공리꼴의 대안으로는 $\left( v_i = t \rightarrow \left( Y_1 \rightarrow Y_2 \right) \right)$가 있다.
-      여기서 $Y_1$은 원자 논리식이고, $Y_2$는 $Y_1$에서 $v_i$의 나타남 중 아무거나 하나를 $t$로 교체하여 얻은 식이다.
-    }
-  \end{enumerate}
-
-  \noindent \textbf{Group III--Eleven Axiom Schemes Having Only One Axiom Apiece}
-  \begin{enumerate}
-    \item[$N_{1}$ :] $\left( v_1 ' = v_2 ' \rightarrow v_1 = v_2 \right)$
-    \item[$N_{2}$ :] $\lnot \overline{0} = v_i '$
-    \item[$N_{3}$ :] $\left( v_1 + \overline{0} \right) = v_1$
-    \item[$N_{4}$ :] $\left( v_1 + v_2 ' \right) = \left( v_1 + v_2 \right) '$
-    \item[$N_{5}$ :] $\left( v_1 \times \overline{0} \right) = \overline{0}$
-    \item[$N_{6}$ :] $\left( v_1 \times v_2 ' \right) = v_1 \times v_2 + v_1$
-    \item[$N_{7}$ :] $\left( v_1 \leq \overline{0} \leftrightarrow v_1 = \overline{0} \right)$
-    \item[$N_{8}$ :] $\left( v_1 \leq v_2 ' \leftrightarrow \left( v_1 \leq v_2 \lor v_1 = v_2 ' \right) \right)$
-    \item[$N_{9}$ :] $\left( v_1 \leq v_2 \lor v_2 \leq v_1 \right)$
-    \item[$N_{10}$ :] $\left( v_1 \mathop{\mathbf{E}} \overline{0} \right) = \overline{1}$
-    \item[$N_{11}$ :] $\left( v_1 \mathop{\mathbf{E}} v_2 ' \right) = \left( \left( v_1 \mathop{\mathbf{E}} v_2 \right) \times v_2 \right)$ 
-  \end{enumerate}
-
-  \noindent \textbf{Group IV}
-  이 그룹에는 오직 하나의 공리꼴만이 있다 -- 수학적 귀납법의 공리꼴 --
-  그러나 그것은 $v_1$만이 자유롭게 나타나는 논리식 $F$마다 무한히 많은 공리를 준다.
-  이 공리꼴을 나타내기 위하여, $F$를 $v_1$만이 자유롭게 나타나는 논리식이라고 하자.
-  $G$를 $$\forall v_i \left( v_i = v_1 ' \rightarrow \forall v_1 \left( v_1 = v_i \rightarrow F \right) \right)$$ 꼴의 아무 논리식이라고 하되,
-  여기서 $v_i$는 $F$에 자유롭게 나타나지 않는다고 하자.\footnote
-  {
-    이러한 꼴의 논리식은 $F \left[ v_1 := v_1 ' \right]$와 동등하다 -- 즉, $F$에서의 $v_1$의 모든 자유 나타남들을 $v_1 '$로 교체한 결과와 같다.
-  }
-  이때,
-  \begin{enumerate}
-    \item[$N_{12}$ :] $\left( F \left( 0 \right) \rightarrow \left( \forall v_1 \left( F \rightarrow G \right) \rightarrow \forall v_1 F \right) \right)$
-  \end{enumerate}
-  가 수학적 귀납법의 공리꼴이다.
-
-  \begin{context}[Discussion]
-    1번 그룹의 공리들은 명제 논리의 표준 체계를 구성한다(cf. Church [1956]).
-    2번 그룹의 공리들은 (Montague와 Kalish 덕분에) 변수의 자유 타나남에 대한 치환의 개념에 호소하지 않고 진술될 수 있다는 기술적 이점을 가진다 --
-    정말로, 자유변수와 속박변수의 개념조차도 우회했다.
-    대신에, \underline{대체}(\textit{replacement})라는 더 단순한 개념만을 쓴다 --
-    대체란, 공리꼴 $L_{7}$에 사용된 변수의 \textit{한} 나타남에만 대한 치환을 의미한다.
-  \end{context}
-
-  \begin{context}[Inference Rules]
-    P.E.의 추론 규칙은 표준적이며, 두 개로 이루어진다.
-    \begin{itemize}[leftmargin=.5in]
-      \item[$Rule \; \mathit{1}$] [Modus Ponens]--$F$와 $F \to G$로부터 $G$를 추론한다.
-      \item[$Rule \; \mathit{2}$] [Generalization]--$F$로부터 $\forall v_{i} F$를 추론한다.
-    \end{itemize}
-    P.E.에서의 \underline{증명}(\textit{proof})이란,
-    각 원소들이
-    \begin{enumerate}
-      \item 공리이거나
-      \item 앞선 두 원소로부터 Modus Ponens에 의하여 얻어지거나
-      \item 앞선 한 원소로부터 Generalization에 의하여 얻어지는
-    \end{enumerate}
-    논리식들의 유한열을 의미한다.
-    논리식 $F$를 마지막 원소로 가지는 증명이 있을 때,
-    $F$를 (P.E.에서) \underline{증명 가능}(\textit{provable})하다고 한다.
-    논리식 $F$에 대하여 $\lnot F$를 마지막 원소로 가지는 증명이 있을 때,
-    $F$를 (P.E.에서) \underline{반증 가능}(\textit{refutable})하다고 한다.
-  \end{context}
-
-  \subsection{공리계의 산술화}
-  \hspace{12pt}
-
-  이제 P.E.의 모든 증명가능한 문장들의 괴델 수들을 모은 집합이 (바로 전 단원에서의 집합 $T$와 다르게) 산술적인 집합이라는 것을 증명하는 데 집중하겠다.
-
-  \noindent \textbf{\S2. 예비 사항}
-
-  우리는 (이전 장의 명제 1과 그것의 따름정리에 의하여)
-  이미 아무 기저 $ b \ge 2 $에 대하여 관계 $ x *_{b} y = z $가 싼술적이라는 것과
-  각 $n \ge 2$에 대하여 관계 $ x_1 *_{b} * x_2 *_{b} \cdots *_{b} x_n = y $가 싼술적이라는 것을 안다.
-
-  숫자 $x$의 기저 $b$ 표기가 숫자 $y$의 기저 $b$ 표기의 시작분절(initial segmemt)이라면,
-  기저 $b$ 표기에서 $x$가 $y$를 \underline{시작시킨다}(\textit{begin})고 말한다.\footnote
-  {
-    예를 들어, 기저 $10$ 표기에서 $593$은 $59348$을 시작시킨다; 또한 $593$은 $593$을 시작시킨다.
-  }
-  $0$은 $0$을 제외한 어떤 수도 시작시키지 않는다.\footnote
-  {
-    $59 = 059$임에도 불구하고, 우리는 $0$이 $59$를 시작시킨다고 말하지 \textit{않는다}.
-  }
-  ``기저 $b$ 표기에서 $x$가 $y$를 시작시킨다''를 ``$x B_{b} y$''로 적는다.
-  $x$가 $y$의 최종분절(final segment)일 때 $x$가 기저 $b$ 표기에서 $y$를 \underline{끝낸다}(\textit{end})고 한다 -- 기호로는, $x E_{b} y$라고 적는다.\footnote
-  {
-    예를 들어, 기저 $10$ 표기에서 $348$은 $59348$를 끝낸다; $48$도 $59348$을 끝낸다.
-    또한, $0$은 $570$을 끝내고 $70$과 $570$도 마찬가지로 $570$을 끝낸다.
-  }
-  (기저 $b$ 표기에서) $x$가 $y$를 시작시키는 어떤 수로 끝날 때, $x$는 $y$의 \underline{부분}(\textit{part})이라고 한다 -- 기호로는, $x P_{b} y$라고 적는다.\footnote
-  {
-    예를 들어, 기저 $10$ 표기에서 $59$는 $934$, $34$와 마찬가지로 $59348$의 부분이다.
-    또한 $0$은 $5076$의 부분이지만, $576$의 부분인 것은 아니다.
-  }
-  (기저 $b$ 표기에서) ``$x$가 $y$를 시작시킨다''는 관계를 고려하자.
-  $0$이 $y$의 부분이 아니라면, 이 관계가 성립할 때 그리고 그럴 때에만 $x = y$이거나 $x \ne 0 \land \exists z \left( x *_{b} y = z \right)$이다.
-  그러나, 일반적인 경우에서는 $0$이 $y$의 부분이 될 수 있고, $x$가 $y$를 시작시킬 때 그리고 그럴 때에만 $x = y$이거나 $x = 0$이고 어떤 $z$와 $b$의 멱 $w$에 대하여 $\left( x \times w \right) *_{b} z = y$이다.\footnote
-  {
-    예를 들어, 기저 $10$ 표기에서, $5$가 $5007$을 시작시키는 이유는 위의 조건이 $z = 7$, $w = 100$에 대하여 성립하기 때문이고,
-    $5$가 $57$을 시작시키는 이유는 위의 조건이 $z = 7$, $w = 1$에 대하여 성립하기 때문이다.
-  }
-  관련된 $z$와 $w$ 모두 $y$보다 작거나 같다(실제로는 작지만)는 사실에 주목하자 -- 이 사실은 이 장에서가 아니라 뒷 장에서 중요하다.
-  관계 ``$x$가 $y$를 끝낸다''와 ``$x$가 $y$의 부분이다''는 기술하기에 훨씬 쉽고, 다음과 같은 동치 명제들을 얻게 된다:
-  \begin{align*}
-    x B_{b} y & \iff x = y \lor \left( x \ne 0 \land \left( \exists z \le y \right) \left( \exists w \le y \right) \left[ \mathrm{Pow}_{b} \left( w \right) \land \left( x \times w \right) *_{b} z = y \right] \right) ; \\
-    x E_{b} y & \iff x = y \lor \left( \exists z \le y \right) \left[ z *_{b} x = y \right] ; \\
-    x P_{b} y & \iff \left( \exists z \le y \right) \left[ z E_{b} y \land x B_{b} z \right] .
-  \end{align*}
-
-  따라서, 관계 $x B_{b} y$, $x E_{b} y$와 $x P_{b} y$는 모두 싼술적이다. 또한
-  $$ x_{1} *_{b} x_{2} *_{b} \cdots *_{b} x_{n} P_{b} y \iff \left( \exists z \le y \right) \left[ x_{1} *_{b} x_{2} *_{b} \cdots *_{b} x_{n} = z \land z P_{b} y \right] $$이므로,
-
-  \begin{context}[Proposition 1]
-    아무 $b \ge 2$와 아무 $n \ge 2$에 대하여 다음 관계들은 싼술적이다. \setstretch{1.0}
-    \begin{enumerate}
-      \item $x B_{b} y$
-      \item $x E_{b} y$
-      \item $x P_{b} y$
-      \item $x_{1} *_{b} x_{2} *_{b} \cdots *_{b} x_{n} P_{b} y$
-    \end{enumerate} \setstretch{1.5}
-  \end{context}
-
-  \begin{context}[Remarks]
-    위의 동치명제들에서 ``$\left( \exists z \le y \right)$''라고 적지 않고 더 단순하게 ``$\exists z$''라고 적어도,
-    위의 관계들이 싼술적이라는 것을 보이는 데 무리가 없다. 우리가 더 복잡하게 적은 목적은 뒷 장에서 나타나는데,
-    위 관계들이 싼술적일 뿐만 아니라 \textit{구성적인} 산술적 관계라고 알려진 더 좁은 관계들의 분류에 속한다는 것을 보이기 위함이 그 목적이다.
-  \end{context}
-
-  이 장의 나머지에서, $b$는 $13$이 될 것이고, 어수선함을 줄이기 위하여, 아래 첨자 $b$를 생략하고 단지 $x B y$, $x E y$ 또는 $x P y$라고만 적을 것이다.
-  또한 지금부터 $x *_{13} y$를 $x y$라고 적을 것이다.\footnote
-  {
-    이것은 어떠한 혼란도 야기하지 않는다. $x$ 곱하기 $y$를 항상 $x \cdot y$로 적기 때문이다.
-  }
-  또한 $\lnot x P y$를 $x \tilde{P} y$로 적고, $$ x_1 *_{13} x_2 *_{13} \cdots *_{13} x_{n} P y $$를 $x_1 x_2 \cdots x_{n} P y$로 적을 것이다. 
-
-  \begin{context}[Finite Sequences]
-    독자는 아마도 언어 $\mathcal{L}_{E}$에서 기호 ``$\sharp$''이 무엇을 하는지 궁금해 왔을 것이다.
-    왜냐하면, 바로 전 장에서 아무 것에도 사용되지 않았기 때문이다!
-    사실 나머지 12 기호들로 구성된 표현식들의 \textit{형식적인} 나열을 형성하려고 예약해 놓았다.
-    임의의 나머지 12 기호들로 구성된 표현식들 $X_1$, $\cdots$, $X_{n}$에 대하여,
-    수식 $ \sharp X_1 \sharp X_2 \sharp \cdots \sharp X_{n} \sharp $은
-    $n$-튜플 $\left( X_{1} , \cdots , X_{n} \right)$의 형식적 대응이고,
-    그것의 괴델 수를 \underline{유한열}(\textit{sequence}) 번호라고 부를 것이다.
-  \end{context}
-
-  다르게 설명해보자면, $K_{11}$을 $\delta$ (13진법의 $12$)가 자연수 $n$(의 13진법 표현)에 나타나지 않는 $n$들의 집합이라고 하자.
-  기호 ``$\sharp$''가 나타나지 않는 모든 표현식들의 괴델 수는 $K_{11}$의 원소들(이것은 숫자, 변수, 항, 논리식 같은 \textit{의미있는} 표현식들을 포함한다)이다.
-  임의의 $K_{11}$ 안의 수들로 된 유한열 $\left( a_{1} , \cdots , a_{n} \right)$에게 수 $\delta a_1 \delta a_2 \delta \cdots \delta a_n \delta$를 할당하고,
-  이 수를 유한열 $\left( a_{1} , \cdots , a_{n} \right)$의 \underline{유한열 번호}(\textit{sequence number})라고 부를 것이다.
-  $ \mathrm{Seq} \left( x \right) $를 $x$가 어떤 유한열의 유한열 번호이다는 성질이라고 하자.
-  $ x \in y $를 $x$가 원소인 어떤 유한열의 유한열 번호가 $y$이다는 관계라고 하자.\footnote
-  {
-    그러므로, 임의의 수 $x_{1}, \cdots, x_{n} \in K_{11}$에 대하여, $y = \delta x_1 \delta \cdots \delta x_{n} \delta$이면,
-    $x \in y$일 때 그리고 그럴 때마다 $x$가 $x_1$, $\cdots$, $x_n$ 중에 하나이다.
-  } $ x \prec_{z} y$를 $z$가, $x$와 $y$가 원소이되 $x$의 첫 번째 나타남이 $y$의 첫 번째 나타남보다 빠른, 유한열의 유한열 번호이다는 관계라고 하자.
-
-  \begin{context}[Proposition 2]
-    관계 $\mathrm{Seq} \left( y \right)$, $x \in y$와 $x \prec_{z} y$는 모두 싼술적이다.
-  \end{context}
-  \begin{proof}
-    증명은 다음과 같다:
-    \begin{enumerate}
-      \item $\mathrm{Seq} \left( x \right) \iff \delta B x \land \delta E x \land \delta \ne x \land \delta \delta \tilde{P} x \land \left( \forall y \le x \right) \left[ \delta 0 y P x \rightarrow \delta B y \right]$
-      \item $x \in y \iff \mathrm{Seq} \left( y \right) \land \delta x \delta P y \land \delta \tilde{P} x$
-      \item $x \prec_{z} y \iff x \in z \land y \in z \land \left( \exists w \le z \right) \left[ w B z \land x \in w \land \lnot \left( y \in w \right) \right]$
-    \end{enumerate}
-  \end{proof}
-
-  이제부터 $ \left( \forall x \in y \right) \varphi $를 $$ \forall x \left( x \in y \rightarrow \varphi \right) $$로 줄여쓰고,
-  $ \left( \exists x , y \prec_{w} z \right) \varphi$를 $$ \exists x \exists y \left( x \prec_{w} w \land y \prec_{w} z \land \varphi \right) $$로 줄여쓰자.
-
-  \begin{context}[Formation Sequences]
-    이전 장에서 \textit{논리항}과 \textit{논리식}의 정의는 귀납적이었다;
-    우리는 기존의 논리항에서 새로운 논리항을 그리고 기존의 논리식에서 새로운 논리식을 구성하는 규칙을 주었다.
-    우리는 이 귀납적인 정의를 명시적인 정의로 대체하여야 한다.
-
-    아무 표현식 $X$, $Y$와 $Z$에 대하여,
-    $Z$가 $\left( X + Y \right)$, $\left( X \times Y \right)$, $X \mathbf{E} Y$, $X^{\prime}$ 중 하나일 때 그리고 그럴 때에만
-    $R_t \left( X , Y , Z \right)$라고 정의하자.\footnote
-    {
-      우리는 $R_t$를 \textit{논리항에 대한 형성 관계}라고 부를 수 있을 것이다.
-    }
-    논리항에 대한 형성 \textit{유한열}이란, 각 원소 $X_{i}$에 대하여 $X_{i}$는 변수 또는 숫자이거나 선행하는 원소 $X_{j}$와 $X_{k}$가 있어서 (단, $j < i$이고 $k < i$) $R_t \left( X_{j}, X_{k}, X_{i} \right)$가 성립하는 유한열 $X_1$, $\cdots$, $X_n$을 의미한다.
-    그러면 우리는 $X$가 항이라 함을 $X$가 원소인 형성 유한열이 존재한다로 정의할 수 있다.
-    
-    논리식도 마찬가지로 한다. $Z$가 $\lnot X$ 또는 $\left( X \to Y \right)$이거나 어떤 변수 $v_{i}$에 대하여 $\forall v_{i} X$일 때 그리고 그럴 때에만
-    $R_f \left( X , Y , Z \right)$라고 정의하자.\footnote
-    {
-      우리는 $R_f$를 \textit{논리식에 대한 형성 관계}라고 부를 수 있을 것이다.
-    }
-    \textit{논리식}에 대한 형성 유한열을 각 $i \le n$에 대하여 $X_{i}$가 원자 논리식이거나 $j < i$와 $k < i$가 있어서 $R_f \left( X_{j} , X_{k} , X_{i} \right)$인 것으로 정의한다.
-    그러면 표현식 $X$가 논리식일 때 그리고 그럴 때에만 $X$가 원소인 논리식에 대한 형성 유한열이 존재한다.
-  \end{context}
+\setstretch{1.5}
+\maketitle
+
+이 글에는 논리학자 Raymond M. Smullyan의 저서 ``G\"odel's Incompleteness Theorems''의 번역과 더불어 제 사견도 들어 있습니다.
+
+\textbf{감사의 인사.} 이 글은 장준영\footnote{https://github.com/Ailrun}님과 전한울\footnote{https://github.com/hanuljeon95}님의 도움을 받아 작성되었습니다.
+
+\newpage
+
+\section{G\"odel의 증명 뒤의 일반적인 아이디어}
+\hspace{12pt}
+
+다음 몇 개의 단원에서 다양한 [산술의 공리화]에 대한 불완전성 증명들을 공부할 것이다.
+G\"odel은 1931년 공리적 집합론에 대한 그의 원래 증명을 이끌어냈지만,
+그 방법은 공리적 수론에도 (동등하게) 적용될 수 있다.
+공리적 수론에 대한 불완전성은,
+공리적 집합론의 불완전성을 쉽게 도출해 낼 수 있으므로,
+실제로 더 강한 결과이다.
+
+G\"odel은 그의 기념비적인 논문을 다음의 놀라운 낱말들로 시작한다.
+
+\begin{quotation}
+``더 정확한 방향으로의 [수학의 발전]은 그것의 광범위한 분야가 형식화되도록 이끌었고,
+그리하여 증명들은 몇 개 되지 않는 기계적인 규칙들을 따라 이끌어 낼 수 있다.
+오늘날 가장 포괄적인 형식 중 하나는 Whitehead와 Russel의 Principia Mathematica이고,
+다른 하나는 공리적 집합론의 Zermelo-Fraenkel 체계이다.
+두 체계 모두 너무 확장적이어서,
+오늘날 사용되는 모든 증명 기법들이 그것들 안에서 형식화 될 수 있다 --
+즉, 몇 가지 안 되는 공리들과 추론 규칙들로 축약될 수 있다.
+그러므로, 이 공리들과 추론 규칙들이 관심 있는 체계 안에서 형식화될 수 있는 \textit{모든} 수학적 질문들을 결정하기에\footnote
+{
+여기서, ``결정''의 뜻은 증명 또는 반증을 하여 참인지 거짓인지 결정한다는 뜻이다.
+}
+충분하다고 받아들이는 게 합리적으로 보인다.
+후술할 내용에서 이는 사실이 아니라는 것과,
+오히려, 언급된 두 체계 모두에서 상대적으로 쉬운 정수론의 문제들 중에 이 공리들을 기저로 하여 결정될 수 없는 문제가 존재한다는 것을 보일 것이다.''
+\end{quotation}
+
+G\"odel은 그리고는 이러한 상황이 고려 중인 두 체계의 특별한 본성에 의존하지 않고,
+어떤 수학 체계들의 대규모 모임에서 성립함을 설명하기 시작한다.
+이 수학 체계들의 ``대규모 모임''이란 과연 무엇일까?
+이 어구에 대하여 다양한 해석들이 있어왔고,
+G\"odel의 그 정리는 몇 가지 방법으로 일반화될 수 있는데,
+이 책에서 많은 그러한 일반화들을 고려할 것이다.
+그 일반화들 중 일반적인 독자에게 가장 직접적이고 가장 쉽게 접근 가능한 하나가 가장 덜 알려져 있는 것으로 보이는데,
+이는 매우 희한하다.
+이를 더욱 희한하게 만드는 것은,
+문제의 그 방법이 G\"odel 그 자신이 그의 원래 논문의 서론에서 시사한 바로 그것이라는 것이다!
+나는 곧 이것으로 (혹은 더 일반화된 것으로) 방향을 틀 것이다.
+그러나 그 전에 나는 독자가,
+G\"odel의 아이디어의 본질을 단순하고 교육적인 방법으로 설명해 주는,
+다음 퍼즐을 보길 바란다.
+
+\begin{context}[A G\"odelian Puzzle]
+다음의 다섯 가지 기호로 이루어진 다양한 표현식을 출력해 내는 어떤 계산하는 기계를 고려하자:
+$$ \sim \qquad P \qquad N \qquad \left( \right. \qquad \left. \right) $$
+
+\underline{표현식}(\textit{expression})이란 위의 다섯 가지 기호들의 문자열 중 길이가 $0$은 아니지만 유한한 것을 의미한다.
+그 기계가 표현식 $X$를 출력해 낼 수 있다면,
+$X$를 \underline{출력 가능}(\textit{printable})하다고 한다.
+그 기계는 그것이 출력해 낼 수 있는 표현식이라면 무엇이든지 언젠가는 출력해 내도록 설계되어 있다고 가정하자.
+
+표현식 $X$의 \underline{노름}(\textit{norm})이란,
+표현식 $X \, \left( \, X \, \right)$를 의미한다 --
+예를 들어, $P \, \sim$의 노름은 $P \, \sim \left( P \, \sim \right)$이다.
+\underline{문장}(\textit{sentence})이란, 다음 네 가지 꼴 중 하나의 형태를 띤 모든 표현식을 의미한다 --
+여기서, $X$에는 임의의 표현식이 올 수 있다:
+\begin{itemize}
+\item[(1)] $P \left( \, X \, \right)$
+\item[(2)] $P \, N \, \left( \, X \, \right)$
+\item[(3)] $\sim \, P \, \left( \, X \, \right)$
+\item[(4)] $\sim \, P \, N \, \left( \, X \, \right)$   
+\end{itemize}
+
+비형식적으로, $P$는 ``printable''을; $N$은 ``the norm of''를; $\sim$은 ``not''을 의미한다.
+그런즉, 표현식 $X$에 대하여,
+$X$가 출력 가능할 때 (그리고 그럴 때에만) $P \, \left( \, X \, \right)$를 \underline{참}(\textit{true})이라고 정의하고;
+$X$의 노름이 출력 가능할 때 (그리고 그럴 때에만) $P \, N \, \left( \, X \, \right)$를 \underline{참}(\textit{true})이라고 정의하고;
+$X$가 출력 가능하지 않을 때 (그리고 그럴 때에만) $\sim \, P \, \left( \, X \, \right)$를 \underline{참}(\textit{true})이라고 정의하고;
+$X$의 노름이 출력 가능하지 않을 때 (그리고 그럴 때에만) $\sim \, P \, N \, \left( \, X \, \right)$를 \underline{참}(\textit{true})이라고 정의한다.\footnote
+{
+마지막 문장은 ``Not printable the norm of $X$''라고 읽거나,
+혹은 더 좋은 영어로 ``The norm of $X$ is not printable''라고 읽는다.
+}
+
+이로써 무슨 문장이 참인지에 대한 완벽한 정의를 갖추었는데,
+그것은 자기 참조의 흥미로운 경우이다:
+그 기계는 자신이 출력할 수 있는 문장은 무엇이고 출력할 수 없는 문장은 무엇인지에 대한 여러 가지의 문장들을 출력하기 때문에,
+자신의 행동을 기술하는 셈이다!\footnote
+{
+이것은 자의식 있는 생물과 다소 닮았다.
+또한 그러한 컴퓨들이 왜 인공지능 분야에서 일하는 사람들에게 관심이 있는지를 알 수 있다.
+}
+
+그 기계가 완벽하게 작동하여 그 기계에 의하여 출력되는 모든 문장들이 참이라는 사실이 주어졌다.
+그러므로, 예를 들어, 그 기계가 $P \, \left( \, X \, \right)$를 출력할 때마다 $X$가 정말로 출력 가능하다 --
+$X$는 그 전 혹은 그 후에 출력될 것이다.
+마찬가지로, 그 기계가 $P \, N \, \left( \, X \, \right)$를 출력할 때마다 $X$의 노름인 $X \left( \, X \, \right)$도 출력 가능하다.
+$X$가 출력 가능하다고 가정하자.
+그렇다면 $P \, \left( \, X \, \right)$가 출력 가능해질까?
+그럴 필요는 없다.
+$X$가 출력 가능하다면, $P \, \left( \, X \, \right)$는 \textit{참}이지만,
+그 기계가 거짓인 문장을 절대로 출력하지 않을 뿐이지,
+\textit{모든} 참인 문장을 출력할 수 있다는 사실은 주어지지 않았기 때문이다.\footnote
+{
+그 기계가 문장이 아닌 표현식을 출력하는지는 전혀 중요하지 않다.
+중요한 것은 그 기계에 의하여 출력되는 \textit{문장}들은 모두 참이라는 사실이다.
+}
+
+그렇다면, 그 기계가 모든 참인 문장을 출력\textit{할 수 있을까}?
+대답은 \textit{아니오}이다.
+이제 독자를 위한 수수께기를 내겠다:
+그 기계가 출력할 수 없지만 참인 문장을 하나 찾아라.\footnote
+{
+도움말: 자신의 출력 불가능성을 선언하는 문장을 찾아라 --
+즉, 그 문장은 자신이 그 기계에 의하여 출력될 수 없을 때 그리고 그럴 때에만 참이다.
+해답은 다음 문제 뒤에 줄 것이다.
+}
+\end{context}
+
+\begin{context}[A Variant of the Puzzle]
+위의 수수께기의 변종인 다음 문제는 독자들에게 \underline{괴델 넘버링}(\textit{G\"odel numbering})의 개념을 소개할 것이다.
+
+이제 다음 다섯 가지의 기호들로 구성된 문자열들을 출력해 내는 또 다른 기계가 주어졌다고 하자:
+$$ \sim \qquad P \qquad N \qquad 1 \qquad 0 $$
+
+우리는 자연수를 이진 표기법으로 (1과 0의 문자열로서) 자연수를 나타낼 것이고,
+이 문제의 목적에 맞추어,
+그 둘을 나타내는 이진 숫자들을 비교함으로써 두 자연수를 식별할 것이다.
+
+각 표현마다 \underline{괴델 수}(\textit{G\"odel number})라고 불리는 수를 할당할 것이다.
+그렇게 하기 위하여, 다음 규칙을 따르자:
+단일 기호 $\sim$, $P$, $N$, $1$, $0$의 괴델 수는 각각 $10$, $100$, $1000$, $10000$, $100000$이다.
+그리고, 복합식의 괴델 수는 각 기호들을 \textit{그것의} 괴델 수로 교체하여 얻는다 --
+예를 들어 $P \, N \, P$의 괴델 수는 $1001000100$이다.
+표현식 $X$의 \underline{노름}(\textit{norm})을 $X$ 뒤에 $X$의 괴델 수를 붙인 표현식으로 재정의한다.
+이제 \underline{문장}(\textit{sentence})이란 다음 네 가지 꼴 중 하나의 형태를 띤 표현식이다:
+$P \, X$, $P \, N \, X$, $\sim \, P \, X$ 그리고 $\sim \, P \, N \, X$ --
+여기서 $X$에는 임의의 이진 숫자가 올 수 있다.
+이진 숫자 $X$에 대하여, 어떤 표현식의 괴델 수가 $X$이고 그 표현식이 출력 가능할 때 그리고 그럴 때에만,
+$P \, \left( \, X \, \right)$를 참이라고 한다.
+이진 숫자 $X$에 대하여, 어떤 표현식의 괴델 수가 $X$이고 그 표현식의 노름이 출력 가능할 때 그리고 그럴 때에만,
+$P \, N \, \left( \, X \, \right)$를 참이라고 한다.
+이진 숫자 $X$에 대하여, $P \, \left( \, X \, \right)$가 참이 아닐 때 그리고 그럴 때에만,
+$\sim \, P \, \left( \, X \, \right)$를 참이라고 한다.
+이진 숫자 $X$에 대하여, $P \, N \, \left( \, X \, \right)$가 참이 아닐 때 그리고 그럴 때에만,
+$\sim \, P \, N \, \left( \, X \, \right)$를 참이라고 한다.
+
+전과 마찬가지로 그 기계는 거짓인 문장을 절대로 출력하지 않는다고 한다.
+참이지만 그 기계가 출력할 수 없는 문장을 하나 찾아라.
+\end{context}
+
+\begin{context}[Solutions]
+첫 번째 문제의 답은 $ \sim \, P \, N \, \left( \, \sim \, P \, N \, \right) $이다.
+``참''의 정의에 의하여, 이 문장이 참일 때 그리고 그럴 때에만 $ \sim \, P \, N $의 노름이 출력 가능하지 않다.
+그런데 $ \sim \, P \, N $의 노름이 바로 문장 $ \sim \, P \, N \, \left( \, \sim \, P \, N \, \right) $이다.
+그런즉, 그 문장이 참일 때 그리고 그럴 때에만 그것은 출력 가능하지 않다.
+이는 그 문장이 참이고 출력 가능하지 않는 경우와 거짓이고 출력 가능한 경우 밖에 없음을 의미한다.
+그러나 후자는 참이지 않은 문장은 절대로 출력하지 않는다는 가정을 위반한다.
+그러므로 그 문장은 참이지만 출력 가능하지 않다.
+
+당연히, 다섯 가지의 기호들로 구성된 다양한 표현식들을 \textit{출력}하는 기계를 논하는 대신,
+같은 기호들로 구성된 다양한 문장들을 \textit{증명}하는 수학 체계를 논할 수도 있다.
+우리는 문자 $P$를, 그 기계에 의하여 출력 가능하다는 뜻 대신, 그 체계에서 \underline{증명 가능}(\textit{provable})하다는 뜻으로 재해석할 수 있다.
+그러면, 만약 그 체계가 완전히 정확하다고 할 때 (즉, 거짓인 문장은 절대 증명 가능하지 않을 때),
+문장 $ \sim \, P \, N \, \left( \, \sim \, P \, N \, \right) $는 참이지만 그 체계에서 증명 가능하지 않는 문장이 될 것이다.
+
+추가로, 문장 $ P \, N \, \left( \, \sim \, P \, N \, \right) $이 거짓임을 알 수 있다 --
+왜냐하면 그것의 부정이 참이기 때문이다.
+그러므로 (그 체계가 정확하다고 가정할 때) 그것 또한 그 체계에서 증명 가능하지 않아야 한다.
+그러므로 문장 $ P \, N \, \left( \, \sim \, P \, N \, \right) $는 \underline{결정 불가능}(\textit{undecidable})한 문장의 예이다 --
+즉, 자신도 자신의 부정도 그 체계에서 증명 가능하지 않다.
+
+두 번째 문제의 답은 $ \sim \, P \, N \, 1 \, 0 \, 1 \, 0 \, 0 \, 1 \, 0 \, 0 \, 0 $이다.
+\end{context}
+
+이제 일반적인 설정에서의 몇 가지 불완전성 논증들로 방향을 틀자:
+특정 성질이 있는 수학 체계에는 반드시 괴델의 논증이 통한다는 것을 보일 것이다.
+뒷 단원들에서는 특정 체계들을 살펴보고 그들이 정말로 그러한 성질을 가지고 있음을 보일 것이다.
+
+\subsection{G\"odel과 Tarski의 정리의 추상적인 형태}
+\hspace{12pt}
+
+괴델의 논증을 적용할 수 있는 각각의 체계 $\mathcal{L}$은 적어도 다음과 같은 물건들을 가지고 있다.
+\begin{enumerate}
+\item 그것의 원소가 $\mathcal{L}$의 \underline{표현식}(\textit{expression})이라고 불리는 가부번 집합 $\mathcal{E}$.
+\item 그것의 원소가 \underline{문장}(\textit{sentence})이라고 불리는 집합 $\mathcal{S} \subseteq \mathcal{E}$.
+\item 그것의 원소가 \underline{증명 가능한}(\textit{provable}) 문장이라고 불리는 집합 $\mathcal{P} \subseteq \mathcal{S}$.
+\item 그것의 원소가 \underline{반증 가능한}(\textit{refutable}) 문장이라고 불리는 집합 $\mathcal{R} \subseteq \mathcal{S}$.
+\item 그것의 원소가 $\mathcal{L}$의 \underline{술어}(\textit{predicate})라고 불리는 집합 $\mathcal{H} \subseteq \mathcal{E}$.\footnote
+{
+괴델의 서론에서 술어는 \textit{class name}이라고 불린다.
+비형식적으로, 각 술어는 자연수들의 집합의 이름으로 생각할 수 있다.
+}
+\item $ \left( \forall H \in \mathcal{H} \right) \left( \forall n \in \mathbb{N} \right) \left[ \Phi \left( H , n \right) \in \mathcal{S} \right] $\footnote
+{
+비형식적으로, 문장 $H \left( n \right)$은 자연수 $n$이 $H$라는 이름을 가진 집합에 속한다는 명제를 표현한다.
+}를 만족시키는 함수 $ \Phi : \mathcal{E} \times \mathbb{N} \to \mathcal{E} $.\footnote
+{
+표기법의 남용을 허용하여, 각 $E \in \mathcal{E}$와 각 $n \in \mathbb{N}$에 대하여 표현식 $\Phi \left( E , n \right)$을 ``$ E \left( n \right) $''으로 표기한다.
+}
+\item 그것의 원소가 \underline{참}(\textit{true})인 문장이라고 불리는 집합 $\mathcal{T} \subseteq \mathcal{S}$.
+\end{enumerate}
+\textit{특정} 체계 $\mathcal{L}$에 대한 제 1 불완전성을 증명할 때,
+Alfred Tarski[1936]에 의하여 정확하게 된 \textit{참}의 개념을 사용할 것이다.
+
+이로써, 뒤의 여러 단원에서 공부할 체계들의 유형에 대한 추상적인 묘사를 마무리 짓겠다.
+
+\begin{context}[Expressibility in $\mathcal{L}$]
+우리가 곧 정의할 $\mathcal{L}$에서의 \underline{표현 가능성}(\textit{expressibility})의 개념은 진리 집합 $\mathcal{T}$를 다루지만 $\mathcal{P}$나 $\mathcal{R}$은 다루지 않는다.
+
+이 책의 나머지 부분에서 ``수''라는 단어는 \underline{자연수}(\textit{natural number})를 의미한다.
+술어 $H$와 수 $n$에 대하여, $\Phi \left( H , n \right)$이 참인 문장일 때 --
+즉, $ H \left( n \right) \in \mathcal{T} $일 때 --
+$H$가 $n$에 대하여 \underline{참}(\textit{true})이라고 하거나,
+$n$이 $H$를 만족시킨다고 한다.
+술어 $H$에 의하여 \underline{표현된}(\textit{expressed}) 집합이란, $H$를 만족시키는 모든 수들의 집합을 의미한다.
+그러므로, 임의의 $H \in \mathcal{H}$와 임의의 $A \subseteq \mathbb{N}$에 대하여,
+$H$가 $A$를 표현할 때 그리고 그럴 때에만 $$ \left( \forall n \in \mathbb{N} \right) \left[ H \left( n \right) \in \mathcal{T} \leftrightarrow n \in A \right] $$가 성립한다.
+\end{context}
+
+\begin{context}[Definition]
+$\mathcal{L}$에서 집합 $A \subseteq \mathbb{N}$를 표현하는 술어가 존재할 때 그리고 그럴 때에만
+$A$를 $\mathcal{L}$에서 \underline{표현될 수 있다}(\textit{expressible})고 하거나,
+$A$가 $\mathcal{L}$에서 \underline{이름을 가진다}(\textit{nameable})고 한다.
+\end{context}
+
+$\mathcal{E}$는 가부번 집합이므로,
+$\mathcal{H}$는 유한 집합이거나 가부번 집합이다.
+그러나 Cantor의 잘 알려진 정리에 의하여,
+모든 $\mathbb{N}$의 부분 집합들의 집합은 비가산 집합이다.
+그러므로, 모든 집합들이 $\mathcal{L}$에서 표현될 수 있는 것은 아니다.
+
+\begin{context}[Definition]
+체계 $\mathcal{L}$의 모든 증명 가능한 문장들이 참이고 모든 반증 가능한 문장들이 거짓이면,
+$\mathcal{L}$이 \underline{정확}(\textit{correct})하다고 한다.
+이것은 $\mathcal{P}$이 $\mathcal{T}$의 부분 집합이고 $\mathcal{R}$이 $\mathcal{T}$와 서로소 집합이라는 것을 의미한다.
+이제 충분한 조건들 안에서 $\mathcal{L}$이 정확하다면 참이지만 증명 가능하지 않은 문장을 포함한다는 데 집중하자.
+\end{context}
+
+\begin{context}[G\"odel Numbering and Diagonalization]
+$\gnum$를 각 $E \in \mathcal{E}$에게 \underline{괴델 수}(\textit{G\"odel number})라고 불리는 자연수 $\gnum \left( E \right)$를 부여하는 단사 함수라고 하자.
+이 단원의 나머지 부분에서 $\gnum$는 고정될 것이다.\footnote
+{
+뒷 단원들에서 공부할 구체적인 체계에서는 특정 괴델 넘버링이 주어질 것이다.
+지금 다루는 순수하게 추상적인 논의에서는 임의의 괴델 넘버링에 대하여 적용될 수 있다.
+}
+$\gnum$가 전사함수라고 가정하는 것이 기술적으로 편리할 것이다.\footnote
+{
+괴델의 원래 넘버링은 이러한 성질이 없지만,
+뒷 단원들에서 사용할 괴델 넘버링은 이러한 성질을 가진다.
+그러나, 이 단원의 결과들은, 소소한 수정을 거치면,
+이러한 제한 없이도 증명될 수 있다.
+(cf. Ex. 5).
+}
+이제 각각의 수 $n$마다 $n$을 괴델 수로 하는 표현식이 유일하다고 가정하고,
+그 유일한 표현식을 $E_{n}$이라 하겠다.
+즉, 임의의 $n \in \mathbb{N}$에 대하여 $\gnum \left( E_{n} \right) = n$이다.
+
+$E_{n}$의 대각화란, 표현식 $E_{n} \left( n \right)$을 의미한다.
+$E_{n}$이 술어라면, 그것의 대각화는 당연히 문장이다;
+이 문장은, $E_{n}$이 그것의 괴델 수 $n$에 의하여 만족할 때 그리고 그럴 때에만, 참이다.
+
+각각의 $n \in \mathbb{N}$마다, $d \left( n \right)$을 $E_{n} \left( n \right)$의 괴델 수로 둔다.
+함수 $d : \mathbb{N} \to \mathbb{N}$은 뒤의 내용에서 항상 핵심적인 역할을 할 것이다;
+$d$를 그 체계의 \underline{대각 함수}(\textit{diagonal function})라고 부른다.
+
+각각의 $A \subseteq \mathbb{N}$마다, $A^{*} := \left\{ n \in \mathbb{N} : d \left( n \right) \in A \right\} $로 놓자.
+즉, $A^{*}$의 정의에 의하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ n \in A^{*} \leftrightarrow \gnum \left( E_{n} \left( n \right) \right) \in A \right] $$이 성립한다.\footnote
+{
+$A^{*}$은 대각 함수 $d$ 아래의 $A$의 역상이기 때문에 $d^{-1} \left[ A \right]$로도 쓰일 수 있다.
+}
+\end{context}
+
+\begin{context}[An Abstract Form of G\"odel's Theorem]
+$P$를 모든 증명 가능한 문장들의 괴델 수를 모은 집합이라고 하자.
+그리고, 각 $A \subseteq \mathbb{N}$마다 $\tilde{A}$를 $\mathbb{N} \setminus A$로 두자 --
+즉, $\tilde{A}$는 $A$의 여집합이다.
+\end{context}
+
+\begin{context}[Theorem (GT)--After G\"odel with shades of Tarski]
+집합 $\tilde{P}^{*}$가 $\mathcal{L}$에서 표현될 수 있고 $\mathcal{L}$이 정확하다면,
+$\mathcal{L}$에서 참이지만 증명 가능하지 않은 문장이 있다.
+\end{context}
+
+\begin{proof}
+$\mathcal{L}$이 정확하고 $\tilde{P}^{*}$가 $\mathcal{L}$에서 표현될 수 있다고 가정하자.
+그러면 $\mathcal{L}$에서 $\tilde{P}^{*}$를 표현하는 술어 $H$가 존재한다.
+이때 $h$를 $H$의 괴델 수라고 하고,
+$G$를 $H$의 대각화(즉, 문장 $ H \left( h \right) $)라고 하자.
+우리는 $G$가 참이지만 증명 가능하지 않음을 보일 것이다.
+$H$가 $\mathcal{L}$에서 $\tilde{P}^{*}$를 표현하므로,
+$$ H \left( n \right) \in \mathcal{T} \iff n \in \tilde{P}^{*} \qquad \mathrm{for} \quad \forall n \in \mathbb{N} $$이다.
+이 명제가 임의의 $n$에 대하여 성립하므로,
+$n$이 $h$일 때도 성립한다.
+그러므로 $n$에 $h$를 대입하여 --
+이 부분의 논증은 \underline{대각화하기}(\textit{diagonalizing})라고 불린다 --
+$$ H \left( h \right) \in \mathcal{T} \iff h \in \tilde{P}^{*}$$를 얻는다.
+한편, $$h \in \tilde{P}^{*} \iff d \left( h \right) \in \tilde{P} \iff d \left( h \right) \notin P$$인데,
+$H$의 괴델 수가 $h$이기 때문에 $d \left( h \right)$의 괴델 수가 $H \left( h \right)$이므로,
+$ H \left( h \right) \in \mathcal{T} \iff H \left( h \right) \notin \mathcal{P}$이다.
+그러므로,
+\begin{enumerate}
+\item $H \left( h \right)$가 참일 때 그리고 그럴 때에만 $H \left( h \right)$가 증명 가능하지 않다.
+이것은 $H \left( h \right)$가 참이고 증명 가능하지 않은 경우와 거짓이고 증명 가능한 경우 밖에 없음을 의미한다.
+그런데 후자는 $\mathcal{L}$이 정확하다는 가정을 위반한다.
+따라서 $H \left( h \right)$는 참이지만 증명 가능하지 않아야 한다.
+\end{enumerate}
+라는 결론을 얻는다.
+\end{proof}
+
+우리가 공부할 특정 체계 $\mathcal{L}$에 대하여,
+$\tilde{P}^{*}$가 $\mathcal{L}$에서 표현 될 수 있다는 전제 조건이 성립함을,
+다음 세 조건을 따로따로 검사함으로써, 입증할 것이다:
+\begin{itemize}
+\item[$G_1$:] 임의의 $A \subseteq \mathbb{N}$에 대하여, $A$가 $\mathcal{L}$에서 표현될 수 있으면 $A^{*}$도 $\mathcal{L}$에서 표현될 수 있다.
+\item[$G_2$:] 임의의 $A \subseteq \mathbb{N}$에 대하여, $A$가 $\mathcal{L}$에서 표현될 수 있으면 $\tilde{A}$도 $\mathcal{L}$에서 표현될 수 있다.
+\item[$G_3$:] $P$가 $\mathcal{L}$에서 표현될 수 있다.
+\end{itemize}
+
+조건 $G_{1}$과 $G_{2}$가 성립하면,
+$\mathcal{L}$에서 표현될 수 있는 임의의 $A \subseteq \mathbb{N}$에 대하여 $A^{*}$도 $\mathcal{L}$에서 표현될 수 있다.
+그러므로 $P$가 $\mathcal{L}$에서 표현될 수 있으면,
+$\tilde{P}^{*}$도 $\mathcal{L}$에서 표현될 수 있다.
+
+우리는 $G_{1}$의 검증은 상대적으로 단순한 것으로 밝혀지고; $G_{2}$의 검증은 완전히 사소하지만; $G_{3}$의 증명은 극도로 정교하다고 밝혀지는 데 주목할 수 있다.
+
+\begin{context}[G\"odel Sentences]
+Rudolf Carnap [1934]에 의하여 명시화된 매우 중요한 원리가 정리 GT의 증명에 얽혀있는데,
+이것은 곧 다룰 Tarski의 정리와도 밀접한 관련이 있다.
+
+$A \subseteq \mathbb{N}$와 $X \in \mathcal{S}$에 대하여,
+$$X \in \mathcal{T} \leftrightarrow \gnum \left( X \right) \in A$$가 성립하면,
+$X$를 $A$에 대한 괴델 문장이라고 부른다.\footnote
+{
+비형식적으로, $A$에 대한 괴델 문장은 그 자신의 괴델 수가 $A$에 속한다고 선언하는 문장으로 볼 수 있다.
+그 문장이 참이면 그것의 괴델 수가 $A$에 속하고, 그 문장이 거짓이면 그것의 괴델 수가 $A$에 속하지 않는다.
+}
+\end{context}
+
+다음 보조정리는 $\mathcal{T}$와만 관련이 있다.
+집합 $\mathcal{P}$와 집합 $\mathcal{R}$과는 무관하다.
+
+\begin{context}[Lemma (D)--A Diagonal Lemma]
+\begin{itemize}
+\item[(a)] 임의의 $A \subseteq \mathbb{N}$에 대하여, $A^{*}$가 $\mathcal{L}$에서 표현될 수 있으면 $A$에 대한 괴델 문장이 존재한다.
+더 자세히는, 술어 $H$가 $A^{*}$를 $\mathcal{L}$에서 표현할 때, $H$의 대각화 $H \left( h \right)$는 $A$에 대한 괴델 문장이다 --
+여기서 $h$는 $H$의 괴델 수이다.
+\item[(b)] $\mathcal{L}$이 조건 $G_{1}$을 만족시키면, $\mathcal{L}$에서 표현될 수 있는 임의의 $A \subseteq \mathbb{N}$에 대하여 $A$에 대한 괴델 문장이 존재한다.
+\end{itemize}
+\end{context}
+
+\begin{proof}
+\begin{itemize}
+\item[(a)] $d \left( h \right)$는 $H \left( h \right)$의 괴델 수이다.
+술어 $H$가 $A^{*}$를 $\mathcal{L}$에서 표현하므로,
+$$ H \left( n \right) \iff n \in A^{*} \qquad \mathrm{for} \quad \forall n \in \mathbb{N} $$이다.
+따라서, $H \left( h \right)$가 참일 때 그리고 그럴 때에만 $h \in A^{*}$이다.
+그런데 $d \left( h \right) \in A \leftrightarrow h^{*} \in A$가 성립하므로,
+$H \left( h \right)$가 참일 때 그리고 그럴 때에만 $d \left( h \right) \in A$이다.
+그런데 $\gnum \left( H \left( h \right) \right) = d \left( h \right)$이므로,
+$H \left( h \right)$가 $A$에 대한 괴델 문장임을 알 수 있다.
+
+\item[(b)] (a)에 의하여 즉각적으로 따라온다.
+\end{itemize}
+\end{proof}
+
+만일 보조정리 D를 먼저 증명했다면, 다음과 같은 신속한 증명을 얻었을 것이다:
+$\tilde{P}^{*}$가 이름을 가진다면, D의 (a)에 의하여, $\tilde{P}$에 대한 괴델 문장 $\mathfrak{G}$가 존재한다.
+$\tilde{P}$에 대한 괴델 문장은 자신이 참일 때 그리고 그럴 때에만 증명 가능하지 않은 문장 그 이상도 그 이하도 아니다.
+그러므로, 임의의 정확한 체계 $\mathcal{L}$에서, $\tilde{P}$에 대한 괴델 문장은 $\mathcal{L}$에서 참이지만 증명 가능하지 않은 문장이다.\footnote
+{
+그러한 문장은 $\mathcal{L}$에서의 자신의 증명 불가능성을 선언하는 문장으로 생각할 수 있다.
+}
+
+\begin{context}[An Abstract Form of Tarski's Theorem]
+보조정리 D는 또다른 중요한 결과를 낳는다:
+$T$를 모든 참인 문장들의 괴델 수를 모은 집합이라고 하자.
+그러면 다음 정리가 성립한다.
+\end{context}
+
+\begin{context}[Theorem (T) (After Tarski)]
+\begin{enumerate}
+\item 집합 $\tilde{T}^{*}$는 $\mathcal{L}$에서 이름을 가지지 않는다.
+\item 조건 $G_1$이 성립하면, $\tilde{T}$는 $\mathcal{L}$에서 이름을 가지지 않는다.
+\item 조건 $G_1$과 $G_2$가 성립하면, $T$는 $\mathcal{L}$에서 이름을 가지지 않는다.
+\end{enumerate}
+\end{context}
+
+\begin{proof}
+시작하기에 앞서, $\tilde{T}$에 대한 괴델 문장은 없다는 것에 주목하자 --
+왜냐하면, 그러한 문장은 자신의 괴델 수가 참인 문장의 괴델 수가 아닐 때 그리고 그럴 때에만 참인 문장이기 때문이다.
+\begin{enumerate}
+\item $\tilde{T}^{*}$가 $\mathcal{L}$에서 이름을 가진다면, 보조정리 D의 (a)에 의하여,
+$\tilde{T}$에 대한 괴델 문장이 존재하는데, 이는 방금 보인 바에 따르면 불가능하다.
+그러므로 $\tilde{T}^{*}$가 $\mathcal{L}$에서 이름을 가지지 않는다.
+
+\item 조건 $G_1$이 성립한다고 가정하자.
+그러면, $\tilde{T}$가 $\mathcal{L}$에서 이름을 가질 때,
+$\tilde{T}^{*}$도 $\mathcal{L}$에서 이름을 가지는데,
+이는 (1)을 위반한다.
+
+\item 조건 $G_2$ 역시 성립한다면,
+$T$가 $\mathcal{L}$에서 이름을 가질 때,
+$\tilde{T}$도 $\mathcal{L}$에서 이름을 가지는데,
+이는 (2)를 위반한다.
+\end{enumerate}
+\end{proof}
+
+\begin{context}[Remarks]
+\begin{enumerate}
+\item 위의 결론 (3)은 종종 다음과 같이 비유된다:
+충분히 강력한 체계에서는, 그 체계 안에서의 진리는 그 체계 안에서 정의될 수 없다.
+어구 ``충분히 강력한''은 몇 가지 방법으로 해석될 수 있다.
+$G_1$과 $G_2$가 ``충분히 강력한''에 부합되기에 충분하다는 것을 짚고 넘어간다.
+
+\item G\"odel(1931)은 [크레타인들은 모두 거짓말쟁이라고 말하는 어떤 크레타인]의 유명한 역설에 빗댄다.\footnote
+{
+실제로는, 거짓말쟁이의 역설은 G\"odel의 정리보다는 Tarski의 정리에 더 가깝다.
+}
+괴델의 비유에 조금 더 근접한 비유는 이것이다:
+항상 참말만을 말하는 주민들과 항상 거짓말만을 말하는 주민들 밖에 없는 나라를 상상하여라.
+주민들 중 일부는 아테네인이고 또다른 일부는 크레타인이다.
+그 나라의 모든 아테네인들은 참말만을 말하고 그 나라의 모든 크레타인들은 거짓말만을 말한다고 한다.
+한 주민이 자신은 항상 참말만을 말하지만 아테네인이 아니라는 것을 너에게 설득시키기 위하여 그 주민이 무슨 말을 하면 될까?
+
+그는 ``나는 아테네인이 아니다''라고만 말하면 된다.
+거짓말쟁이는 그러한 주장을 만들 수 없기 때문이다 --
+왜냐하면, 거짓말쟁이는 실제로 아테네인이 \textit{아니기} 때문이다;
+아테네인들은 참말쟁이 밖에 없기 때문이다.
+그러므로 그의 말을 믿을 수 있다.
+그가 말한 문장이 참이었기 때문에 그는 정말로 아테네인이 아니다.
+그러므로 그는 참말쟁이이지만 아테네인이 아니다.
+
+아테네인들이 $\mathcal{L}$에서 참이면서 증명 가능한 문장들의 역할을 하는 것으로 간주하면,
+자신이 아테네인이 아니라고 주장하는 주민은 $\tilde{P}$에 대한 괴델 문장 $\mathfrak{G}$의 역할을 하는 셈인데,
+이는 $\mathcal{L}$에서의 자신의 증명 불가능성을 선언하기 때문이다.\footnote
+{
+크레타인들은 당연히 $\mathcal{L}$의 반증 가능한 문장들의 역할을 하는데,
+그것의 기능이 잠시 뒤에 나타날 것이다.
+}
+\end{enumerate}
+\end{context}
+
+\subsection{$\mathcal{L}$의 결정 불가능한 문제들}
+\hspace{12pt}
+
+지금까지 모든 \textit{반증 가능한} 문장들의 집합 $\mathcal{R}$은 아무 역할도 하지 않았다.
+이제 그것은 중요한 역할을 할 것이다.
+
+$\mathcal{L}$의 문장 중 증명 가능한 동시에 반증 가능한 문장이 없을 때 $\mathcal{L}$이 \underline{일관성 있다}(\textit{consistent})고 하고 --
+즉, $\mathcal{P}$와 $\mathcal{R}$이 서로소임을 의미한다 --
+그렇지 않을 경우 \underline{일관성 없다}(\textit{inconsistent})고 한다.
+이 정의는 집합 $\mathcal{P}$와 $\mathcal{R}$을 언급하지만 $\mathcal{T}$는 언급하지 않는다.
+그럼에도 불구하고, $\mathcal{L}$이 정확하면, 자동적으로 일관성 있게 된다 --
+왜냐하면 $\mathcal{P}$가 $\mathcal{T}$의 부분 집합이고 $\mathcal{R}$이 $\mathcal{T}$와 서로소 집합이면 $\mathcal{P}$는 $\mathcal{R}$과 서로소 집합이어야 하기 때문이다.
+그 역이 참일 필요는 없다 --
+우리는 후에 일관성 있지만 정확하지 않은 체계들을 다룰 것이다.
+
+문장 $X$가 $\mathcal{L}$에서 증명 가능하거나 반증 가능할 경우 $X$를 \underline{결정 가능}(\textit{decidable})하다고 하고,
+그렇지 않으면 \underline{결정 불가능}(\textit{undecidable})하다고 한다.
+체계 $\mathcal{L}$의 모든 문장이 결정 가능하면 \underline{완전}(\textit{complete})하다고 하고 그렇지 않으면 \underline{불완전}(\textit{incomplete})하다고 한다.
+
+이제 $\mathcal{L}$이 정리 GT의 전제 조건들을 만족시킨다고 가정하자.
+그러면 어떤 문장 $G$가 $\mathcal{L}$에서 참이지만 증명 가능하지 않다.
+$G$는 참이므로 반증 역시 가능하지 않다 --
+정확성을 가정하였기 때문이다.
+그러므로 $G$는 $\mathcal{L}$에서 결정 불가능하다.
+그리고 즉시 다음 정리를 얻는다.
+
+\begin{context}[Theorem 1]
+$\mathcal{L}$이 정확하고 $\mathcal{L}$에서 $\tilde{P}^{*}$가 표현될 수 있으면,
+$\mathcal{L}$은 불완전하다.
+\end{context}
+
+\begin{context}[A Dual of Theorem 1]
+T.F.S.(Theory of Formal Systems, 1961)에서 나는 G\"odel의 논증의 ``쌍대 형식''이라고 부르는 것이 적절한 무언가를 도입했는데,
+이를 먼저 비형식적으로 설명하겠다.
+``나는 증명 가능하지 않아''라고 말하는 문장을 구성하는 대신에,
+``나는 반증 가능\textit{해}''라고 말하는 문장을 구성하겠다.
+그러한 문장 역시 ($\mathcal{L}$이 정확하다면) 결정 불가능해야 함을 곧 보게 될 것이다.
+
+집합 $P$를 모든 증명 가능한 문장들의 괴델 수로 정의해왔다.
+이제 집합 $R$을 모든 반증 가능한 문장들의 괴델 수로 정의하자.
+\end{context}
+
+\begin{context}[Theorem ($1^{\circ}$)--(A Dual of Theorem 1)]
+$\mathcal{L}$이 정확하고 $R^{*}$가 $\mathcal{L}$에서 표현될 수 있으면,
+$\mathcal{L}$은 불완전하다.
+더 구체적으로는, $\mathcal{L}$이 정확하고 술어 $K$가 $\mathcal{L}$에서 $R^{*}$를 표현하면,
+그것의 대각화 $K \left( k \right)$는 $\mathcal{L}$에서 결정 불가능하다 --
+여기서 $k$는 $K$의 괴델 수이다.
+\end{context}
+
+\begin{proof}
+전제 조건들을 가정하자.
+$K$가 $R^{*}$를 표현하기에, 보조정리 D의 (a)에 의하여,
+문장 $K \left( k \right)$는 $R$에 대한 괴델 문장이다.
+즉, $K \left( k \right)$는 그것의 괴델 수가 $R$에 속할 때 그리고 그럴 때에만 참이다.
+다시 말해, $K \left( k \right)$가 참일 때 그리고 그럴 때에만 $K \left( k \right)$가 반증 가능하다.
+이는 $K \left( k \right)$가 참이고 반증 가능한 경우와 거짓이고 반증 불가능한 경우 밖에 없음을 의미한다.
+정확성을 가정하였으므로, $K \left( k \right)$는 참이면서 반증 가능할 수는 없다.
+따라서 그것은 거짓이며 반증 가능하지 않다.
+(또다시 $\mathcal{L}$이 정확하다는 가정에 의하여) 그 문장은 거짓이기에 증명 역시 가능하지 않다.
+그러므로 $K \left( k \right)$는 $\mathcal{L}$에서 증명도 반증도 가능하지 않다.
+\end{proof}
+
+\begin{context}[Remarks]
+$\tilde{P}$에 대한 괴델 문장 $H \left( h \right)$가 ``나는 $\mathcal{L}$에서 증명 가능하지 않아''라고 말한다고 생각할 수 있는 것처럼,
+$K \left( k \right)$는 ``나는 $\mathcal{L}$에서 반증 가능해''라고 말하는 것으로 생각할 수 있다.
+아테네인들과 크레타인들에 관한 비유로 돌아가자.
+자신이 아테네인이 아니라고 말하는 주민이 $H \left( h \right)$에 대응하는 것처럼,
+문장 $K \left( k \right)$는 자신이 크레타인\textit{이라고} 말하는 주민에 대응된다.
+그는 거짓말쟁이지만 크레타인이 아니어야 한다.
+따라서 (자신이 아테네인이 아니라고 주장하는 주민의 경우와 같이) 그는 아테네인도 크레타인도 아니어야 한다.
+
+정확한 체계 $\mathcal{L}$이 다음 두 조건을 만족시킨다고 가정하자:
+\begin{itemize}
+\item[$G_{1}$:] 임의의 $A \subseteq \mathbb{N}$에 대하여, $A$가 $\mathcal{L}$에서 표현될 수 있으면 $A^{*}$도 $\mathcal{L}$에서 표현될 수 있다.
+\item[$G_{3}^{\prime}$:] $R$을 $\mathcal{L}$에서 표현될 수 있다.
+\end{itemize}
+
+그러면 당연히 $R^{*}$은 $\mathcal{L}$에서 표현될 수 있다.
+그렇기 때문에, 정리 $1^{\circ}$에 의하여, 정확하지 않거나 불완전하다.
+여집합 조건 $G_{2}$는 이 증명에서 필요하지 않음에 주목하자.
+\end{context}
+
+다음 첫 번째 연습문제는 정리 $1^{\circ}$의 흥미로운 변종이다.
+
+\begin{context}[Exercise 1]
+정확한 체계 $\mathcal{L}$이 다음 두 조건을 만족시킨다고 가정하자.
+\begin{enumerate}
+\item 집합 $P^{*}$이 $\mathcal{L}$에서 표현될 수 있다.
+\item 임의의 술어 $H$에 대하여, 어떤 술어 $H^{\prime}$이 존재하여 $$\left( \forall n \in \mathbb{N} \right) \left[ H^{\prime} \left( n \right) \in \mathcal{P} \leftrightarrow H \left( n \right) \in \mathcal{R} \right]$$이 성립한다.
+\end{enumerate}
+
+이때 $\mathcal{L}$이 불완전함을 증명하여라.
+\end{context}
+
+\begin{context}[Exercise 2]
+$H \in \mathcal{H}$와 $A \subseteq \mathbb{N}$가
+$$ \left( \forall n \in \mathbb{N} \right) \left[ H \left( n \right) \in \mathcal{P} \leftrightarrow n \in A \right] $$를 만족시키면
+$H$가 $\mathcal{L}$에서 $A$를 \underline{나타낸다}(\textit{represent})고 한다.\footnote
+{
+이 정의는 진리 집합 $\mathcal{T}$를 언급하지 않고 오직 증명가능성 집합 $\mathcal{P}$만을 언급한다.
+}
+
+정확한 체계 $\mathcal{L}$에서 집합 $R^{*}$를 나타낼 수 있으면, $\mathcal{L}$은 불완전함을 보여라.
+\end{context}
+
+\begin{context}[Exercise 3]
+어떤 $R^{*}$의 상위 집합 $A \subseteq \mathbb{N}$가 존재하여 $P^{*}$가 $A$와 서로소 집합이고 $\mathcal{L}$에서 $A$를 나타낼 수 있으면,
+$\mathcal{L}$은 불완전함을 보여라.\footnote
+{
+집합 $A$가 집합 $B$의 부분 집합이면, $B$를 $A$의 \underline{상위 집합}(\textit{superset})이라고 한다.
+}
+\end{context}
+
+\begin{context}[Exercise 4]
+$H \in \mathcal{H}$와 $A \subseteq \mathbb{N}$가
+$$ \left( \forall n \in \mathbb{N} \right) \left[ H \left( n \right) \in \mathcal{R} \leftrightarrow n \in A \right] $$를 만족시키면
+$H$가 $\mathcal{L}$에서 $A$를 \underline{거꾸로 나타낸다}(\textit{contrarepresent})고 한다.
+일관성 있는 체계 $\mathcal{L}$에서 집합 $P^{*}$를 거꾸로 나타낼 수 있다면,
+$\mathcal{L}$은 불완전함을 보여라.\footnote
+{
+이 결과와 연습문제 2의 결과는 5단원에서 확장될 것이다;
+연습문제 3의 결과는 6단원에서 배울 Rosser의 불완전성 정리와 관련 있다.
+}
+\end{context}
+
+\begin{context}[Exercise 5]
+괴델 넘버링 $\gnum$가 전사 함수가 아닌 경우를 고려하자.
+이때 $$ \left( \forall E \in \mathcal{E} \right) \left( \forall e \in \mathbb{N} \right) \left[ \gnum \left( E \right) = e \rightarrow \gnum \left( \Phi \left( E , e \right) \right) = d \left( e \right) \right] $$를
+만족시키는 함수 $d : \mathbb{N} \to \mathbb{N}$를 한 대각 함수로 보자.
+대각 함수 $d$가 주어졌을 때, 임의의 $A \subseteq \mathbb{N}$에 대하여 $d^{-1} \left[ A \right]$가 $\mathcal{L}$에서 표현될 수 있다면 $A$에 대한 괴델 문장이 존재한다는 것을 보여라.
+\end{context}
+
+\begin{context}[Exercise 6]
+임의의 $A \subseteq \mathbb{N}$에 대하여,
+$\tilde{A}^{*}$와 $\widetilde{A^{*}}$가 같은 집합일 필요가 있을까?
+\end{context}
+
+\begin{context}[Exercise 7]
+G\"odel의 증명의 온전히 구성적인 본질을 강조하기 위하여,
+$\mathcal{L}$이 다음 세 조건을 만족시키는 정확한 체계라고 하자.
+\begin{enumerate}
+\item 표현식 $E_{7}$는 $P$를 표현하는 술어이다.
+\item 임의의 $n \in \mathbb{N}$와 임의의 $A \subseteq \mathbb{N}$에 대하여, 표현식 $E_{n}$이 $A$를 표현하는 술어이면 표현식 $E_{3 n}$은 $\tilde{A}$를 표현하는 술어이다.
+\item 임의의 $n \in \mathbb{N}$와 임의의 $A \subseteq \mathbb{N}$에 대하여, 표현식 $E_{n}$이 $A$를 표현하는 술어이면 표현식 $E_{3 n + 1}$은 $A^{*}$를 표현하는 술어이다.
+\end{enumerate}
+
+이때 다음 세 물음에 답하여라:
+\begin{itemize}
+\item[(a)] 문장 $E_{a} \left( b \right)$가 참이지만 증명 가능하지 않은 문장임을 보장할 수 있는 $a \in \mathbb{N}$와 $b \in \mathbb{N}$의 순서쌍 $\left( a , b \right)$를 찾아라.\footnote
+{
+$a$와 $b$ 모두 $100$ 미만인 해는 두 개 있다.
+과연 독자가 둘 다 찾아낼 수 있을까?
+}
+\item[(b)] 문장 $E_{a} \left( b \right)$가 참이지만 증명 가능하지 않은 문장임을 보장할 수 있는 $a \in \mathbb{N}$와 $b \in \mathbb{N}$의 순서쌍 $\left( a , b \right)$이 무한히 많음을 보여라.
+\item[(c)] 표현식 $E_{10}$이 술어일 때, $E_{c} \left( d \right)$가 $E_{10}$이 표현하는 집합에 대한 괴델 문장임을 보장할 수 있는 $c \in \mathbb{N}$와 $d \in \mathbb{N}$의 순서쌍 $\left( c , d \right)$를 하나 찾아라.
+\end{itemize}
+\end{context}
+
+\begin{context}[Solutions]
+\begin{enumerate}
+\item[{1.}] 모든 전제 조건들을 가정하자.
+먼저, 조건 1에 의하여, 어떤 술어 $H$가 $\mathcal{L}$에서 $P^{*}$를 표현하는 것을 알 수 있다. --
+즉, $$ \left( \forall n \in \mathbb{N} \right) \left[ H \left( n \right) \in \mathcal{T} \leftrightarrow n \in P^{*} \right] $$이 성립한다.
+또한, 조건 2에 의하여, 어떤 술어 $H^{\prime}$이 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ H^{\prime} \left( n \right) \in \mathcal{P} \leftrightarrow H \left( n \right) \in \mathcal{R} \right] $$이 성립한다.
+이제, $h^{\prime} := \gnum \left( H^{\prime} \right)$에 대하여, $H \left( h^{\prime} \right)$이 $\mathcal{L}$에서 증명도 반증도 가능하지 않다는 것을 보일 것이다.
+먼저, $H \left( h^{\prime} \right)$이 $\mathcal{L}$에서 증명 가능한 경우,
+\begin{align*}
+H \left( h^{\prime} \right) \in \mathcal{P}
+& \implies H \left( h^{\prime} \right) \in \mathcal{T} \\
+& \implies h^{\prime} \in P^{*} \\
+& \implies H^{\prime} \left( h^{\prime} \right) \in \mathcal{P} \\
+& \implies H \left( h^{\prime} \right) \in \mathcal{R}
+\end{align*}
+인데, 이는 $\mathcal{L}$이 정확하다는 가정에 모순이다.
+한편, $H \left( h^{\prime} \right)$이 $\mathcal{L}$에서 반증 가능한 경우,
+\begin{align*}
+H \left( h^{\prime} \right) \in \mathcal{R}
+& \implies H^{\prime} \left( h^{\prime} \right) \in \mathcal{P} \\
+& \implies h^{\prime} \in P^{*} \\
+& \implies H \left( h^{\prime} \right) \in \mathcal{T}
+\end{align*}
+인데, 이것 역시 $\mathcal{L}$이 정확하다는 가정에 모순이다.
+그러므로, $H \left( h^{\prime} \right)$이 $\mathcal{L}$에서 결정 불가능하기 때문에, $\mathcal{L}$은 불완전하다.
+
+\item[{2.}] 모든 전제 조건들을 가정하자.
+$R^{*}$를 $\mathcal{L}$에서 나타낼 수 있으므로,
+어떤 술어 $K$가 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ K \left( n \right) \in \mathcal{P} \leftrightarrow n \in R^{*} \right] $$이 성립한다.
+이제, $k := \gnum \left( K \right)$에 대하여, $K \left( k \right)$가 $\mathcal{L}$에서 증명도 반증도 가능하지 않다는 것을 보일 것이다.
+먼저, $K \left( k \right)$가 증명 가능한 경우,
+\begin{align*}
+K \left( k \right) \in \mathcal{P}
+& \implies k \in R^{*} \\
+& \implies K \left( k \right) \in \mathcal{R}
+\end{align*}
+인데, 이는 $\mathcal{L}$이 정확하다는 가정에 모순이다.
+한편, $K \left( k \right)$가 반증 가능한 경우,
+\begin{align*}
+K \left( k \right) \in \mathcal{R}
+& \implies K \in R^{*} \\
+& \implies K \left( k \right) \in \mathcal{P}
+\end{align*}
+인데, 이것 역시 $\mathcal{L}$이 정확하다는 가정에 모순이다.
+그러므로, $K \left( k \right)$이 $\mathcal{L}$에서 결정 불가능하기 때문에, $\mathcal{L}$은 불완전하다.
+
+\item[{3.}] 전제 조건들을 가정하자.
+$A$를 $\mathcal{L}$에서 나타낼 수 있으므로,
+어떤 술어 $K$가 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ K \left( n \right) \in \mathcal{P} \leftrightarrow n \in A \right] $$이 성립한다.
+이제, $k := \gnum \left( K \right)$에 대하여, $K \left( k \right)$가 $\mathcal{L}$에서 증명도 반증도 가능하지 않다는 것을 보일 것이다.
+먼저, $K \left( k \right)$가 증명 가능하다고 가정하자.
+그러면, $$ K \left( k \right) \in \mathcal{P} \implies k \in P^{*} $$이고 $$ K \left( k \right) \in \mathcal{P} \implies k \in A $$인데,
+이는 $P^{*}$가 $A$와 서로소 집합이라는 가정에 모순이다.
+한편, $K \left( k \right)$가 반증 가능하다고 가정하자.
+그러면, $R^{*} \subseteq A$임을 이용하여,
+\begin{align*}
+K \left( k \right) \in \mathcal{R}
+& \implies k \in R^{*} \\
+& \implies k \in A \\
+& \implies K \left( k \right) \in \mathcal{P} \\
+& \implies k \in P^{*}
+\end{align*}
+임과
+\begin{align*}
+K \left( k \right) \in \mathcal{R}
+& \implies k \in R^{*} \\
+& \implies k \in A
+\end{align*}
+임을 알 수 있다.
+그러나 이것 역시 $P^{*}$가 $A$와 서로소 집합이라는 가정에 모순이다.
+
+\item[{4.}] 전제 조건들을 가정하자.
+$P^{*}$를 $\mathcal{L}$에서 거꾸로 나타낼 수 있으므로,
+어떤 술어 $K$가 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ K \left( n \right) \in \mathcal{R} \leftrightarrow n \in P^{*} \right] $$이 성립한다.
+이제, $k := \gnum \left( K \right)$에 대하여, 문장 $K \left( k \right)$가 $\mathcal{L}$에서 결정 불가능함을 보이겠다.
+먼저, $K \left( k \right)$를 $\mathcal{L}$에서 증명 가능한 경우,
+\begin{align*}
+K \left( k \right) \in \mathcal{P}
+& \implies k \in P^{*} \\
+& \implies K \left( k \right) \in \mathcal{R}
+\end{align*}
+인데, 이는 $\mathcal{L}$이 일관성 있다는 가정에 모순이다.
+한편, $K \left( k \right)$를 $\mathcal{L}$에서 반증 가능한 경우,
+\begin{align*}
+K \left( k \right) \in \mathcal{R}
+& \implies k \in P^{*} \\
+& \implies K \left( k \right) \in \mathcal{P}
+\end{align*}
+인데, 이것 역시 $\mathcal{L}$이 일관성 있다는 가정에 모순이다.
+그러므로, $K \left( k \right)$가 $\mathcal{L}$에서 결정 불가능하기 때문에, $\mathcal{L}$은 불완전하다.
+
+\item[{5.}] 대각 함수 $d$와 집합 $A$이 주어졌다고 하고,
+$d^{-1} \left[ A \right]$가 $\mathcal{L}$에서 표현될 수 있다고 하자.
+그러면 어떤 술어 $H$가 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ H \left( n \right) \in \mathcal{T} \leftrightarrow n \in d^{-1} \left[ A \right] \right]$$이 성립한다.
+이제, $h := \gnum \left( H \right)$에 대하여, $H \left( h \right)$가 $A$에 대한 괴델 문장이라는 것을 보일 것이다.
+먼저, $h = \gnum \left( H \right)$이므로,
+대각 함수의 제약 조건 $$ \left( \forall E \in \mathcal{E} \right) \left( \forall e \in \mathbb{N} \right) \left[ g \left( E \right) = e \rightarrow g \left( E \left( e \right) \right) = d \left( e \right) \right] $$로부터,
+$ g \left( H \left( h \right) \right) = d \left( h \right) $를 얻는다.
+그러면,
+\begin{align*}
+H \left( h \right) \in \mathcal{T}
+& \iff h \in d^{-1} \left[ A \right] \\
+& \iff d \left( h \right) \in A \\
+& \iff \gnum \left( H \left( h \right) \right) \in A
+\end{align*}
+를 얻는데,
+이는 $H \left( h \right)$가 $A$에 대한 괴델 문장 중 하나라는 것을 의미한다.
+
+\item[{6.}] $A \subseteq \mathbb{N}$이 주어졌다고 하자.
+그러면, 임의의 $n \in \mathbb{N}$에 대하여
+\begin{align*}
+n \in \tilde{A}^{*}
+& \iff n \in d^{-1} \left[ \tilde{A} \right] \\
+& \iff d \left( n \right) \in \tilde{A} \\
+& \iff d \left( n \right) \notin A \\
+& \iff n \notin d^{-1} \left[ A \right] \\
+& \iff n \notin A^{*} \\
+& \iff n \in \widetilde{A^{*}}
+\end{align*}
+이므로, $\tilde{A}^{*} = \widetilde{A^{*}}$이어야 한다.
+
+\item[{7.}]
+\begin{itemize}
+\item[(a)] 먼저, $\left( a , b \right) = \left( 64 , 64 \right)$가 한 해임을 보이겠다. 
+$64 = 3 \times \left( 3 \times \left( 7 \right) \right) + 1$이므로,
+$E_{64}$는 집합 $\tilde{P}^{*}$을 표현하는 술어이다.
+정리 GT에 의하여, $E_{64}$는 $\mathcal{L}$에서 참이지만 증명 가능하지 않다.
+그리고, $\left( a , b \right) = \left( 66 , 66 \right)$이 또다른 해임을 보이겠다.
+$66 = 3 \times \left( 3 \times \left( 7 \right) + 1 \right)$이므로,
+$E_{66}$은 집합 $\widetilde{P^{*}}$를 표현하는 술어이다 --
+즉, $$ E_{66} \left( n \right) \in \mathcal{T} \iff n \in \widetilde{P^{*}} \qquad \mathrm{for} \quad \forall n \in \mathbb{N} $$이다.
+따라서,
+\begin{align*}
+E_{66} \left( 66 \right) \in \mathcal{T}
+& \iff 66 \in \widetilde{P^{*}} \\
+& \iff 66 \notin P^{*} \\
+& \iff d \left( 66 \right) \notin P \\
+& \iff \gnum \left( E_{66} \left( 66 \right) \right) \notin P \\
+& \iff E_{66} \left( 66 \right) \notin \mathcal{P}
+\end{align*}
+인데, $\mathcal{L}$의 정확성을 가정하였으므로,
+문장 $E_{66} \left( 66 \right)$은 $\mathcal{L}$에서 참이지만 증명 가능하지 않아야 한다.
+
+\item[(b)] $n \geq 1$에 대하여, $a_{n} := 7 \times 9^{n} + 1$라고 하고 $b_{n} := 7 \times 9^{n} + 1$라고 하자.
+이제, 임의의 $n \geq 1$에 대하여, $E_{a_{n}} \left( b_{n} \right)$이 $\mathcal{L}$에서 참이지만 증명 가능하지 않다는 것을 보이겠다.
+$ n \geq 1 $을 임의로 잡자.
+그러면 술어 $E_{a_{n}}$은 집합 $\tilde{P}^{*}$를 표현한다.
+그러므로,
+\begin{align*}
+E_{a_{n}} \left( b_{n} \right) \in \mathcal{T}
+& \iff b_{n} \in \tilde{P}^{*} \\
+& \iff d \left( b_{n} \right) \in \tilde{P} \\
+& \iff \gnum \left( E_{a_{n}} \left( b_{n} \right) \right) \in \tilde{P} \\
+& \iff \gnum \left( E_{a_{n}} \left( b_{n} \right) \right) \notin P \\
+& \iff E_{a_{n}} \left( b_{n} \right) \notin \mathcal{P}
+\end{align*}
+인데, $\mathcal{L}$의 정확성에 의하여,
+$E_{a_{n}} \left( b_{n} \right)$은 $\mathcal{L}$에서 참이지만 증명 가능하지 않아야 한다.
+그런데 $ n \mapsto \left( a_{n} , b_{n} \right) : \mathbb{N}_{+} \to \mathbb{N} \times \mathbb{N} $은 정의역이 $\mathbb{N}_{+}$인 단사 함수이므로,
+$E_{a} \left( b \right)$가 $\mathcal{L}$에서 참이지만 증명 가능하지 않다는 것을 보장할 수 있는,
+$a \in \mathbb{N}$와 $b \in \mathbb{N}$의 순서쌍 $\left( a , b \right)$은 무한히 많음을 알 수 있다.
+
+\item[(c)] 집합 $A \subseteq \mathbb{N}$가 술어 $E_{10}$에 의하여 표현된다고 하자.
+그러면 $$ \left( \forall n \in \mathbb{N} \right) \left[ E_{10} \left( n \right) \in \mathcal{T} \leftrightarrow n \in A \right] $$이 성립한다.
+이제, $E_{31} \left( 31 \right)$이 $A$에 대한 괴델 문장임을 보이겠다.
+먼저, $31 = 3 \times \left( 10 \right) + 1$이므로,
+술어 $E_{31}$는 집합 $A^{*}$를 표현한다 --
+즉, $$E_{31} \left( n \right) \in \mathcal{T} \iff n \in A^{*} \qquad \mathrm{for} \quad \forall n \in \mathbb{N}$$이다.
+따라서,
+\begin{align*}
+E_{31} \left( 31 \right) \in \mathcal{T}
+& \iff 31 \in A^{*} \\
+& \iff d \left( 31 \right) \in A \\
+& \iff \gnum \left( E_{31} \left( 31 \right) \right) \in A
+\end{align*}
+인데,
+이는 $E_{31} \left( 31 \right)$이 $A$에 대한 괴델 문장이라는 것을 의미한다.
+그러므로 $$\left( c , d \right) = \left( 31 , 31 \right)$$이 해 중 하나이다.
+\end{itemize}
+\end{enumerate}
+\end{context}
+
+\begin{context}[Comments]
+\begin{enumerate}
+\item 정리 GT의 증명에서,
+문장 $G$가 참일 때 그리고 그럴 때에만 증명 가능하지 않다는 것으로부터 $G$는 참이지만 증명 가능하지 않음을 보일 때,
+배중률을 이용하여 증명했지만, 직관주의 논리에서도 증명할 수 있다 --
+즉, 명제 $H_{1}$과 명제 $H_{2}$를 각각
+$$H_{1} : \equiv \left( G \in \mathcal{T} \right) \leftrightarrow \lnot \left( G \in \mathcal{P} \right) $$와
+$$ H_{2} : \equiv \left( \forall X \in \mathcal{S} \right) \left[ X \in \mathcal{P} \rightarrow X \in \mathcal{T} \right]$$로
+두었을 때,
+직관주의 체계에서 $H_{1} , H_{2} \vdash G \in \mathcal{T} \land G \notin \mathcal{P}$를 도출할 수 있다.
+
+\begin{proof}
+먼저, $H_{1}$과 $H_{2}$를 가정하자.
+추가로, 명제 $$H_{3} : \equiv G \in \mathcal{P}$$가 성립한다고 가정하자.
+그러면 $H_{2}$에 $H_{3}$를 적용하여 $G \in \mathcal{T}$를 얻는데,
+이것을 $H_{3}$와 함께 $H_{1}$의 순방향에 적용하면 모순을 얻는다.
+이때 가정 $H_{3}$을 해제하면 $\lnot H_{3}$를 얻는데,
+이것을 $H_{1}$의 역방향에 적용하면 $G \in \mathcal{T}$를 얻는다.
+그러나 $\lnot H_{3} \equiv G \notin \mathcal{P}$이므로,
+원하던 $G \in \mathcal{T} \land G \notin \mathcal{P}$를 얻게 된다.
+\end{proof}
+\end{enumerate}
+\end{context}
+
+\newpage
+
+\section{산술에 대한 Tarski의 정리}
+\hspace{12pt}
+
+전 단원에서, 상당히 일반적인 방법으로 수학적 언어를 다루었다.
+이제는 특정 수학적 언어를 다루겠다.
+\underline{페아노 산술}(\textit{Peano Arithmetic})으로 알려진 체계에 대한
+G\"odel의 불완전성 정리에 도달하는 것이 우리의 목표 중 하나인데,
+이 중요한 결과에 대한 몇 가지 증명을 볼 것이다;
+그 중 가장 간단한 것은, 곧 다룰, Tarski의 정리를 부분적인 기반으로 삼는다.
+
+\subsection{언어 $\mathcal{L}_{E}$}
+\hspace{12pt}
+
+\noindent \textbf{\S1. 구문론적 예비 사항}
+
+우리가 공부할 첫 번째 구체적인 언어는 덧셈과 곱셈 그리고 제곱을 기반으로 하는 1차 산술의 언어이다.\footnote
+{
+다음 수 함수와 이하의 관계도 넣을 것이지만, 이것들은 불필요하다.
+}
+(편리한 괴델 넘버링을 구현하기 위하여) 오직 유한한 알파벳만을 사용하여 그 언어를 형식화할 것이다;
+구체적으로는 다음 13개의 기호들을 사용할 것이다.
+$$ 0 \quad ' \quad \left( \quad \right) \quad f \quad \circ \quad v \quad \lnot \quad \rightarrow \quad \forall \quad = \quad \le \quad \sharp $$
+
+표현식 $0$, $0'$, $0''$, $0'''$, ...은
+각각 자연수 $0$, $1$, $2$, $3$, ...의 형식적인 이름으로서 \underline{숫자}(\textit{numeral})라고 불린다.
+악센트 기호는 \underline{프라임}(\textit{prime})이라고도 불리는데,
+다음 수 함수의 형식적인 이름이다.
+또한 덧셈과 곱셈 그리고 제곱 연산의 이름이 필요한데;
+$f \circ$, $f \! \circ \! \circ$, $f \! \circ \! \circ \circ$을 각각 이 세 함수의 이름이라 하자.
+그러나 $f \circ$을 ``$+$''로, $f \! \circ \! \circ$을 ``$\times$''로, $f \! \circ \! \circ \circ$을 ``$\mathop{\mathbf{E}}$''로 줄여서 표기하자.
+
+기호 $\lnot$과 $\rightarrow$는 명제 논리의 친숙한 기호로서,
+각각 부정과 실질 함축을 의미한다.\footnote
+{
+화살표 기호가 익숙하지 않은 독자에게: 두 명제 $p$와 $q$에 대하여, $p \rightarrow q$는 $p$가 거짓인 경우와 $p$와 $q$ 모두 참인 경우에 그리고 이 두 경우에만 참인 명제이다.
+}
+기호 $\forall$는 \underline{전칭 양화사}(\textit{universal quantifier})라고 불리는데, ``for all''을 의미한다.
+우리는 집합이나 자연수들 사이의 관계 위에 양화하지 않고 오직 자연수만을 양화한다.\footnote
+{
+기술적으로, 우리는 1차 산술을 다루는 것이지, 2차 산술을 다루는 것은 아니다.
+}
+
+여느 때처럼, 기호 ``$=$''는 좌변과 우변이 같다는 관계를 의미하고 기호 ``$\leq$''는 좌변이 우변보다 같거나 작은 관계를 의미한다.
+
+또한 \underline{개체 변수}(\textit{individual variable})라고들 불리는 가부번하게 많은 표현식들 $v_{1}$, $v_{2}$, ..., $v_{n}$, ...이 필요하다.
+이 표현식들을 13 개의 알파벳만으로 표현하기 위하여, $v_{1}$, $v_{2}$, $v_{3}$, ...을 각각 $\left( v \circ \right)$, $\left( v \! \circ \! \circ \right)$, $\left( v \! \circ \! \circ \circ \right)$, ...로 표현하자.\footnote
+{
+그러므로 $v_{n}$은 ``$v$'' 뒤에 $n$개의 $\circ$가 따라온 표현식에 괄호를 감싼 것이다.
+}
+
+\begin{context}[Terms and Formulas]
+다음 두 규칙들의 결과로서 존재하는 표현식을 \underline{논리항}(\textit{term})이라고 부른다.
+\begin{enumerate}
+\item 모든 개체 변수들과 숫자들은 논리항이다.
+\item $t_{1}$과 $t_{2}$가 논리항일 때, $\left( t_{1} + t_{2} \right)$, $\left( t_{1} \times t_{2} \right)$, $\left( t_{1} \mathop{\mathbf{E}} t_{2} \right)$와 $t_{1} '$도 항이다.
+\end{enumerate}
+
+논리항이 개체 변수를 포함하고 있지 않으면, 그것을 \underline{상항}(\textit{constant term})이라고 부르거나 \underline{닫혀 있다}(\textit{closed})고 한다.
+
+\underline{원자 논리식}(\textit{atomic formula})이란,
+$t_{1} = t_{2}$와 $t_{1} \leq t_{2}$ 중 한 형태의 표현식을 의미한다 --
+여기서 $t_{1}$과 $t_{2}$에는 임의의 논리항이 올 수 있다.
+
+모든 \underline{논리식}(\textit{formula})들의 집합은 다음 규칙에 의하여 귀납적으로 정의된다:
+\begin{enumerate}
+\item 모든 원자 논리식은 논리식이다.
+\item $F$와 $G$가 논리식이라면, $\lnot F$과 $F \rightarrow G$ 그리고 $\forall v_{i} F$도 논리식이다 --
+여기서 $v_{i}$는 임의의 개체 변수이다.
+\end{enumerate}
+\end{context}
+
+\begin{context}[Free and Bound Occurrences of Variables]
+$v_{i}$를 개체 변수라고 하자.
+항 $t$에 대하여, $t$에서의 $v_{i}$의 모든 나타남들은 \underline{자유 나타남}(\textit{free occurrence})이라고 불린다.
+또한, \textit{원자} 논리식 $A$에 대하여서도, $A$에서의 $v_{i}$의 모든 나타남들은 자유 나타남이다.
+논리식 $F$와 $G$에 대하여, $F \rightarrow G$에서의 $v_{i}$의 모든 자유 나타남들은 $F$와 $G$의 그것과 같다.
+논리식 $F$에 대하여, $\lnot F$에서의 $v_{i}$의 모든 자유 나타남들은 $F$의 그것과 같다.
+이때 $v_{i}$는 $\forall v_{i} F$에서 자유롭게 나타나지 않는다;
+$\forall v_{i} F$에서의 $v_{i}$의 모든 나타남들은 \underline{속박 나타남}(\textit{bound occurrence})이라고 불린다.
+$j \neq i$인 각 $j \in \mathbb{N}_{+}$마다 $\forall v_{j} F$에서의 $v_{i}$의 모든 자유 나타남들은 $F$의 그것과 같다.
+\end{context}
+
+\begin{context}[Sentences]
+\underline{문장}(\textit{sentence})이란, 어떤 개체 변수도 자유롭게 나타나지 않는 논리식을 의미한다.
+문장들은 때때로 \underline{닫힌}(\textit{closed}) 논리식이라고도 불린다.
+\underline{열린}(\textit{open}) 논리식이란, 닫히지 않은 논리식을 의미한다 --
+즉, 적어도 하나의 개체 변수가 자유롭게 나타나는 논리식이다.
+\end{context}
+
+\begin{context}[Substitution of Numerals for Variables]
+자연수 $n$에 대하여, $\overline{n}$은 $n$을 가르키는 숫자를 의미한다 --
+즉, 기호 ``$0$'' 뒤에 $n$개의 악센트 기호가 따라오는 표현식이다.\footnote
+{
+예를 들어, $\overline{5}$는 표현식 $0'''''$이다.
+}
+
+개체 변수 $v_{i}$에 대하여, 우리는 논리식 $F$에서 $v_{i}$의 모든 자유 나타남들을 $\overline{n}$으로 대체한 논리식을 $F \left[ v_{i} := \overline{n} \right]$으로 적을 것이다.
+더 일반적으로, $F \left[ v_{i_{1}} := \overline{n_{1}} , \cdots , v_{i_{k}} := \overline{n_{k}} \right]$은 논리식 $F$에서 $v_{i_{1}}$, ..., $v_{i_{k}}$을 동시에 각각 $\overline{n_{1}}$, ..., $\overline{n_{k}}$으로 치환한 결과를 의미한다.
+
+자유롭게 나타나는 개체 변수가 $v_{1}$, ..., $v_{n}$ 뿐인 논리식을 \underline{정규}(\textit{regular}) 논리식이라고 한다.
+그러므로, 정규 논리식 $F$에서 개체 변수 $v_{i}$가 자유롭게 나타난다면,
+$j \leq i$인 임의의 $j \in \mathbb{N}_{+}$에 대하여 $v_{j}$도 $F$에서 자유롭게 나타나는 개체 변수이다.
+\end{context}
+
+\begin{context}[Degrees and Induction]
+논리식의 \underline{복잡도}(\textit{degree})란, 그 논리식에서 $\lnot$, $\rightarrow$, $\forall$이 나타나는 횟수이다.
+그러므로,
+\begin{enumerate}
+\item 원자 논리식의 복잡도는 $0$이다.
+\item 논리식 $F$의 복잡도가 $d_{1}$이고 논리식 $G$의 복잡도가 $d_{2}$이면,
+$\lnot F$의 복잡도는 $d_{1} + 1$이고;
+$\left( F \rightarrow G \right)$의 복잡도는 $d_{1} + d_{2} + 1$이고;
+$\forall v_{i} F$의 복잡도는 $d_{1} + 1$이다 --
+여기서 $v_{i}$는 임의의 개체 변수이다.
+\end{enumerate}
+
+다음의 수학적 귀납법에 익숙하다고 가정하겠다:
+주어진 성질이 모든 논리식에 대하여 성립함을 보이기 위하여
+모든 원자 논리식에 대하여 그 성질이 성립함과
+임의의 논리식 $F$에 대하여 $F$보다 낮은 복잡도의 모든 논리식들에 대하여 그 성질이 성립한다고 가정하고
+$F$에서도 성립함을 보이면 충분하다.
+\end{context}
+
+\begin{context}[Abbreviations]
+우리는 다음의 표준적인 약어를 쓸 것이다:
+\begin{align*}
+\left( F \lor G \right) & : \equiv \left( \lnot F \rightarrow G \right) \\
+\left( F \land G \right) & : \equiv \lnot \left( F \rightarrow \lnot G \right) \\
+\left( F \leftrightarrow G \right) & : \equiv \left( \left( F \rightarrow G \right) \land \left( G \rightarrow F \right) \right) \\
+\exists v_{i} F & : \equiv \lnot \forall v_{i} \lnot F \\
+t_{1} \neq t_{2} & : \equiv \lnot t_{1} = t_{2} \\
+t_{1} < t_{2} & : \equiv \left( t_{1} \leq t_{2} \land t_{1} \neq t_{2} \right) \\
+t_{1}^{t_{2}} & : \equiv \left( t_{1} \mathop{\mathbf{E}} t_{2} \right) \\
+\left( \forall v_{i} \leq t \right) F & : \equiv \forall v_{i} \left( v_{i} \leq t \rightarrow F \right) \\
+\left( \exists v_{i} \leq t \right) F & : \equiv \lnot \left( \forall v_{i} \leq t \right) \lnot F
+\end{align*}
+여기서 $F$와 $G$에는 임의의 논리식이 올 수 있고,
+$t_{1}$과 $t_{2}$에는 임의의 논리항이 올 수 있으며,
+$v_{i}$에는 임의의 개체 변수가 올 수 있다.
+
+논리항과 논리식을 표기할 때,
+괄호를 생략하여도 모호함이 생기지 않는 경우에는 종종 괄호를 생략할 것이다.
+예를 들어, 독립적인 논리항과 논리식을 표기할 때, 가장 바깥쪽 괄호를 떨어뜨릴 수 있다 --
+[예 1] $\left( F \rightarrow G \right)$ 대신에 $F \rightarrow G$라고 쓴다;
+[예 2] 독립적인 항 $\left( v_{1} + v_{2} \right)$는 $v_{1} + v_{2}$로 단축할 수 있다;
+[예 3] $\left( \left( v_{1} + v_{2} \right) \times v_{3} \right)$은 $\left( v_{1} + v_{2} \right) \times v_{3}$으로 단축될 수 있다.
+\end{context}
+
+\begin{context}[Designation]
+\textit{상항}이 개체 변수가 나타나지 않는 항이라는 사실을 상기하자.
+임의의 상항은 다음 규칙에 따라 유일한 자연수에 대응한다.
+\begin{enumerate}
+\item 숫자 $\overline{n}$은 $n$에 대응한다.
+\item 두 상항 $c_{1}$과 $c_{2}$가 각각 $n_{1}$과 $n_{2}$에 대응할 때,
+$\left( c_{1} + c_{2} \right)$는 $n_{1}$과 $n_{2}$의 합에 대응하고;
+$\left( c_{1} \times c_{2} \right)$는 $n_{1}$과 $n_{2}$의 곱에 대응하고;
+$\left( c_{1} \mathop{\mathbf{E}} c_{2} \right)$은 $n_{1}$의 $n_{2}$ 제곱에 대응한다.
+\end{enumerate}
+
+한 예로, 상항 $\left( \left( 0''' + 0' \right) \times \left( 0'' \mathop{\mathbf{E}} 0''' \right) \right) '$는
+수 $\left( \left( 3 + 1 \right) \times 2^{3} \right) + 1 = 33$에 대응한다.
+\end{context}
+
+\noindent \textbf{\S2. $\mathcal{L}_{E}$에서의 참의 개념.}
+
+이제 $\mathcal{L}_{E}$의 어떠한 문장들이 \textit{참}이라는 게 무엇을 의미하는지를 정의할 때가 되었다.
+이 정의는 문장의 복잡도에 대한 귀납법에 의하여 적용된다.
+다음 조건들은 진리에 대한 귀납적인 정의를 제공한다.
+\begin{itemize}
+\item[$T_{0}$:]
+\begin{enumerate}
+\item 상항 $c_{1}$과 $c_{2}$에 대하여, 원자 논리식인 문장 $c_{1} = c_{2}$는 $c_{1}$과 $c_{2}$가 같은 자연수에 대응할 때 그리고 그럴 때에만 참이다.
+\item 상항 $c_{1}$과 $c_{2}$에 대하여, 원자 논리식인 문장 $c_{1} \leq c_{2}$는 $c_{1}$이 대응하는 자연수가 $c_{2}$가 대응하는 자연수보다 작거나 같을 때 그리고 그럴 때에만 참이다.
+\end{enumerate}
+\item[$T_{1}$:] $\lnot X$ 꼴의 문장은 $X$가 참이 아닐 때 그리고 그럴 때에만 참이다.
+\item[$T_{2}$:] $X \rightarrow Y$는 $X$가 참이 아닌 경우 또는 $X$와 $Y$ 모두 참인 경우에 그리고 이 두 경우에만 참이다.
+\item[$T_{3}$:] $\forall v_{i} F$은 모든 자연수 $n$에 대하여 문장 $F \left[ v_{i} := \overline{n} \right]$이 참일 때 그리고 그럴 때에만 참이다.
+\end{itemize}
+
+조건 $T_{0}$는 노골적으로 원자 논리식인 문장이 참일 조건을 진술한다.
+조건 $T_{1}$, $T_{2}$과 $T_{3}$은,
+더 낮은 복잡도의 문장들에 대한 진리를 이용하여,
+원자 논리식이 아닌 문장이 참일 조건을 기술한다.\footnote
+{
+$T_{3}$에서 $F \left[ v_{i} := n \right] $의 복잡도가 $\forall v_{i} F$의 복잡도보다 낮은 것과
+$\forall v_{i} F$가 문장이므로 $F \left[ v_{i} := n \right]$도 문장임에 주목하여라.
+}
+
+열린 논리식은 참이라고 혹은 거짓이라고 말할 수는 없지만,
+임의의 $n_{1} \in \mathbb{N}$, ..., $n_{k} \in \mathbb{N}$에 대하여 $F \left[ v_{i_{1}} := \overline{n_{1}} , \cdots , v_{i_{k}} := \overline{n_{k}} \right]$가 참일 때
+자유롭게 나타나는 개체 변수가 $v_{i_{1}}$, ..., $v_{i_{k}}$ 뿐인 논리식 $F$를 \underline{정확}(\textit{correct})하다고 한다 --
+단, $k \geq 1$이다.
+
+\begin{context}[Exercise 1]
+\begin{enumerate}
+\item[(a)] 임의의 문장 $X$와 $Y$에 대하여, $X \land Y$는 $X$와 $Y$ 모두 참일 때 그리고 그럴 때에만 참이다.
+\item[(b)] 임의의 문장 $X$와 $Y$에 대하여, $X \lor Y$는 $X$와 $Y$ 중 적어도 하나가 참일 때 그리고 그럴 때에만 참이다.
+\item[(c)] 자유롭게 나타나는 개체 변수가 $v_{i}$ 뿐인 논리식 $F$에 대하여, $\exists v_{i} F$는 어떤 자연수 $n$이 존재하여 $F \left[ v_{i} := \overline{n} \right]$이 참일 때 그리고 그럴 때에만 참이다.
+\end{enumerate}
+
+위의 세 명제가 모두 참임을 보여라.
+\end{context}
+
+\begin{context}[Substitution of Variables]
+자유롭게 나타나는 개체 변수가 $v_{1}$ 뿐인 논리식 $F$를 고려하자.
+$i > 1$일 때, 개체 변수 $v_{i}$에 대하여, $F \left[ v_{1} := v_{i} \right]$를 다음과 같이 정의한다:
+\begin{enumerate}
+\item $v_{i}$가 $F$에서 속박되어 나타나지 않을 때, $F \left[ v_{1} := v_{i} \right]$는 $v_{1}$의 모든 자유 나타남을 $v_{i}$로 치환한 결과이다.
+\item $v_{i}$가 $F$에서 속박되어 나타날 때, $v_{j}$가 $F$에서 나타나지 않는 개체 변수가 되게 하는 가장 작은 $j$를 취하여,
+$v_{i}$의 모든 나타남을 $v_{j}$으로 치환한 논리식에서 $v_{j}$의 모든 자유 나타남을 $v_{i}$로 치환한 결과이다.
+\end{enumerate}
+
+예를 들어, 논리식 $\exists v_{2} v_{2} \neq v_{1}$을 $F$라고 하자.
+그러면 $F$는 정확하다.
+$F \left[ v_{1} := v_{2} \right]$이란 정확한 논리식 $\exists v_{3} v_{3} \neq v_{2}$를 의미하지, 정확하지 않은 논리식 $\exists v_{2} v_{2} \neq v_{2}$를 의미하지는 않는다.
+
+자유롭게 나타나는 개체 변수가 $n$ 개인 정규 논리식에 대하여서도 비슷한 정의를 적용한다.
+개체 변수 $v_{i_{1}}$, ..., $v_{i_{n}}$에 대하여,
+$F \left[ v_{1} := v_{i_{1}} , \cdots , v_{n} := v_{i_{n}} \right]$을
+$v_{i_{1}}$, ..., $v_{i_{n}}$ 중 어느 것도 $F$에서 속박되어 나타나지 않도록 $F$를 재작성하여 얻은 논리식에
+$v_{1}$, ..., $v_{n}$을 동시에 $v_{i_{1}}$, ..., $v_{i_{n}}$으로 치환하여 얻은 논리식으로 정의한다. 
+\end{context}
+
+두 문장이 동시에 참이거나 거짓일 때, 두 문장이 (산술적으로) \underline{동등}(\textit{equivalent})하다고 한다.
+자유롭게 나타나는 개체 변수가 $v_{i_{1}}$, ..., $v_{i_{k}}$ 뿐인 논리식 $F$와 $G$에 대하여,
+임의의 $n_{1} \in \mathbb{N}$, ..., $n_{k} \in \mathbb{N}$에 대하여 $F \left[ v_{i_{1}} := \overline{n_{1}} , \cdots , v_{i_{k}} := \overline{n_{k}} \right]$이 동등한 문장일 때,
+$F$와 $G$를 동등한 논리식이라고 한다.
+
+\noindent \textbf{\S3. 싼술적인 그리고 산술적인 집합과 관계}
+
+자유롭게 나타나는 개체 변수가 $v_{1}$ 뿐인 논리식 $F$에 대하여,
+$F$는 문장 $F \left[ v_{1} := \overline{n} \right]$이 참이게 하는 자연수 $n$을 모두 모은 집합을 \underline{표현한다}(\textit{express})고 한다;
+즉, 임의의 집합 $A \subseteq \mathbb{N}$에 대하여, $$ \left( \forall n \in \mathbb{N} \right) \left[ F \left[ v_{1} := \overline{n} \right] \in \mathcal{T} \leftrightarrow n \in A \right] $$이 성립할 때 그리고 그럴 때에만 $F$는 $A$를 표현한다.
+자유롭게 나타나는 개체 변수가 $k$개인 정규 논리식 $F$에 대하여,
+$F$는 문장 $F \left[ v_{i_{1}} := \overline{n_{1}} , \cdots , v_{i_{k}} := \overline{n_{k}} \right]$이 참이게 하는 $k$-튜플 $\left( n_{1} , \cdots , n_{k} \right)$을 모두 모은 집합을 \underline{표현한다}(\textit{express})고 한다;
+즉, 임의의 관계 $R \subseteq \mathbb{N}^{k}$에 대하여, $$ \left( \forall n_{1} \in \mathbb{N} \right) \cdots \left( \forall n_{k} \in \mathbb{N} \right) \left[ F \left[ v_{i_{1}} := \overline{n_{1}} , \cdots , v_{i_{k}} := \overline{n_{k}} \right] \in \mathcal{T} \leftrightarrow R \left( n_{1} , \cdots , n_{k} \right) \right] $$이 성립할 때 그리고 그럴 때에만 $F$는 $R$을 표현한다.
+
+예를 들어, 모든 자연수는 짝수일 때 그리고 그럴 때에만 2로 나누어 떨어지므로, 모든 짝수들의 집합은 논리식 $\exists v_{2} v_{1} = 0'' \times v_{2}$에 의하여 표현된다.
+
+집합이나 관계가 어떤 $\mathcal{L}_{E}$의 논리식에 의하여 표현될 때 그것을 \underline{싼술적}(\textit{Arithmetic})이라고 한다.
+그리고 집합이나 관계가 $\mathbf{E}$를 포함하지 않는 어떤 $\mathcal{L}_{E}$의 논리식에 의하여 표현될 때 그것을 \underline{산술적}(\textit{arithmetic})이라고 한다.
+비형식적으로, 싼술적인 집합과 관계는 1차 논리에서 덧셈과 곱셈 그리고 제곱에 의하여 정의될 수 있다는 특성을 가지고 있다;
+그리고 산술적인 집합과 관계는 1차 논리에서 덧셈과 곱셈에만 의하여 정의될 수 있다는 특성을 가지고 있다.\footnote
+{
+관계 $\leq$를 넣지 않은 이유는 다음과 같다:
+논리식 $\left( v_{1} \leq v_{2} \leftrightarrow \left( \exists v_{3} v_{1} + v_{3} = v_{2} \right) \right)$이 정확하기 때문에,
+$\leq$는 덧셈만으로 표현될 수 있다.
+}
+
+뒷 단원에서, 관계 $x^{y} = z$를 덧셈과 곱셈만으로 정의할 수 있기 때문에 모든 싼술적인 관계가 산술적인 관계라는,
+자명하지 않은 G\"odel의 결론을 증명할 것이다.
+그러나 이것을 증명하기 전까지, ``싼술적인''이라는 용어를 계속 사용할 것이다.
+
+함수 $f : \mathbb{N}^{k} \to \mathbb{N}$를, 관계 $$f \left( x_{1} , \cdots , x_{k} \right) = y$$가 싼술적일 때, \underline{싼술적}(\textit{Arithmetic})이라고 부를 것이다.
+다시 말해, 임의의 함수 $f : \mathbb{N}^{k} \to \mathbb{N}$에 대하여, $f$가 싼술적일 때 그리고 그럴 때에만 자유롭게 나타나는 개체 변수가 $k + 1$개인 어떤 정규 논리식 $F$가 존재하여
+임의의 $x_{1} \in \mathbb{N}$, ..., $x_{k} \in \mathbb{N}$, $y \in \mathbb{N}$에 대하여 $$ F \left[ v_{1} := \overline{x_1} , \cdots , v_{k} := \overline{x_k} , v_{k + 1} := \overline{y} \right] \in \mathcal{T} \leftrightarrow f \left( x_{1} , \cdots , x_{k} \right) = y $$가 성립한다.
+
+\underline{성질}(\textit{property}) $P$를 만족시키는 모든 자연수들의 집합이 싼술적일 때 $P$를 싼술적이라고 할 것이다.
+또한 ``조건''이란 용어를 관계나 성질을 의미하는 용어로서 사용할 것이다.
+
+\begin{context}[Exercise 2]
+\begin{enumerate}
+\item[(a)] 관계 ``$x$가 $y$의 약수이다''는 산술적이다.
+\item[(b)] 모든 소수들의 집합은 산술적이다.
+\end{enumerate}
+
+위의 두 명제가 모두 참임을 보여라.
+\end{context}
+
+\begin{context}[Exercise 3]
+임의의 싼술적인 집합 $A \subseteq \mathbb{N}$와 임의의 싼술적인 함수 $f : \mathbb{N} \to \mathbb{N}$에 대하여, 집합 $$f^{-1} \left[ A \right] = \left\{ n \in \mathbb{N} : f \left( n \right) \in A \right\}$$도 싼술적임을 보여라.
+``산술적인''에 대하여 같은 것을 보여라.
+\end{context}
+
+\begin{context}[Exercise 4]
+\begin{enumerate}
+\item[(a)] 임의의 두 함수 $f : \mathbb{N} \to \mathbb{N}$과 $g : \mathbb{N} \to \mathbb{N}$가 싼술적일 때
+함수 $x \mapsto f \left( g \left( x \right) \right)$도 싼술적이다.
+\item[(b)] 임의의 두 함수 $f : \mathbb{N} \to \mathbb{N}$과 $g : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$가 싼술적일 때
+세 함수 $ \left( x , y \right) \mapsto g \left( f \left( x \right) , y \right) $와 $ \left( x , y \right) \mapsto g \left( x , f \left( y \right) \right) $ 그리고 $ \left( x , y \right) \mapsto f \left( g \left( x , y \right) \right) $ 모두 싼술적이다.
+\end{enumerate}
+
+위의 두 명제가 모두 참임을 보여라.
+\end{context}
+
+\begin{context}[Exercise 5]
+무한 집합 $A \subseteq \mathbb{N}$가 싼술적이라고 하자.
+그러면 $A$가 무한 집합이므로 $$\left( \forall x \in \mathbb{N} \right) \left( \exists y \in \mathbb{N} \right) \left[ y \in A \land x \leq y \right]$$가 성립한다.
+이제 $R \left( x , y \right)$를 ``$x$보다 큰 $A$의 원소들의 최솟값이 $y$이다''는 관계로 두자.
+그러면 관계 $R \subseteq \mathbb{N}^{2}$이 싼술적임을 보여라.
+\end{context}
+
+\subsection{접합과 괴델 넘버링}
+\hspace{12pt}
+
+\noindent \textbf{\S4. $b$를 기저로 하는 접합}
+
+각 $b \geq 2$에 대하여, \underline{$b$를 기저로 하는 접합}(\textit{concatenation to the base $b$})라고 불릴 함수 $$\left( x , y \right) \mapsto x *_{b} y : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$$를 정의할 것인데,
+이 함수는 이 책에서 기본적인 역할을 할 것이다.
+
+저 정의에 친숙한 기저인 $10$을 주자.
+임의의 $m \in \mathbb{N}$과 $n \in \mathbb{N}$에 대하여,
+$m *_{10} n$을 $m$의 십진법 표기 뒤에 $n$의 십진법 표기를 붙인 수로 정의하자.
+예를 들어, $53 *_{10} 792 = 53792$이다.
+우리는 $53792 = 53000 + 792 = 53 \times 10^{3} + 792$임에 주목한다.
+$3$은 (십진법으로 표기된) $792$의 자릿수이다 --
+또는, 우리는 $3$을 $792$의 \underline{길이}(\textit{length})라고 말할 것이다.
+
+더 일반적으로는, $m *_{10} n = m \times 10^{\mathrm{len}_{10} \left( n \right)} + n$이다 --
+여기서 $\mathrm{len}_{10} \left( n \right)$은 (십진법으로 표기된) $n$의 길이이다.
+
+더욱 일반적으로는, 각 $b \geq 2$에 대하여,
+우리는 $b$진 표기법에서 $m *_{b} n$을 $m$ 뒤에 $n$을 붙인 수로 정의할 것이다.
+그러면 $m *_{b} n = m \times b^{\mathrm{len}_{b} \left( n \right)} + n$이다 --
+여기서 $\mathrm{len}_{b} \left( n \right)$는 $n$을 $b$진 표기법으로 나타냈을 때 그것의 자릿수이다.
+다음 정리는 기본적이다.
+
+\begin{context}[Proposition 1]
+각각의 $b \geq 2$에 대하여, 관계 $x *_{b} y = z$는 싼술적이다.
+\end{context}
+
+증명을 하기에 앞서, 우리는 본질적인 아이디어를 진술한다.
+먼저 친숙한 기저인 $10$을 고려하자.
+임의의 $n > 0$에 대하여, $\mathrm{len}_{10} \left( n \right)$은 $10^{k} > n$을 만족시키는 가장 작은 $k$이고,
+$10^{\mathrm{len}_{10} \left( n \right)}$은 $n$보다 큰 $10$의 거듭제곱 중 가장 작은 것이다.
+(예를 들어, $10^{\mathrm{len}_{10} \left( 5368 \right)} = 10^4 = 10,000$인데, 이는 $5368$보다 큰 $10$의 거듭제곱 중 가장 작은 것이다.)
+일반적으로, 임의의 $b \geq 2$와 임의의 $n \in \mathbb{N}$에 대하여,
+$b^{\mathrm{len}_{b} \left( n \right)}$은 $n > 0$이면 $n$보다 $b$의 거듭제곱 중 가장 작은 것과 같고 그렇지 않으면 $b$와 같다.
+
+\begin{proof}
+$b \geq 2$를 잡자.
+\begin{enumerate}
+\item $\mathrm{Pow}_{b} \left( x \right)$을 $x$가 $b$의 거듭제곱 중 하나라는 조건으로 두자.
+이 조건은 싼술적이다. 왜냐하면 $\left( \exists y \in \mathbb{N} \right) \left[ x = b^{y} \right]$일 때 그리고 그럴 때에만 $\mathrm{Pow}_{b} \left( x \right)$가 성립하기 때문이다.\footnote
+{
+더 형식적으로는, 논리식 $\exists v_2 v_1 = \left( \overline{b} \mathop{\mathbf{E}} v_2 \right)$을 모든 $b$의 거듭제곱들의 집합을 표현한다.
+앞으로는 이렇게 형식적으로 나타내지 않을 것이다.
+}
+\item ($x$와 $y$ 사이의 관계로서의) 관계 $b^{\mathrm{len}_{b} \left( x \right)} = y$는,
+우리가 주목했듯이, 조건 $$ \left( x = 0 \land y = b \right) \lor \left( x \neq 0 \land s \left( x , y \right) \right) $$과 동등하다 --
+여기서, $s \left( x , y \right)$는 ``$y$가 $x$보다 큰 거듭제곱 중 가장 작다''는 관계이다.
+이것은 싼술적인데, 왜냐하면 $$\left( \mathrm{Pow}_{b} \left( y \right) \land x < y \right) \land \left( \forall z \in \mathbb{N} \right) \left[ \left( \mathrm{Pow}_{b} \left( z \right) \land x < z \right) \rightarrow y \leq z \right]$$일 때 그리고 그럴 때에만 $s \left( x , y \right)$가 성립하기 때문이다.
+\item 최종적으로, 관계 $x \times b^{\mathrm{len}_{b} \left( y \right)} + y = z$(즉, $x *_{b} y = z$)는 다음 조건과 같다:
+$$ \left( \exists w \in \mathbb{N} \right) \left[ b^{\mathrm{len}_{b} \left( y \right)} = w \land x \times w + y = z \right] . $$
+따라서, 관계 $x *_{b} y = z$는 싼술적이다.
+\end{enumerate}
+\end{proof}
+
+임의의 $x > 0$와 $y > 0$ 그리고 $z > 0$에 대하여, $$ \left( x *_{b} y \right) *_{b} z = x *_{b} \left( y *_{b} z \right) $$임에 주목하자.
+그러나 $y = 0$이면, 이것은 실패할 수도 있다.\footnote
+{
+Quine의 예를 빌리자면, $\left( 5 *_{10} 0 \right) *_{10} 3 = 50 *_{10} 3 = 503$이지만,
+$0 *_{10} 3 = 3$이므로 $5 *_{10} \left( 0 *_{10} 3 \right) = 5 *_{10} 3 = 53$이기 때문에 실패한다.
+}
+그러므로 괄호를 생략하는 경우 그 식에 좌측으로 결합하는 괄호가 있는 것으로 간주하겠다.
+(예를 들어, $x *_{b} y *_{b} z$는 $\left( x *_{b} y \right) *_b z$를 의미하지만 $x *_{b} \left( y *_{b} z \right)$를 의미하지는 않는다.)
+
+\begin{context}[Corollary 1]
+각각의 $n \geq 2$과 각각의 $b \geq 2$에 대하여, ($y$, $x_1$, $x_2$, ..., $x_n$ 사이의 $\left( n + 1 \right)$-항 관계로서의) 관계 $$ y = x_1 *_b x_2 *_b \cdots *_b x_n $$는 싼술적이다.
+\end{context}
+
+\begin{proof}
+$n$에 대한 귀납법을 적용하자.
+우리는 이미 $n = 2$인 경우에 대하여 증명했다.
+이제 $n \geq 2$에 대하여 관계 $y = x_1 *_b x_2 *_b \cdots *_b x_n$가 싼술적이라고 하자.
+그러면 $$y = x_1 *_b x_2 *_b \cdots *_b x_n *_b x_{n + 1}$$일 때 그리고 그럴 때에만
+$$ \left( \exists z \in \mathbb{N} \right) \left[ z = x_1 *_b x_2 *_b \cdots *_b x_n \land y = z *_b x_{n + 1} \right] $$이므로,
+관계 $y = x_1 *_b x_2 *_b \cdots *_b x_n *_b x_{n + 1}$는 싼술적이다.
+\end{proof}
+
+\noindent \textbf{\S5. 괴델 넘버링}
+
+싼술적인 문장들(즉, $\mathcal{L}_{E}$의 문장들)은 \textit{수}에 대하여 이야기하지, $\mathcal{L}_{E}$의 표현식들을 이야기하지는 않는다.
+표현식들에게 괴델 수를 할당하는 목적은 바로 문장이 문장들에 대하여 그것들의 괴델 수를 이용하여 간접적으로 말하는 것을 허용하기 위함이다.
+
+우리가 사용할 괴델 넘버링은 Quine[1940]을 수정한 것이다.
+Quine은 그의 언어를 9개의 알파벳 $S_1$, $S_2$, ..., $S_9$으로 이루어진 언어로 형식화하였다.
+그리고서는 각 표현식 $S_{i_{1}} S_{i_{2}} \cdots S_{i_{n}}$에 십진 표기의 $i_{1} i_{2} \cdots i_{n}$를 괴델 수를 할당하였다.
+(예를 들어, 표현식 $S_{3} S_{1} S_{2}$는 괴델 수로 $312$를 할당받는다.)
+
+우리의 언어 $\mathcal{L}_{E}$는 13개의 기호들을 사용하므로,
+접합의 기저로서 10 대신 13을 취하여 Quine의 아이디어를 차용할 것이다.\footnote
+{
+13이라는 수는 우연히도 소수인데, 우리는 뒷 단원에서 합성수를 접합의 기저로 취하는 것보다 기술적 이득이 있음을 보게 될 것이다.
+}
+
+우리는 13진수의 숫자로서 $10$, $11$, $12$로서 각각 ``$\eta$'', ``$\varepsilon$'', ``$\delta$''를 사용할 것이다.
+그리고 13개의 기호에 각각 다음과 같은 괴델 수를 할당하겠다:
+$$ \begin{matrix}
+0 \\
+1
+\end{matrix} \quad
+\begin{matrix}
+' \\
+0
+\end{matrix} \quad
+\begin{matrix}
+( \\
+2
+\end{matrix} \quad
+\begin{matrix}
+) \\
+3
+\end{matrix} \quad
+\begin{matrix}
+f \\
+4
+\end{matrix} \quad
+\begin{matrix}
+\circ \\
+5
+\end{matrix} \quad
+\begin{matrix}
+v \\
+6  
+\end{matrix} \quad
+\begin{matrix}
+\lnot \\
+7
+\end{matrix} \quad
+\begin{matrix}
+\rightarrow \\
+8
+\end{matrix} \quad
+\begin{matrix}
+\forall \\
+9
+\end{matrix} \quad
+\begin{matrix}
+= \\
+\eta
+\end{matrix} \quad
+\begin{matrix}
+\leq \\
+\varepsilon
+\end{matrix} \quad
+\begin{matrix}
+\sharp \\
+\delta
+\end{matrix} $$
+
+그 다음, 이 기호들의 임의의 문자열에 대하여,
+그것의 괴델 수로 그것의 각 기호를 그에 대응하는 13진법 숫자로 대체하여 13진법으로 읽은 수를 부여한다.
+예를 들어 4번째 기호 다음에 7번째 기호 다음에 3번째 기호가 나오는 길이 3의 문자열의 괴델 수를 13진법으로 표기한 것은 ``$362$''이다 --
+즉, 수 $2 + 6 \times 13 + 3 \times 13^{2}$이다.
+
+각 $n > 0$에 대하여, $E_{n}$을 $n$을 괴델 수로 할당받은 유일한 문자열로 정의하자.
+한편, 악센트 기호로만 이루어진 문자열은 모두 괴델 수로 $0$을 부여받는데, $E_{0}$을 악센트 기호 한 개 그 자체로 정의하겠다.
+그러므로 우리는 \underline{표현식}(\textit{expression})이라는 단어를 악센트 기호로 시작하지 않거나 악센트 기호 한 개 그 자체인 그 13개의 기호들의 문자열이라는 뜻으로 사용하겠다.
+
+$0$을 악센트 기호의 괴델 수로 택한 까닭은 다음과 같다:
+임의의 $n \in \mathbb{N}$에 대하여, (다른 표현식들과 마찬가지로) 숫자 $\overline{n}$은 괴델 수를 가진다.
+이때 함수 $n \mapsto \gnum \left( \overline{n} \right) : \mathbb{N} \to \mathbb{N}$이 싼술적이기를 원한다.
+당연히, $\overline{n}$은 ``$0$'' 뒤에 $n$개의 악센트 기호가 붙은 것이므로,
+그것의 괴델 수를 13진법으로 표기하면 ``$1$'' 뒤에 ``$0$''이 $n$번 나타나는 문자열과 같다.
+따라서 $\gnum \left( \overline{n} \right) = 13^{n}$이다.
+
+\begin{context}[Discussion]
+실제로, 이 단원과 다음 두 단원의 모든 결과들은 다음 두 성질을 가지는 임의의 괴델 수에 대하여 통한다:
+\begin{enumerate}
+\item 싼술적인 함수 $\left( x , y \right) \mapsto x \bullet y : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$가 존재하여,
+$$ \left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left( \forall z \in \mathbb{N} \right) \left[ E_x E_y \equiv E_z \rightarrow x \bullet y = z \right] $$가 성립한다.
+\item 함수 $n \mapsto \gnum \left( \overline{n} \right) : \mathbb{N} \to \mathbb{N}$가 싼술적이다.
+\end{enumerate}
+
+저 두 성질을 최대한 빨리 달성하기 위하여 저러한 특정 괴델 넘버링을 택하였다.
+또한 첫 번째 성질을 가지는 괴델 넘버링은 두 번째 성질도 가진다는 데에 주목할 수 있다.
+(이것은 다음 몇 개의 단원 전까지는 분명하지 않다;
+그것은 우리가 자연수의 이름을 선택한 특정 방식에 달려있다.)
+\end{context}
+
+당연히, 기호들에게 다음과 같은 괴델 수를 부여함으로써, 13 대신 10을 괴델 넘버링의 기저로 취할 \textit{수 있었고},
+$$ \begin{matrix}
+0 \\
+1
+\end{matrix} \quad
+\begin{matrix}
+' \\
+0
+\end{matrix} \quad
+\begin{matrix}
+( \\
+2
+\end{matrix} \quad
+\begin{matrix}
+) \\
+3
+\end{matrix} \quad
+\begin{matrix}
+f \\
+4
+\end{matrix} \quad
+\begin{matrix}
+\circ \\
+5
+\end{matrix} \quad
+\begin{matrix}
+v \\
+6  
+\end{matrix} \quad
+\begin{matrix}
+\lnot \\
+7
+\end{matrix} \quad
+\begin{matrix}
+\rightarrow \\
+89
+\end{matrix} \quad
+\begin{matrix}
+\forall \\
+899
+\end{matrix} \quad
+\begin{matrix}
+= \\
+8999
+\end{matrix} \quad
+\begin{matrix}
+\leq \\
+89999
+\end{matrix} \quad
+\begin{matrix}
+\sharp \\
+899999
+\end{matrix} $$
+십진 표기법을 더 편안하게 여기는 독자들은 그가 원하면 이러한 괴델 넘버링을 쓸 수 있다.
+이러한 괴델 넘버링 하에서는, $\overline{n}$의 괴델 수는 $13^{n}$이 아니라 $10^{n}$이 된다.
+그러나 우리가 전에 주목했듯이, 소수인 $13$을 기저로 하는 데에 특정한 기술적 이득이 있다.
+
+이 장의 나머지 부분(과 다음 나머지 단원들)에서,
+기저를 $13$으로 하는 괴델 수만을 다룰 것이며,
+따라서, $x * y$는 $x *_{13} y$를 의미할 것이다.\footnote
+{
+$10$을 기저로 취하고자 하는 독자는 ``$x * y$''를 $x *_{10} y$로 읽을 수 있어도 좋다.
+그러나 $13^{n}$이 쓰일 때마다 그 또는 그녀는 $10^{n}$을 써야할 것이다.
+}
+
+\subsection{Tarski의 정리}
+\hspace{12pt}
+
+\noindent \textbf{\S 6. 대각화와 괴델 문장}
+
+집합 $T \subseteq \mathbb{N}$을 $T := \left\{ \gnum \left( X \right) : X \in \mathcal{T} \right\}$으로 놓자.
+이 $T$라는 집합은 완벽하게 정의된 [자연수들의 집합]이다.
+그런데 이것이 싼술적일까?
+우리는 그렇지 않다는 것을 보일 것이다 -- Tarski의 정리.
+
+1단원에서처럼, 집합 $A \subseteq \mathbb{N}$에 대하여
+$X$가 참이고 그것의 괴델 수가 $A$에 속하거나 $X$가 거짓이고 그것의 괴델 수가 $A$에 속하지 않을 때
+문장 $X$을 $A$에 대한 \underline{괴델 문장}(\textit{G\"odel sentence})이라고 하겠다.
+이제 (Tarski의 정리가 쉽게 따라오도록)
+임의의 싼술적인 집합 $A \subseteq \mathbb{N}$에 대하여
+$A$에 대한 괴델 문장이 있음을 보이는 데 초점을 맞추겠다.
+
+거의 모든 책이 괴델 문장을 구성하는 여러 가지 영리한 방법으로 쓰여질 수 있다.
+G\"odel의 원래 방법은 임의의 논리식 $F$와 $G$ 그리고 임의의 수 $n$에 대하여,
+$$F \left[ v_1 := \overline{n} \right] \equiv G \rightarrow \mathrm{sub} \left( \gnum \left( F \right) , n \right) = \gnum \left( G \right)$$
+만족시키는 싼술적인 함수 $\mathrm{sub} : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$의 존재를 보이는 것을 수반한다.
+이것을 수행하는 것은 개체 변수를 숫자로 치환하는 연산을 산술화하는 것과 관련되어 있는데,
+이것은 꽤나 복잡한 일이다.
+대신에, Tarski[1953]의 단순하지만 영리한 생각을 활용할 것이다.
+
+비형식적으로, 성질 $P$가 수 $n$에 대하여 성립한다고 말하는 것은
+임의의 수 $x$에 대하여 $x$가 $n$과 같을 때마다 $P$가 $x$에 대하여 성립한다고 말하는 것과 같다.
+형식적으로, 개체 변수 $v_1$만이 자유롭게 나타나는 논리식 $F$에 대하여,
+문장 $F \left[ v_1 := \overline{n} \right]$은 문장 $\forall v_1 \left( v_1 = \overline{n} \rightarrow F \right)$와 동등하다.\footnote
+{
+덧붙여서, 이는 $\exists v_1 \left( v_1 = \overline{n} \land F \right)$와도 동등하다.
+}
+이제 문장 $\forall v_1 \left( v_1 = \overline{n} \rightarrow F \right)$의 괴델 수가 $F$의 괴델 수와 $n$의 싼술적인 함수라는 게 중점이다.
+
+각각의 논리식 $F$와 각각의 수 $n$에 대하여 $F \left( n \right) : \equiv \forall v_1 \left( v_1 = \overline{n} \rightarrow F \right)$로 표기하자.
+재차 강조하자면, 논리식 $F$에 $v_1$만이 자유롭게 나타나는 개체 변수라면,
+$F \left[ v_1 := \overline{n} \right]$과 $F \left( n \right)$은 같진 않더라도 \textit{동등한} 문장이라는 것이다 --
+즉, 동시에 참이거나 동시에 거짓이다.
+사실, \textit{임의의} 표현식 $E$에 대하여, $E$가 논리식이든 아니든,
+$\forall v_1 \left( v_1 = \overline{n} \rightarrow E \right)$은 ($E$가 논리식이 아닐 경우 의미 없는 표현식일지라도) 잘 정의된 표현식이고,
+(표현식 $E \left( n \right)$의 의미가 없을 수도 있지만) $$E \left( n \right) : \equiv \forall v_1 \left( v_1 = \overline{n} \rightarrow E \right)$$로 단축하겠다.
+이때, $E$가 논리식일 경우 $E \left( n \right)$은 논리식이지만 문장일 필요는 없으며,
+$E$가 변수 $v_1$만이 자유롭게 나타나는 논리식인 경우 당연히 $E \left( n \right)$은 문장이나,
+이 모든 경우에서 $E \left( n \right)$은 잘 정의된 논리식이다.
+
+함수 $r : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$을 $$ r \left( x , y \right) := \gnum \left( E_x \left( y \right) \right) $$으로 정의하자.
+즉, 임의의 $e \in \mathbb{N}$과 임의의 $n \in \mathbb{N}$에 대하여,
+$e$를 괴델 수로 받은 표현식을 $E$라 하면, $r \left( e , n \right)$은 표현식 $E \left( n \right)$의 괴델 수이다.
+$r$은 이 책에서 매우 중요한 역할을 하는 함수이며, 우리는 곧 이 함수가 싼술적임을 보이겠다.
+
+$x \in \mathbb{N}$과 $y \in \mathbb{N}$을 임의로 잡자.
+$E_x \left( y \right)$는 곧 $\forall v_1 \left( v_1 = \overline{y} \rightarrow E_x \right)$이라는 표현식과 같다.
+표현식 ``$ \forall v_1 ( v_1 = $''의 괴델 수를 $k$라고 하자.\footnote
+{
+독자는 원한다면 $k$를 계산할 수 있다.
+}
+함의 기호 ``$\rightarrow$''는 괴델 수 $8$을 부여받았고
+오른쪽 괄호 ``$)$''는 괴델 수 $3$을 부여받았고
+$\overline{y}$의 괴델 수는 $13^{y}$이며 $E_x$의 괴델 수는 $x$이기 때문에,
+$E_x \left( y \right)$의 괴델 수는 $k *_{13} 13^{y} *_{13} * 8 *_{13} x *_{13} 3$이다.
+즉, 그림으로 나타내면 다음과 같다: $$ \underbrace{\forall v_1 ( v_1 =}_{k} \underbrace{\overline{y}}_{13^{y}} \underbrace{\rightarrow}_{8} \underbrace{E_x}_{x} \underbrace{)}_{3}$$
+
+결국, $$\left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ r \left( x , y \right) = k *_{13} 13^{y} *_{13} * 8 *_{13} x *_{13} 3 \right]$$이므로,
+관계 $r \left( x , y \right) = z$는, $\left( \exists w \in \mathbb{N} \right) \left[ w = 13^{y} \land z = k *_{13} w *_{13} *_{13} 8 *_{13} x *_{13} 3 \right]$으로 나타낼 수 있기 때문에, 명백하게 싼술적이다.
+따라서 다음 명제를 얻는다.
+
+\begin{context}[Proposition 2]
+$r$은 싼술적인 함수이다.
+\end{context}
+
+함수 $r$은 이 책에서 많이 튀어나올 것인데, 그것을 $\mathcal{L}_{E}$의 \underline{나타내기}(\textit{representation}) 함수라고 부를 것이다.
+
+\begin{context}[Diagonalization]
+함수 $d : \mathbb{N} \to \mathbb{N}$를 $$d \left( x \right) := r \left( x , x \right) \quad \mathop{\mathrm{for}} x \in \mathbb{N} $$으로 정의하고
+이것을 \underline{대각}(\textit{diagonal})함수라고 부르겠다.
+$r$이 싼술적이었기 때문에 $d$ 또한 싼술적이다.
+임의의 $n \in \mathbb{N}$에 대하여 $d \left( n \right) = \gnum \left( E_{n} \left( n \right) \right)$이다.
+\end{context}
+
+집합 $A \subseteq \mathbb{N}$에 대하여 $A^{*} := \left\{ n \in \mathbb{N} : d \left( n \right) \in A \right\}$로 정의하자.\footnote
+{
+즉, $A^{*} = d^{-1} \left[ A \right]$이다.
+}
+
+\begin{context}[Lemma 1]
+$A$가 싼술적이면 $A^{*}$도 그러하다.
+\end{context}
+
+\begin{proof}
+전제 조건을 가정하자.
+$A^{*}$은 $\left( \exists y \in \mathbb{N} \right) \left[ d \left( x \right) = y \land y \in A \right]$을 만족시키는 모든 $x \in \mathbb{N}$들의 집합이다.
+대각함수 $d$는 싼술적이므로 어떤 논리식 $D$가 존재하여 $$ \left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ D \left[ v_1 := \overline{x} , v_2 := \overline{y} \right] \in \mathcal{T} \leftrightarrow d \left( x \right) = y \right] $$이 성립한다.
+한편, $A$가 싼술적이라고 가정하였으므로, 어떤 논리식 $F$가 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ F \left[ v_1 := \overline{n} \right] \in \mathcal{T} \leftrightarrow n \in A \right]$$이 성립한다.
+그러면 $A^{*}$는 논리식 $\exists v_2 \left( D \land F \left[ v_1 := v_2 \right] \right)$에 의하여 표현되기 때문에 싼술적이다.\footnote
+{
+대안으로 $\forall v_2 \left( D \rightarrow F \left[ v_1 := v_2 \right] \right)$가 있다.
+}
+\end{proof}
+
+\begin{context}[Theorem 1]
+임의의 $A \subseteq \mathbb{N}$에 대하여 $A$가 싼술적이면 $A$에 대한 괴델 문장이 존재한다.
+\end{context}
+
+\begin{proof}
+정말로 이것은 위의 보조정리와 1단원의 보조정리 D에 의하여 따라온다 -- 밑의 주목을 보라.
+그러나 $\mathcal{L}_{E}$이라는 특정 언어에서 반복하기 위하여, $A$를 싼술적이라고 가정하자.
+그러면 $A^{*}$은 위의 보조정리에 의하여 싼술적이다.
+그러므로 어떤 술어 $H$가 존재하여 $A^{*}$를 표현한다.
+$H$의 괴델 수를 $h$라 하자.
+그러면 $$H \left( h \right) \in \mathcal{T} \iff h \in A^{*} \iff d \left( h \right) \in A$$인데,
+$d \left( h \right)$은 문장 $H \left( h \right)$의 괴델 수이므로,
+$H \left( h \right)$가 $A^{*}$에 대한 괴델 문장이다.
+\end{proof}
+
+\begin{context}[Remarks]
+지금 우리가 다루는 언어 $\mathcal{L}_{E}$를 1단원의 추상적인 프레임워크에 적용하기에 앞서,
+각각의 수 $n$에 대하여 각 표현식 $E$에 표현식 $E \left( n \right)$을 할당했던 함수 $\Phi : \mathcal{E} \times \mathbb{N} \to \mathcal{E}$를 떠올려 보자.
+언어 $\mathcal{L}_{E}$에서는 $\Phi \left( E , n \right) : \equiv \forall v_1 \left( v_1 = \overline{n} \rightarrow E \right)$로 취했다.
+그러면 ``술어''는 개체 변수 $v_1$만이 자유롭게 나타나는 논리식이 되어야 할 것이다.
+그러면 정리 1에 쓰이는 보조정리는 1단원에 있던 조건 $G_1$이 체계 $\mathcal{L}_{E}$에서 적용됨을 말해준다.
+그러므로, 정리 1은 1단원의 보조정리 D의 (b)의 특별한 경우이다.
+\end{context}
+
+\begin{context}[Tarski's Theorem]
+임의의 $A \subseteq \mathbb{N}$에 대하여 논리식 $F$가 $A$를 표현하면 $\lnot F$는 $\tilde{A}$를 표현하기 때문에,
+모든 싼술적인 집합들의 모임은 명백히 여집합에 대하여 닫혀있다.
+따라서 $\mathcal{L}_{E}$에서는 1단원에서의 조건 $G_1$과 $G_2$이 모두 성립한다.
+그러므로, 1단원의 정리 T에 의하여 $\mathcal{L}_{E}$의 모든 참인 문장들의 괴델 수들의 집합 $T$는 $\mathcal{L}_{E}$에서 표현 가능하지 않다 --
+즉, 그것은 싼술적이지 않다.
+\end{context}
+
+$\mathcal{L}_{E}$의 특별한 경우에서 증명을 반복하자.
+$\tilde{T}$에 대한 괴델 문장은 그것이 참일 때 그리고 그럴 때에만 거짓이어야 하기 때문에 존재하지 않는다.
+그러나 $\tilde{T}$가 싼술적인 집합이었다면 정리 1에 의하여 그것에 대한 괴델 문장이 존재한다.
+그러므로 집합 $\tilde{T}$은 싼술적일 수 없고 $T$도 싼술적이지 않다.
+따라서 다음 정리를 얻는다.
+
+\begin{context}[Theorem 2--Tarski's Theorem]
+모든 싼술적인 문장들 중 참인 문장의 괴델 수를 모은 집합은 싼술적이지 않다.
+\end{context}
+
+다음 단원에서 우리는 산술을 위한 형식적인 공리 시스템으로 넘어갈 것이다.
+표면적으로는 모든 참인 문장이 시스템에서 증명 될 수 있다는 것이 그럴 듯해 보이지만,
+집합 $T$와는 다르게 체계에서 \textit{증명 가능한} 모든 문장들의 괴델 수를 모은 집합은 싼술적이라는 것이 밝혀질 것이다.
+그러므로, 정리 2에 의하여, 진실과 증명가능성은 일치하지 않는다.
+사실 정리 1을 사용하면 체계에서 참이지만 증명 가능하지 않은 문장을 보일 수 있다.
+
+\begin{context}[Exercise 6]
+\begin{enumerate}
+\item[(1)] 기저를 $10$으로 취한 괴델 넘버링을 이용하여, 우리가 방금 공부했던 방법으로, 모든 짝수들의 집합에 대한 괴델 문장을 하나 찾아라.
+그것은 참인가 거짓인가?
+\item[(2)] 같은 것을 모든 홀수들의 집합에 대하여서도 하라.
+\end{enumerate}
+
+위 두 물음에 대하여 답하여라.
+\end{context}
+
+\begin{context}[Exercise 7]
+임의의 논리식 $F$와 임의의 수 $n$에 대하여 $F$에 자유롭게 나타나는 개체 변수가 $v_1$ 뿐이고 $F$의 괴델 수가 $n$일 때 $f \left( n \right)$이 $F$가 표현하는 집합에 대한 괴델 문장의 괴델 수가 되게 하는 싼술적인 함수 $f : \mathbb{N} \to \mathbb{N}$을 찾아라.\footnote
+{
+그러한 $f$는 \underline{괴델라이저}(\textit{G\"odelizer})라고 적절하게 불릴 수 있을 것이다.
+}
+\end{context}
+
+\begin{context}[Exercise 8]
+\textbf{[어려움 주의!]} 임의의 $A \subseteq \mathbb{N}$과 임의의 $B \subseteq \mathbb{N}$에 대하여,
+$A$와 $B$ 모두 싼술적이면 어떤 두 문장 $X$와 $Y$가 존재하여 $X \in \mathcal{T} \leftrightarrow g \left( Y \right) \in A$와 $Y \in \mathcal{T} \leftrightarrow g \left( X \right) \in B$가 성립함을 보여라.
+이것은 \underline{상호 참조}(\textit{cross-reference})의 한 예로 생각될 수 있다;
+$X$를 $Y$의 괴델 수가 $A$에 속한다고 선언하는 문장으로 생각할 수 있고,
+$Y$를 $X$의 괴델 수가 $B$에 속한다고 선언하는 문장으로 생각할 수 있다.
+\end{context}
+
+\begin{context}[Solutions]
+\begin{enumerate}
+\item[{1.}]
+\begin{itemize}
+\item[(a)] $X$와 $Y$를 문장이라고 하자.
+그러면 $\left( X \land Y \right)$는 문장 $\lnot \left( X \rightarrow \lnot Y \right)$의 약어이다.
+\begin{enumerate}
+\item[(\textit{i})] $X$와 $Y$ 모두 참인 경우를 고려하자.
+이때 $\lnot Y$는 거짓이고, 또한 $X \rightarrow \lnot Y$는 거짓이다.
+따라서 $\lnot \left( X \rightarrow \lnot Y \right)$는 참이고 $\left( X \land Y \right)$도 참이다.
+\item[(\textit{ii})] $X$는 참이지만 $Y$는 참이 아닌 경우를 고려하자.
+이때 $\lnot Y$는 참이고 $X \rightarrow \lnot Y$도 참이다.
+따라서 $\lnot \left( X \rightarrow \lnot Y \right)$는 거짓이고 $\left( X \land Y \right)$도 거짓이다.
+\item[(\textit{iii})] $X$는 참이 아니지만 $Y$는 참인 경우를 고려하자.
+이때 $X \rightarrow \lnot Y$는 참이다.
+따라서 $\lnot \left( X \rightarrow \lnot Y \right)$는 거짓이고 $\left( X \land Y \right)$도 거짓이다.
+\item[(\textit{iv})] $X$와 $Y$ 모두 참이 아닌 경우를 고려하자.
+이때 $X \rightarrow \lnot Y$는 참이다.
+따라서 $\lnot \left( X \rightarrow \lnot Y \right)$는 거짓이고 $\left( X \land Y \right)$도 거짓이다.
+\end{enumerate}
+그러므로 위의 네 경우로부터 $\left( X \land Y \right)$가 참일 때 그리고 그럴 때에만 $X$와 $Y$ 모두 참임을 알 수 있다.
+\item[(b)] $X$와 $Y$를 문장이라고 하자.
+그러면 $\left( X \lor Y \right)$는 문장 $\left( \lnot X \rightarrow Y \right)$의 약어이다.
+\begin{enumerate}
+\item[(\textit{i})] $X$와 $Y$ 모두 참인 경우를 고려하자.
+$\lnot X$가 거짓이므로 $\left( \lnot X \rightarrow Y \right)$는 참이다.
+따라서 $\left( X \lor Y \right)$도 참이다.
+\item[(\textit{ii})] $X$는 참이지만 $Y$는 참이 아닌 경우를 고려하자.
+$\lnot X$가 거짓이므로 $\left( \lnot X \rightarrow Y \right)$는 참이다.
+따라서 $\left( X \lor Y \right)$도 참이다.
+\item[(\textit{iii})] $X$는 참이 아니지만 $Y$는 참인 경우를 고려하자.
+$\lnot X$가 참이고 $\left( \lnot X \rightarrow Y \right)$도 참이므로, $\left( X \lor Y \right)$도 참이다.
+\item[(\textit{iv})] $X$와 $Y$ 모두 참이 아닌 경우를 고려하자.
+그러면 $\lnot X$가 참이지만 $\left( \lnot X \rightarrow Y \right)$는 거짓이다.
+따라서 $\left( X \lor Y \right)$도 거짓이다.
+\end{enumerate}
+그러므로 위의 네 경우로부터 $\left( X \lor Y \right)$가 참일 때 그리고 그럴 때에만 $X$와 $Y$ 중 적어도 하나가 참임을 알 수 있다.
+\item[(c)] $F$를 자유롭게 나타나는 개체 변수가 $v_i$ 뿐인 논리식이라고 하자.
+그러면 $\exists v_i F$는 문장 $\lnot \forall v_i \lnot F$의 약어이다.
+먼저 $\lnot \forall v_i \lnot F$가 참이라고 하자.
+그러면 $\forall v_i \lnot F$는 거짓이다.
+이때, 모든 $n \in \mathbb{N}$에 대하여 $F \left[ v_i := \overline{n} \right]$이 거짓이라면,
+$\forall v_i \lnot F$는 거짓임에 모순이다.
+따라서 어떤 $n \in \mathbb{N}$가 존재하여 $F \left[ v_i := \overline{n} \right]$이 거짓이 아니어야 한다.
+이제 어떤 $n \in \mathbb{N}$가 존재하여 $F \left[ v_i := \overline{n} \right]$이 참이라고 하자.
+그러면 $\forall v_i \lnot F$은 거짓이다.
+따라서 $\lnot \forall v_i \lnot F$는 거짓이다.
+이상에서 $\exists v_i F$가 참일 때 그리고 그럴 때에만 어떤 $n \in \mathbb{N}$가 존재하여 $F \left[ v_i := \overline{n} \right]$이 참임을 알 수 있다.
+\end{itemize}
+
+\item[{2.}]
+\begin{itemize}
+\item[(a)] 논리식 $\exists v_3 v_2 = \left( v_1 \times v_3 \right)$이 ``$x$가 $y$의 약수이다''라는 관계를 표현하기 때문이다.
+\item[(b)] 논리식 $\left( v_1 \neq \overline{1} \land \left( \forall v_2 \forall v_3 \left( \left( v_1 = v_2 \times v_3 \right) \rightarrow \left( v_2 = \overline{1} \lor v_2 = v_1 \right) \right) \right) \right)$이 모든 소수들의 집합을 표현하기 때문이다.
+\end{itemize}
+
+\item[{3.}] 집합 $A \subseteq \mathbb{N}$과 함수 $f : \mathbb{N} \to \mathbb{N}$가 싼술적이라고 하자.
+그러면 자유롭게 나타나는 개체 변수가 $v_1$ 뿐인 어떤 논리식 $F_A$와 자유롭게 나타나는 개체 변수가 $v_1$과 $v_2$ 뿐인 어떤 논리식 $F_f$가 존재하여
+$$\left( \forall n \in \mathbb{N} \right) \left[ F_A \left[ v_1 := \overline{n} \right] \in \mathcal{T} \leftrightarrow n \in A \right]$$와
+$$\left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ F_f \left[ v_1 := \overline{x} , v_2 := \overline{y} \right] \in \mathcal{T} \leftrightarrow f \left( x \right) = y \right]$$가 성립한다.
+이때 논리식 $\exists v_2 \left( F_f \land F_A \left[ v_1 := v_2 \right] \right)$을 고려하자.
+이 논리식은 $$\left( \exists y \in \mathbb{N} \right) \left[ f \left( x \right) = y \land y \in A \right]$$을 만족시키는 모든 $x \in \mathbb{N}$들의 집합을 표현한다.
+그런데 그 집합은 결국 $f^{-1} \left[ A \right]$를 표현하므로, $f^{-1} \left[ A \right]$는 싼술적임을 알 수 있다.
+$A$과 $f$가 산술적인 경우에는,
+고려 중인 논리식이 산술적이게 되므로 $f^{-1} \left[ A \right]$도 산술적임을 알 수 있다.
+
+\item[{4.}]
+\begin{itemize}
+\item[(a)] $f : \mathbb{N} \to \mathbb{N}$와 $g : \mathbb{N} \to \mathbb{N}$ 모두 싼술적이라고 하자.
+그러면 개체 변수 $v_1$과 $v_2$만이 자유롭게 나타나는 어떤 두 논리식 $F_f$와 $F_g$가 존재하여
+$$\left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ F_f \left[ v_1 := \overline{x} , v_2 := \overline{y} \right] \in \mathcal{T} \leftrightarrow f \left( x \right) = y \right]$$와
+$$\left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ F_g \left[ v_1 := \overline{x} , v_2 := \overline{y} \right] \in \mathcal{T} \leftrightarrow g \left( x \right) = y \right]$$가 성립한다.
+이제 논리식 $\forall v_3 \left( F_f \left[ v_2 := v_3 \right] \rightarrow F_g \left[ v_1 := v_3 \right] \right)$를 고려하자.
+이것은 관계 $$\forall z \left( f \left( x \right) = z \rightarrow g \left( z \right) = y \right)$$을 표현하므로,
+함수 $x \mapsto f \left( g \left( x \right) \right) : \mathbb{N} \to \mathbb{N}$도 싼술적이다.
+\item[(b)] $f : \mathbb{N} \to \mathbb{N}$와 $g : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$ 모두 싼술적이라고 하자.
+그러면 개체 변수 $v_1$과 $v_2$만이 자유롭게 나타나는 어떤 논리식 $F_f$와 개체 변수 $v_1$, $v_2$와 $v_3$만이 자유롭게 나타나는 어떤 논리식 $F_g$가 존재하여
+$$\left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ F_f \left[ v_1 := \overline{x} , v_2 := \overline{y} \right] \in \mathcal{T} \leftrightarrow f \left( x \right) = y \right]$$와
+$$\left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left( \forall z \in \mathbb{N} \right) \left[ F_g \left[ v_1 := \overline{x} , v_2 := \overline{y} , v_3 := \overline{z} \right] \in \mathcal{T} \leftrightarrow g \left( x , y \right) = z \right]$$가 성립한다.
+이때 세 논리식 $F_1$, $F_2$와 $F_3$를 개체 변수 $v_1$, $v_2$와 $v_3$만이 자유롭게 나타나도록 다음과 같이 정의하자:
+\begin{align*}
+F_1 & : \equiv \forall v_4 \left( F_f \left[ v_2 := v_4 \right] \rightarrow F_g \left[ v_1 := v_4 \right] \right) \\
+F_2 & : \equiv \forall v_4 \left( F_f \left[ v_2 := v_4 \right] \left[ v_1 := v_2 \right] \rightarrow F_g \left[ v_2 := v_4 \right] \right) \\
+F_3 & : \equiv \forall v_4 \left( F_g \left[ v_3 := v_4 \right] \rightarrow F_f \left[ v_1 := v_4 \right] \left[ v_2 := v_3 \right] \right)
+\end{align*}
+그러면, 함수 $\left( x , y \right) \mapsto g \left( f \left( x \right) , y \right) : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$은 $F_1$에 의하여 표현되고
+함수 $\left( x , y \right) \mapsto g \left( x , f \left( y \right) \right) : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$는 $F_2$에 의하여 표현되고
+함수 $\left( x , y \right) \mapsto f \left( g \left( x , y \right) \right)$는 $F_3$에 의하여 표현되므로, 모두 싼술적이다.
+\end{itemize}
+
+\item[{5.}] $A$가 싼술적이므로, 개체 변수 $v_1$만이 자유롭게 나타나는 논리식 $F_A$가 존재하여
+$$ \left( \forall n \in \mathbb{N} \right) \left[ F_A \left[ v_1 := \overline{n} \right] \leftrightarrow n \in A \right] $$이 성립한다.
+이때 논리식 $$\left( \left( F_A \left[ v_1 := v_2 \right] \land v_1 < v_2 \right) \land \forall v_3 \left( \left( F_A \left[ v_1 := v_3 \right] \land v_1 < v_3 \right) \rightarrow v_2 \leq v_3 \right) \right)$$을 고려하자.
+이 논리식은 관계 $ \left( y \in A \land x < y \right) \land \left( \forall z \in \mathbb{N} \right) \left[ \left( z \in A \land x < z \right) \rightarrow y \leq z \right] $를 표현하는데,
+이 관계는 임의의 $x \in \mathbb{N}$와 $y \in \mathbb{N}$에 대하여 $R \left( x , y \right)$와 동등하므로, 관계 $R \subseteq \mathbb{N}^{2}$은 싼술적이다.
+
+\item[{6.}] 문제를 풀기에 앞서, 괴델 넘버링의 기저를 $10$으로 취했을 때의 대각 함수 $d$를 계산해 보자.
+임의의 $x \in \mathbb{N}$에 대하여,
+$\gnum \left( \overline{x} \right) = 10^{x}$임과 $$ \gnum \left( v_1 \right) = \gnum \left( \left( v \circ \right) \right) = 2 *_{10} 6 *_{10} 5 *_{10} 3 = 2653 $$임에 주목하면,
+\begin{align*}
+d \left( x \right)
+& = r \left( x , x \right) \\
+& = \gnum \left( \forall v_1 \left( v_1 = \overline{x} \rightarrow E_x \right) \right) \\
+& = \gnum \left( \forall \right) *_{10} \gnum \left( v_1 \right) *_{10} \gnum \left( ( \right) *_{10} \gnum \left( v_1 \right) *_{10} \gnum \left( = \right) *_{10} \gnum \left( \overline{x} \right) *_{10} \gnum \left( \rightarrow \right) *_{10} \gnum \left( E_x \right) * \gnum \left( ) \right) \\
+& = 899 *_{10} 2653 *_{10} 2 *_{10} 2653 *_{10} 10^{x} *_{10} 89 *_{10} x *_{10} 3 \\
+& = 899265322653 *_{10} 10^{x} *_{10} 89 *_{10} x *_{10} 3
+\end{align*}
+를 얻는다.
+$k := 899265322653$로 놓자.
+그러면, 관계 $k *_{10} 10^{x} *_{10} 89 *_{10} x *_{10} 3 = y$는 싼술적이므로,
+개체 변수 $v_1$과 $v_2$만이 자유롭게 나타나는 논리식 $D$가 존재하여 $$ \left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ D \left[ v_1 := \overline{x} , v_2 := \overline{y} \right] \in \mathcal{T} \leftrightarrow k *_{10} 10^{x} *_{10} 89 *_{10} x *_{10} 3 = y \right] $$가 성립한다.
+\begin{itemize}
+\item[(1)] 이제 모든 짝수들의 집합을 $A$라고 하자.
+임의의 $x \in \mathbb{N}$에 대하여
+\begin{align*}
+x \in A^{*}
+& \iff \left( \exists y \in \mathbb{N} \right) \left[ d \left( x \right) = y \land y \in A \right] \\
+& \iff \left( \exists y \in \mathbb{N} \right) \left[ k *_{10} 10^{x} *_{10} 89 *_{10} x *_{10} 3 = y \land \left( \exists z \in \mathbb{N} \right) \left[ y = 2 z \right] \right]
+\end{align*}
+이므로,
+논리식 $$ H_A : \equiv \exists v_2 \left( D \land \exists v_3 \left( v_2 = \overline{2} \times v_3 \right) \right) $$은 집합 $A^{*}$를 표현한다.
+이때 $H_A$의 괴델 수를 $h_A$라 하자.
+그러면 $ H_A \left( h_A \right) $은 원하던 $A$의 괴델 문장이 된다.
+한편, $k *_{10} 10^{h_A} *_{10} 89 *_{10} h_A *_{10} 3$가 짝수일 때 그리고 그럴 때에만 이 문장이 참인데,
+이 수의 $10$진 표기의 마지막 숫자는 $3$이므로 $H_A \left( h_A \right)$는 거짓임을 알 수 있다.
+\item[(2)] 이제 모든 홀수들의 집합을 $B$라고 하자.
+임의의 $x \in \mathbb{N}$에 대하여
+\begin{align*}
+x \in B^{*}
+& \iff \left( \exists y \in \mathbb{N} \right) \left[ d \left( x \right) = y \land y \in B \right] \\
+& \iff \left( \exists y \in \mathbb{N} \right) \left[ k *_{10} 10^{x} *_{10} 89 *_{10} x *_{10} 3 = y \land \left( \forall z \in \mathbb{N} \right) \left[ y \neq 2 z \right] \right]
+\end{align*}
+이므로,
+논리식 $$ H_B : \equiv \exists v_2 \left( D \land \forall v_3 \lnot \left( v_2 = \overline{2} \times v_3 \right) \right) $$은 집합 $B^{*}$를 표현한다.
+이때 $H_B$의 괴델 수를 $h_B$라 하자.
+그러면 $H_B \left( h_B \right)$은 원하던 $B$의 괴델 문장이 된다.
+한편, $k *_{10} 10^{h_B} *_{10} 89 *_{10} h_B *_{10} 3$가 홀수일 때 그리고 그럴 때에만 이 문장이 참인데,
+이 수의 $10$진 표기의 마지막 숫자는 $3$이므로 $H_B \left( h_B \right)$은 참임을 알 수 있다.
+\end{itemize}
+
+\item[{7.}] 먼저 대각 함수 $d$는 싼술적이므로,
+$v_1$과 $v_2$만이 자유롭게 나타나는 개체 변수인 논리식 $D$가 존재하여
+$$\left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left[ D \left[ v_1 := \overline{x} , v_2 := \overline{y} \right] \in \mathcal{T} \leftrightarrow d \left( x \right) = y \right]$$가 성립한다.
+임의의 $n \in \mathbb{N}$에 대하여,
+표현식 $E_{n}$이 자유롭게 나타나는 개체 변수가 $v_1$ 뿐인 논리식일 때,
+논리식 $$ F_{n} : \equiv \exists v_2 \left( D \land \forall v_1 \left( v_1 = v_2 \rightarrow E_{n} \right) \right) $$에 대하여
+$F_{n} \left( \gnum \left( F_{n} \right) \right)$은 $E_{n}$이 표현하는 집합의 괴델 문장이다.
+그러므로 $$ f \left( n \right) := \gnum \left( \forall v_1 \left( v_1 = \overline{\gnum \left( F_{n} \right)} \rightarrow F_{n} \right) \right) $$로 두자.
+그러면 $f$는 싼술적이므로 원하는 답을 얻었다.
+
+\item[{8.}] \textbf{다음은 \underline{전한울}님의 풀이임을 밝힙니다:}
+
+$A \subseteq \mathbb{N}$와 $B \subseteq \mathbb{N}$을 싼술적이라고 하자.
+그러면 개체 변수 $v_1$만이 자유롭게 나타나는 어떤 두 논리식 $F_A$와 $F_B$가 존재하여
+$$ \left( \forall n \in \mathbb{N} \right) \left[ F_A \left[ v_1 := \overline{n} \right] \in \mathcal{T} \leftrightarrow n \in A \right]$$와
+$$ \left( \forall n \in \mathbb{N} \right) \left[ F_B \left[ v_1 := \overline{n} \right] \in \mathcal{T} \leftrightarrow n \in B \right]$$가 성립한다.
+각각의 표현식 $E$에 대하여 각 $x \in \mathbb{N}$와 각 $y \in \mathbb{N}$마다 $$E \left( x , y \right) : \equiv \forall v_1 \forall v_2 \left( v_1 = \overline{x} \rightarrow \left( v_2 = \overline{y} \rightarrow E \right) \right)$$라고 표기하자.
+그리고 함수 $\mathrm{fst} : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$와 $\mathrm{snd} : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$을
+각각 $$ \mathrm{fst} \left( x , y \right) := \gnum \left( E_x \left( x , y \right) \right)$$와
+$$\mathrm{snd} \left( x , y \right) := \gnum \left( E_y \left( x , y \right) \right)$$로 두자.
+그런데 $\mathrm{fst}$와 $\mathrm{snd}$는 모두 싼술적인 함수이므로,
+개체 변수 $v_1$, $v_2$와 $v_3$만이 자유롭게 나타나는 어떤 두 논리식 $\mathrm{Fst}$와 $\mathrm{Snd}$가 존재하여
+$$ \left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left( \forall z \in \mathbb{N} \right) \left[ \mathrm{Fst} \left[ v_1 := \overline{x} , v_2 := \overline{y} , v_3 := \overline{z} \right] \in \mathcal{T} \leftrightarrow \mathrm{fst} \left( x , y \right) = z \right] $$와
+$$ \left( \forall x \in \mathbb{N} \right) \left( \forall y \in \mathbb{N} \right) \left( \forall z \in \mathbb{N} \right) \left[ \mathrm{Snd} \left[ v_1 := \overline{x} , v_2 := \overline{y} , v_3 := \overline{z} \right] \in \mathcal{T} \leftrightarrow \mathrm{snd} \left( x , y \right) = z \right] $$가 성립한다.
+이제 논리식 $F_1$과 $F_2$를 각각 $$F_1 : \equiv \forall v_3 \left( \mathrm{Snd} \rightarrow F_A \left[ v_1 := v_3 \right] \right)$$와 $$F_2 : \equiv \forall v_3 \left( \mathrm{Fst} \rightarrow F_B \left[ v_1 := v_3 \right] \right)$$로 놓자.
+그러면, $F_1$과 $F_2$에는 개체 변수 $v_1$와 $v_2$만이 자유롭게 나타나며,
+\begin{align*}
+F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \in \mathcal{T}
+& \iff \left( \forall z \in \mathbb{N} \right) \left[ \mathrm{snd} \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) = z \rightarrow F_A \left[ v_1 := \overline{z} \right] \in \mathcal{T} \right] \\
+& \iff F_A \left[ v_1 := \overline{\mathrm{snd} \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right)} \right] \in \mathcal{T} \\
+& \iff F_A \left[ v_1 := \overline{\gnum \left( F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right)} \right] \in \mathcal{T} \\
+\end{align*}
+이고
+\begin{align*}
+F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \in \mathcal{T}
+& \iff \left( \forall z \in \mathbb{N} \right) \left[ \mathrm{fst} \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) = z \rightarrow F_B \left[ v_1 := \overline{z} \right] \in \mathcal{T} \right] \\
+& \iff F_B \left[ v_1 := \overline{\mathrm{fst} \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right)} \right] \in \mathcal{T} \\
+& \iff F_B \left[ v_1 := \overline{\gnum \left( F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right)} \right] \in \mathcal{T} \\
+\end{align*}
+이다.
+이때 $$X : \equiv F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right)$$와 $$Y : \equiv F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right)$$를 취하자.
+그러면,
+\begin{align*}
+X \in \mathcal{T}
+& \iff F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \in \mathcal{T} \\
+& \iff F_A \left[ v_1 := \overline{\gnum \left( F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right)} \right] \in \mathcal{T} \\
+& \iff \gnum \left( F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right) \in A \\
+& \iff \gnum \left( Y \right) \in A
+\end{align*}
+이고,
+\begin{align*}
+Y \in \mathcal{T}
+& \iff F_2 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \in \mathcal{T} \\
+& \iff F_B \left[ v_1 := \overline{\gnum \left( F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right)} \right] \in \mathcal{T} \\
+& \iff \gnum \left( F_1 \left( \gnum \left( F_1 \right) , \gnum \left( F_2 \right) \right) \right) \in B \\
+& \iff \gnum \left( X \right) \in B
+\end{align*}
+이다.
+이로써 $$X \in \mathcal{T} \leftrightarrow \gnum \left( Y \right) \in A$$와 $$Y \in \mathcal{T} \leftrightarrow \gnum \left( X \right) \in B$$가 성립함을 알 수 있다.
+\end{enumerate}
+\end{context}
+
+\newpage
+
+\section{제곱 연산이 있는 페아노 산술의 불완전성}
+\hspace{12pt}
+
+\subsection{P.E. 공리계}
+\hspace{12pt}
+
+\noindent \textbf{\S1. P.E. 공리계}
+
+이제 \underline{제곱 연산이 있는 페아노 산술}(\textit{Peano Arithmetic with Exponentiation})이라고 불리는 공리계로 넘어갈 것인데,
+이 형식 체계를 약어로 ``P.E.''라고 부를 것이다.
+\underline{공리}(\textit{axiom})라고 불리는, 정확한 특정 논리식들을 잡고;
+이미 증명된 [정확한 논리식]들로부터 새로운 [정확한 논리식]을 증명할 수 있게 하는 두 \underline{추론 규칙}(\textit{inference rule})을 제공한다.
+공리의 개수는 무한히 많지만,
+각 공리는 쉽게 인식할 수 있는 열아홉 가지의 꼴 중 하나이다;
+이러한 꼴들을 \underline{공리꼴}(\textit{axiom schemes})라고 한다.
+19가지의 공리꼴을 4개의 그룹으로 분류하는 것은 편리하다. (cf. 공리꼴이 소개된 다음의 논의)
+그룹 I와 II는 이른바 \underline{논리적 공리}(\textit{logical axioms})라고 하는데,
+Tarski[1965]을 기초로 한 Kalish, Montague[1965]의 등호가 있는 일차논리의 적절한 형식화의 기둥이 된다.
+그룹 III와 그룹 IV는 \underline{산술}(\textit{arithmetic}) 공리라고 불린다.
+
+여기서
+$F$, $G$, $H$는 임의의 논리식이며,
+$v_i$, $v_j$는 임의의 변수이며,
+$t$는 임의의 항이다.
+예를 들어, 첫 번째 공리꼴 $L_1$은 \textit{임의의} 논리식 $F$와 $G$에 대하여 논리식 $$\left( F \rightarrow \left( G \rightarrow F \right) \right)$$를 공리 중 하나로 둔다는 걸 의미하고;
+공리꼴 $L_4$는 \textit{임의의} 변수 $v_i$와 \textit{임의의} 논리식 $F$와 $G$에 대하여 논리식 $$\left( \forall v_i \left( F \rightarrow G \right) \rightarrow \left( \forall v_i F \rightarrow \forall v_i G \right) \right)$$를 공리 중 하나로 둔다는 것을 의미한다.
+
+\noindent \textbf{Group I--Axiom Schemes for Propositional Logic}
+\begin{enumerate}
+\item[$L_{1}$ :] $\left( F \rightarrow \left( G \rightarrow F \right) \right)$
+\item[$L_{2}$ :] $\left( \left( F \rightarrow \left( G \rightarrow H \right) \right) \rightarrow \left( \left( F \rightarrow H \right) \rightarrow \left( G \rightarrow H \right) \right) \right)$
+\item[$L_{3}$ :] $\left( \left( \lnot F \rightarrow \lnot G \right) \rightarrow \left( G \rightarrow F \right) \right)$
+\end{enumerate}
+
+\noindent \textbf{Group II--Additional Axiom Schemes for First-Order Logic with Identity}
+\begin{enumerate}
+\item[$L_{4}$ :] $\left( \forall v_i \left( F \rightarrow G \right) \rightarrow \left( \forall v_i F \rightarrow \forall v_i G \right) \right)$
+\item[$L_{5}$ :] $\left( F \rightarrow \forall v_i F \right)$ (단, $v_i$는 $F$에서 자유롭게 나타나지 않아야 함)
+\item[$L_{6}$ :] $\exists v_i v_i = t$ (단, $v_i$는 $t$에 자유롭게 나타나지 않아아 함)
+\item[$L_{7}$ :] $\left( v_i = t \rightarrow \left( X_1 v_i X_2 \rightarrow X_1 t X_2 \right) \right)$ (단, $X_1$과 $X_2$는 $X_1 v_i X_2$가 원자 논리식이 되게 하는 임의의 표현식임)\footnote
+{
+이 공리꼴의 대안으로는 $\left( v_i = t \rightarrow \left( Y_1 \rightarrow Y_2 \right) \right)$가 있다.
+여기서 $Y_1$은 원자 논리식이고, $Y_2$는 $Y_1$에서 $v_i$의 나타남 중 아무거나 하나를 $t$로 교체하여 얻은 식이다.
+}
+\end{enumerate}
+
+\noindent \textbf{Group III--Eleven Axiom Schemes Having Only One Axiom Apiece}
+\begin{enumerate}
+\item[$N_{1}$ :] $\left( v_1 ' = v_2 ' \rightarrow v_1 = v_2 \right)$
+\item[$N_{2}$ :] $\lnot \overline{0} = v_i '$
+\item[$N_{3}$ :] $\left( v_1 + \overline{0} \right) = v_1$
+\item[$N_{4}$ :] $\left( v_1 + v_2 ' \right) = \left( v_1 + v_2 \right) '$
+\item[$N_{5}$ :] $\left( v_1 \times \overline{0} \right) = \overline{0}$
+\item[$N_{6}$ :] $\left( v_1 \times v_2 ' \right) = v_1 \times v_2 + v_1$
+\item[$N_{7}$ :] $\left( v_1 \leq \overline{0} \leftrightarrow v_1 = \overline{0} \right)$
+\item[$N_{8}$ :] $\left( v_1 \leq v_2 ' \leftrightarrow \left( v_1 \leq v_2 \lor v_1 = v_2 ' \right) \right)$
+\item[$N_{9}$ :] $\left( v_1 \leq v_2 \lor v_2 \leq v_1 \right)$
+\item[$N_{10}$ :] $\left( v_1 \mathop{\mathbf{E}} \overline{0} \right) = \overline{1}$
+\item[$N_{11}$ :] $\left( v_1 \mathop{\mathbf{E}} v_2 ' \right) = \left( \left( v_1 \mathop{\mathbf{E}} v_2 \right) \times v_2 \right)$ 
+\end{enumerate}
+
+\noindent \textbf{Group IV}
+이 그룹에는 오직 하나의 공리꼴만이 있다 -- 수학적 귀납법의 공리꼴 --
+그러나 그것은 $v_1$만이 자유롭게 나타나는 논리식 $F$마다 무한히 많은 공리를 준다.
+이 공리꼴을 나타내기 위하여, $F$를 $v_1$만이 자유롭게 나타나는 논리식이라고 하자.
+$G$를 $$\forall v_i \left( v_i = v_1 ' \rightarrow \forall v_1 \left( v_1 = v_i \rightarrow F \right) \right)$$ 꼴의 아무 논리식이라고 하되,
+여기서 $v_i$는 $F$에 자유롭게 나타나지 않는다고 하자.\footnote
+{
+이러한 꼴의 논리식은 $F \left[ v_1 := v_1 ' \right]$와 동등하다 -- 즉, $F$에서의 $v_1$의 모든 자유 나타남들을 $v_1 '$로 교체한 결과와 같다.
+}
+이때,
+\begin{enumerate}
+\item[$N_{12}$ :] $\left( F \left( 0 \right) \rightarrow \left( \forall v_1 \left( F \rightarrow G \right) \rightarrow \forall v_1 F \right) \right)$
+\end{enumerate}
+가 수학적 귀납법의 공리꼴이다.
+
+\begin{context}[Discussion]
+1번 그룹의 공리들은 명제 논리의 표준 체계를 구성한다(cf. Church [1956]).
+2번 그룹의 공리들은 (Montague와 Kalish 덕분에) 변수의 자유 타나남에 대한 치환의 개념에 호소하지 않고 진술될 수 있다는 기술적 이점을 가진다 --
+정말로, 자유변수와 속박변수의 개념조차도 우회했다.
+대신에, \underline{대체}(\textit{replacement})라는 더 단순한 개념만을 쓴다 --
+대체란, 공리꼴 $L_{7}$에 사용된 변수의 \textit{한} 나타남에만 대한 치환을 의미한다.
+\end{context}
+
+\begin{context}[Inference Rules]
+P.E.의 추론 규칙은 표준적이며, 두 개로 이루어진다.
+\begin{itemize}[leftmargin=.5in]
+\item[$Rule \; \mathit{1}$] [Modus Ponens]--$F$와 $F \to G$로부터 $G$를 추론한다.
+\item[$Rule \; \mathit{2}$] [Generalization]--$F$로부터 $\forall v_{i} F$를 추론한다.
+\end{itemize}
+P.E.에서의 \underline{증명}(\textit{proof})이란,
+각 원소들이
+\begin{enumerate}
+\item 공리이거나
+\item 앞선 두 원소로부터 Modus Ponens에 의하여 얻어지거나
+\item 앞선 한 원소로부터 Generalization에 의하여 얻어지는
+\end{enumerate}
+논리식들의 유한열을 의미한다.
+논리식 $F$를 마지막 원소로 가지는 증명이 있을 때,
+$F$를 (P.E.에서) \underline{증명 가능}(\textit{provable})하다고 한다.
+논리식 $F$에 대하여 $\lnot F$를 마지막 원소로 가지는 증명이 있을 때,
+$F$를 (P.E.에서) \underline{반증 가능}(\textit{refutable})하다고 한다.
+\end{context}
+
+\subsection{공리계의 산술화}
+\hspace{12pt}
+
+이제 P.E.의 모든 증명가능한 문장들의 괴델 수들을 모은 집합이 (바로 전 단원에서의 집합 $T$와 다르게) 산술적인 집합이라는 것을 증명하는 데 집중하겠다.
+
+\noindent \textbf{\S2. 예비 사항}
+
+우리는 (이전 장의 명제 1과 그것의 따름정리에 의하여)
+이미 아무 기저 $ b \ge 2 $에 대하여 관계 $ x *_{b} y = z $가 싼술적이라는 것과
+각 $n \ge 2$에 대하여 관계 $ x_1 *_{b} * x_2 *_{b} \cdots *_{b} x_n = y $가 싼술적이라는 것을 안다.
+
+숫자 $x$의 기저 $b$ 표기가 숫자 $y$의 기저 $b$ 표기의 시작분절(initial segmemt)이라면,
+기저 $b$ 표기에서 $x$가 $y$를 \underline{시작시킨다}(\textit{begin})고 말한다.\footnote
+{
+예를 들어, 기저 $10$ 표기에서 $593$은 $59348$을 시작시킨다; 또한 $593$은 $593$을 시작시킨다.
+}
+$0$은 $0$을 제외한 어떤 수도 시작시키지 않는다.\footnote
+{
+$59 = 059$임에도 불구하고, 우리는 $0$이 $59$를 시작시킨다고 말하지 \textit{않는다}.
+}
+``기저 $b$ 표기에서 $x$가 $y$를 시작시킨다''를 ``$x B_{b} y$''로 적는다.
+$x$가 $y$의 최종분절(final segment)일 때 $x$가 기저 $b$ 표기에서 $y$를 \underline{끝낸다}(\textit{end})고 한다 -- 기호로는, $x E_{b} y$라고 적는다.\footnote
+{
+예를 들어, 기저 $10$ 표기에서 $348$은 $59348$를 끝낸다; $48$도 $59348$을 끝낸다.
+또한, $0$은 $570$을 끝내고 $70$과 $570$도 마찬가지로 $570$을 끝낸다.
+}
+(기저 $b$ 표기에서) $x$가 $y$를 시작시키는 어떤 수로 끝날 때, $x$는 $y$의 \underline{부분}(\textit{part})이라고 한다 -- 기호로는, $x P_{b} y$라고 적는다.\footnote
+{
+예를 들어, 기저 $10$ 표기에서 $59$는 $934$, $34$와 마찬가지로 $59348$의 부분이다.
+또한 $0$은 $5076$의 부분이지만, $576$의 부분인 것은 아니다.
+}
+(기저 $b$ 표기에서) ``$x$가 $y$를 시작시킨다''는 관계를 고려하자.
+$0$이 $y$의 부분이 아니라면, 이 관계가 성립할 때 그리고 그럴 때에만 $x = y$이거나 $x \ne 0 \land \exists z \left( x *_{b} y = z \right)$이다.
+그러나, 일반적인 경우에서는 $0$이 $y$의 부분이 될 수 있고, $x$가 $y$를 시작시킬 때 그리고 그럴 때에만 $x = y$이거나 $x = 0$이고 어떤 $z$와 $b$의 멱 $w$에 대하여 $\left( x \times w \right) *_{b} z = y$이다.\footnote
+{
+예를 들어, 기저 $10$ 표기에서, $5$가 $5007$을 시작시키는 이유는 위의 조건이 $z = 7$, $w = 100$에 대하여 성립하기 때문이고,
+$5$가 $57$을 시작시키는 이유는 위의 조건이 $z = 7$, $w = 1$에 대하여 성립하기 때문이다.
+}
+관련된 $z$와 $w$ 모두 $y$보다 작거나 같다(실제로는 작지만)는 사실에 주목하자 -- 이 사실은 이 장에서가 아니라 뒷 장에서 중요하다.
+관계 ``$x$가 $y$를 끝낸다''와 ``$x$가 $y$의 부분이다''는 기술하기에 훨씬 쉽고, 다음과 같은 동치 명제들을 얻게 된다:
+\begin{align*}
+x B_{b} y & \iff x = y \lor \left( x \ne 0 \land \left( \exists z \le y \right) \left( \exists w \le y \right) \left[ \mathrm{Pow}_{b} \left( w \right) \land \left( x \times w \right) *_{b} z = y \right] \right) ; \\
+x E_{b} y & \iff x = y \lor \left( \exists z \le y \right) \left[ z *_{b} x = y \right] ; \\
+x P_{b} y & \iff \left( \exists z \le y \right) \left[ z E_{b} y \land x B_{b} z \right] .
+\end{align*}
+
+따라서, 관계 $x B_{b} y$, $x E_{b} y$와 $x P_{b} y$는 모두 싼술적이다. 또한
+$$ x_{1} *_{b} x_{2} *_{b} \cdots *_{b} x_{n} P_{b} y \iff \left( \exists z \le y \right) \left[ x_{1} *_{b} x_{2} *_{b} \cdots *_{b} x_{n} = z \land z P_{b} y \right] $$이므로,
+
+\begin{context}[Proposition 1]
+아무 $b \ge 2$와 아무 $n \ge 2$에 대하여 다음 관계들은 싼술적이다. \setstretch{1.0}
+\begin{enumerate}
+\item $x B_{b} y$
+\item $x E_{b} y$
+\item $x P_{b} y$
+\item $x_{1} *_{b} x_{2} *_{b} \cdots *_{b} x_{n} P_{b} y$
+\end{enumerate} \setstretch{1.5}
+\end{context}
+
+\begin{context}[Remarks]
+위의 동치명제들에서 ``$\left( \exists z \le y \right)$''라고 적지 않고 더 단순하게 ``$\exists z$''라고 적어도,
+위의 관계들이 싼술적이라는 것을 보이는 데 무리가 없다. 우리가 더 복잡하게 적은 목적은 뒷 장에서 나타나는데,
+위 관계들이 싼술적일 뿐만 아니라 \textit{구성적인} 산술적 관계라고 알려진 더 좁은 관계들의 분류에 속한다는 것을 보이기 위함이 그 목적이다.
+\end{context}
+
+이 장의 나머지에서, $b$는 $13$이 될 것이고, 어수선함을 줄이기 위하여, 아래 첨자 $b$를 생략하고 단지 $x B y$, $x E y$ 또는 $x P y$라고만 적을 것이다.
+또한 지금부터 $x *_{13} y$를 $x y$라고 적을 것이다.\footnote
+{
+이것은 어떠한 혼란도 야기하지 않는다. $x$ 곱하기 $y$를 항상 $x \cdot y$로 적기 때문이다.
+}
+또한 $\lnot x P y$를 $x \tilde{P} y$로 적고, $$ x_1 *_{13} x_2 *_{13} \cdots *_{13} x_{n} P y $$를 $x_1 x_2 \cdots x_{n} P y$로 적을 것이다. 
+
+\begin{context}[Finite Sequences]
+독자는 아마도 언어 $\mathcal{L}_{E}$에서 기호 ``$\sharp$''이 무엇을 하는지 궁금해 왔을 것이다.
+왜냐하면, 바로 전 장에서 아무 것에도 사용되지 않았기 때문이다!
+사실 나머지 12 기호들로 구성된 표현식들의 \textit{형식적인} 나열을 형성하려고 예약해 놓았다.
+임의의 나머지 12 기호들로 구성된 표현식들 $X_1$, $\cdots$, $X_{n}$에 대하여,
+수식 $ \sharp X_1 \sharp X_2 \sharp \cdots \sharp X_{n} \sharp $은
+$n$-튜플 $\left( X_{1} , \cdots , X_{n} \right)$의 형식적 대응이고,
+그것의 괴델 수를 \underline{유한열}(\textit{sequence}) 번호라고 부를 것이다.
+\end{context}
+
+다르게 설명해보자면, $K_{11}$을 $\delta$ (13진법의 $12$)가 자연수 $n$(의 13진법 표현)에 나타나지 않는 $n$들의 집합이라고 하자.
+기호 ``$\sharp$''가 나타나지 않는 모든 표현식들의 괴델 수는 $K_{11}$의 원소들(이것은 숫자, 변수, 항, 논리식 같은 \textit{의미있는} 표현식들을 포함한다)이다.
+임의의 $K_{11}$ 안의 수들로 된 유한열 $\left( a_{1} , \cdots , a_{n} \right)$에게 수 $\delta a_1 \delta a_2 \delta \cdots \delta a_n \delta$를 할당하고,
+이 수를 유한열 $\left( a_{1} , \cdots , a_{n} \right)$의 \underline{유한열 번호}(\textit{sequence number})라고 부를 것이다.
+$ \mathrm{Seq} \left( x \right) $를 $x$가 어떤 유한열의 유한열 번호이다는 성질이라고 하자.
+$ x \in y $를 $x$가 원소인 어떤 유한열의 유한열 번호가 $y$이다는 관계라고 하자.\footnote
+{
+그러므로, 임의의 수 $x_{1}, \cdots, x_{n} \in K_{11}$에 대하여, $y = \delta x_1 \delta \cdots \delta x_{n} \delta$이면,
+$x \in y$일 때 그리고 그럴 때마다 $x$가 $x_1$, $\cdots$, $x_n$ 중에 하나이다.
+} $ x \prec_{z} y$를 $z$가, $x$와 $y$가 원소이되 $x$의 첫 번째 나타남이 $y$의 첫 번째 나타남보다 빠른, 유한열의 유한열 번호이다는 관계라고 하자.
+
+\begin{context}[Proposition 2]
+관계 $\mathrm{Seq} \left( y \right)$, $x \in y$와 $x \prec_{z} y$는 모두 싼술적이다.
+\end{context}
+\begin{proof}
+증명은 다음과 같다:
+\begin{enumerate}
+\item $\mathrm{Seq} \left( x \right) \iff \delta B x \land \delta E x \land \delta \ne x \land \delta \delta \tilde{P} x \land \left( \forall y \le x \right) \left[ \delta 0 y P x \rightarrow \delta B y \right]$
+\item $x \in y \iff \mathrm{Seq} \left( y \right) \land \delta x \delta P y \land \delta \tilde{P} x$
+\item $x \prec_{z} y \iff x \in z \land y \in z \land \left( \exists w \le z \right) \left[ w B z \land x \in w \land \lnot \left( y \in w \right) \right]$
+\end{enumerate}
+\end{proof}
+
+이제부터 $ \left( \forall x \in y \right) \varphi $를 $$ \forall x \left( x \in y \rightarrow \varphi \right) $$로 줄여쓰고,
+$ \left( \exists x , y \prec_{w} z \right) \varphi$를 $$ \exists x \exists y \left( x \prec_{w} w \land y \prec_{w} z \land \varphi \right) $$로 줄여쓰자.
+
+\begin{context}[Formation Sequences]
+이전 장에서 \textit{논리항}과 \textit{논리식}의 정의는 귀납적이었다;
+우리는 기존의 논리항에서 새로운 논리항을 그리고 기존의 논리식에서 새로운 논리식을 구성하는 규칙을 주었다.
+우리는 이 귀납적인 정의를 명시적인 정의로 대체하여야 한다.
+
+아무 표현식 $X$, $Y$와 $Z$에 대하여,
+$Z$가 $\left( X + Y \right)$, $\left( X \times Y \right)$, $X \mathbf{E} Y$, $X^{\prime}$ 중 하나일 때 그리고 그럴 때에만
+$R_t \left( X , Y , Z \right)$라고 정의하자.\footnote
+{
+우리는 $R_t$를 \textit{논리항에 대한 형성 관계}라고 부를 수 있을 것이다.
+}
+논리항에 대한 형성 \textit{유한열}이란, 각 원소 $X_{i}$에 대하여 $X_{i}$는 변수 또는 숫자이거나 선행하는 원소 $X_{j}$와 $X_{k}$가 있어서 (단, $j < i$이고 $k < i$) $R_t \left( X_{j}, X_{k}, X_{i} \right)$가 성립하는 유한열 $X_1$, $\cdots$, $X_n$을 의미한다.
+그러면 우리는 $X$가 항이라 함을 $X$가 원소인 형성 유한열이 존재한다로 정의할 수 있다.
+
+논리식도 마찬가지로 한다. $Z$가 $\lnot X$ 또는 $\left( X \to Y \right)$이거나 어떤 변수 $v_{i}$에 대하여 $\forall v_{i} X$일 때 그리고 그럴 때에만
+$R_f \left( X , Y , Z \right)$라고 정의하자.\footnote
+{
+우리는 $R_f$를 \textit{논리식에 대한 형성 관계}라고 부를 수 있을 것이다.
+}
+\textit{논리식}에 대한 형성 유한열을 각 $i \le n$에 대하여 $X_{i}$가 원자 논리식이거나 $j < i$와 $k < i$가 있어서 $R_f \left( X_{j} , X_{k} , X_{i} \right)$인 것으로 정의한다.
+그러면 표현식 $X$가 논리식일 때 그리고 그럴 때에만 $X$가 원소인 논리식에 대한 형성 유한열이 존재한다.
+\end{context}
 
 \end{document}
