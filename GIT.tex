@@ -2045,6 +2045,46 @@ $R_f \left( X , Y , Z \right)$라고 정의하자.\footnote
 
 $P_E \left( x \right)$($E_x$가 P.E.의 증명 가능한 논리식이다)와 $R_E \left( x \right)$($E_x$가 P.E.의 반증 가능한 논리식이다) 같은 중요한 것들을 이끌어 내기 위해서,
 그리고 각 조건들이 싼술적이라는 것을 보이기 위해서 조건들(집합들과 관계들)의 체인을 나열할 것이다.
-다음 장에서만 관계가 있을 목적을 이루기 위하여, 독자들은 $\left( \forall x \le y \right)$ 꼴의 보편양화사만 도입할 것임에 주목해야 한다. (그러한 양화사는 \textit{제한된} 보편양화사라고 한다.)
+다음 장에서만 관계가 있을 목적을 이루기 위하여, 독자들은 $\left( \forall x \le y \right)$ 꼴만의 보편양화사를 도입할 것임에 주목해야 한다 -- 여기서 $y$는 숫자이거나 변수이다. (그러한 양화사는 \underline{제한된}(\textit{bounded}) 보편양화사라고 한다.)
+
+임의의 숫자 $x$와 $y$에 대하여, 우리는 $\left( E_{x} \rightarrow E_{y} \right)$, $\lnot E_{x}$, $\left( E_{x} \times E_{y} \right)$, $\left( E_{x} \mathrm{\mathbf{E}} E_{y} \right)$, $E^{\prime}$와 $E_{x} = E_{y}$와 $E_{x} \le E_{y}$의 괴델 수를
+각각 $x \, \mathrm{imp} \, y$, $\neg \left( x \right)$, $x \, \mathrm{pl} \, y$, $x \, \mathrm{tim} \, y$, $x \, \mathrm{exp} \, y$, $s \left( x \right)$, $x \, \mathrm{id} \, y$와 $x \, \mathrm{le} \, y$로 언급하자.
+당연히, 이 여덟 개의 함수는 모두 싼술적이다. (예로, $x \mathrm{imp} y = 2 * x * 8 * y * 3$이고 $\mathrm{neg} \left( x \right) = 7 * x$이다.)
+
+이제 앞서 말했던 조건들을 나열하자. (각각 그 아래에서 싼술적이라는 것을 보일 것이다.)
+\begin{enumerate}
+\item[{1.}] $\mathrm{Sb} \left( x \right)$ -- $E_x$가 $\circ$로 된 문자열이다:
+$$ \left( \forall y \le x \right) \left[ y P x \rightarrow 5 P y \right] $$
+\item[{2.}] $\mathrm{Var} \left( x \right)$ -- $E_x$가 개체변수이다:
+$$ \left( \exists y \le x \right) \left[ \mathrm{Sb} \left( y \right) \land x = 2 * 6 * y * 3 \right] $$
+\item[{3.}] $\mathrm{Num} \left( x \right)$ -- $E_x$가 숫자이다:
+$$ \mathrm{Pow}\left( x \right) $$
+\item[{4.}] $R_1 \left( x , y , z \right)$ -- 관계 $R_t \left( E_x , E_y , E_z \right)$가 성립한다:
+$$ z = x \, \mathrm{pl} \, y \lor z = x \, \mathrm{tim} \, y \lor z = x \, \mathrm{exp} \, y \lor z = s \left( x \right) $$
+\item[{5.}] $\mathrm{Seqt} \left( x \right)$ -- $E_{x}$가 논리항들의 형성 유한열이다:
+$$ \mathrm{Seq} \left( x \right) \land \left( \forall y \in x \right) \left[ \mathrm{Var} \left( y \right) \lor \mathrm{Num} \left( y \right) \lor \left( \exists z , w \prec_x y \right) R_1 \left( z , w , y \right) \right] $$
+\item[{6.}] $\mathrm{tm} \left( x \right)$ -- $E_{x}$가 논리항이다:
+$$ \exists y \left( \mathrm{Seqt} \left( t \right) \land x \in y \right) $$
+\item[{7.}] $\mathrm{f}_0 \left( x \right)$ -- $E_{x}$가 원자논리식이다:
+$$ \left( \exists y \le x \right) \left( z \le x \right) \left[ \mathrm{tm}\left( y \right) \land \mathrm{tm}\left( y \right) \land \left( x = y \, \mathrm{id} \, z \lor x = y \, \mathrm {le} \, z \right) \right] $$
+\item[{8.}] $\mathrm{Gen} \left( x , y \right)$ -- 어떤 변수 $w$에 대하여 $E_y = \forall w E_x $이다:
+$$ \left( \exists z \le y \right) \left[ \mathrm{Var} \left( z \right) \land y = 9 * z * x \right] $$
+\item[{9.}] $R_2 \left( x , y , z \right)$ -- 관계 $R_f \left( E_x , E_y , E_z \right)$가 성립한다:
+$$ z = x \, \mathrm{imp} \, y \lor z = \mathrm{neg} \left( x \right) \lor \mathrm{Gen} \left( x , z \right) $$
+\item[{10.}] $\mathrm{Seqf} \left( x \right)$ -- $E_x$가 논리식들의 형성 유한열이다:
+$$ \mathrm{Seq} \left( x \right) \land \left( \forall y \in x \right) \left[ \mathrm{f}_0 \left( y \right) \lor \left( \exists z , w \prec_x y \right) R_2 \left( z , w , y \right) \right]$$
+\item[{11.}] $\mathrm{fm} \left( x \right)$ -- $E_x$가 논리식이다:
+$$ \exists y \left( \mathrm{Seqf} \left( y \right) \land x \in y \right) $$
+\item[{12.}] $\mathrm{A} \left( x \right)$ -- $E_x$가 P.E.의 공리이다: 밑의 노트 참고.
+\item[{13.}] $\mathrm{M.P.} \left( x , y , z \right)$ -- $E_z$가 $E_x$와 $E_y$로부터 규칙 1(Modus Ponens)에 의하여 얻어질 수 있다:
+$$ y = x \, \mathrm{imp} \, z $$
+\item[{14.}] $\mathrm{Der} \left( x , y , z \right)$ -- $E_z$가 $E_x$와 $E_y$로부터 규칙 1(Modus Ponens)에 의하여 얻어질 수 있거나 $E_x$로부터 규칙 2(Generalization)에 의하여 얻어질 수 있다:
+\item[{15.}] $\mathrm{Pf} \left( x \right)$ -- $E_x$가 P.E.의 증명이다:
+$$ \mathrm{Seq} \left( x \right) \land \left( \forall y \in x \right) \left[ A \left( y \right) \lor \left( \exists z , w \prec_x y \right) \mathrm{Der} \left( z , w , y \right) \right] $$
+\item[{16.}] $P_E \left( x \right)$ -- $E_x$가 P.E.에서 증명 가능하다:
+$$ \exists y \left( \mathrm{Pf} \left( y \right) \land x \in y \right) $$
+\item[{17.}] $R_E \left( x \right)$ -- $E_x$가 P.E.에서 반증 가능하다:
+$$ P_E \left( \mathrm {neg} \left( x \right) \right) $$
+\end{enumerate}
 
 \end{document}
