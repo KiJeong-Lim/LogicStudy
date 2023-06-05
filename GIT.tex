@@ -17,14 +17,12 @@
 \author{임기정}
 
 \newcommand{\gnum}
-{ \mathfrak{g}
-}
+{ \mathfrak{g} }
 
 \newenvironment{context}[1][]
 { \noindent \textbf{{#1}.}
 }
-{ \hfill $ \dashv $
-}
+{ \hfill $ \dashv $ }
 
 \newcommand{\coqstyle}
 { \lstset
@@ -72,8 +70,7 @@
   \coqstyle
   \lstset{#1}
 }
-{ \setstretch{1.5}
-}
+{ \setstretch{1.5} }
 
 \begin{document}
 
@@ -2049,7 +2046,7 @@ $P_E \left( x \right)$($E_x$가 P.E.의 증명 가능한 논리식이다)와 $R_
 
 임의의 숫자 $x$와 $y$에 대하여, 우리는 $\left( E_{x} \rightarrow E_{y} \right)$, $\lnot E_{x}$, $\left( E_{x} \times E_{y} \right)$, $\left( E_{x} \mathrm{\mathbf{E}} E_{y} \right)$, $E^{\prime}$와 $E_{x} = E_{y}$와 $E_{x} \le E_{y}$의 괴델 수를
 각각 $x \, \mathrm{imp} \, y$, $\mathrm{neg} \left( x \right)$, $x \, \mathrm{pl} \, y$, $x \, \mathrm{tim} \, y$, $x \, \mathrm{exp} \, y$, $s \left( x \right)$, $x \, \mathrm{id} \, y$와 $x \, \mathrm{le} \, y$로 언급하자.
-당연히, 이 여덟 개의 함수는 모두 싼술적이다. (예로, $x \mathrm{imp} y = 2 * x * 8 * y * 3$이고 $\mathrm{neg} \left( x \right) = 7 * x$이다.)
+당연히, 이 여덟 개의 함수는 모두 싼술적이다. (예로, $x \, \mathrm{imp} \, y = 2 * x * 8 * y * 3$이고 $\mathrm{neg} \left( x \right) = 7 * x$이다.)
 
 이제 앞서 말했던 조건들을 나열하자. (각각 그 아래에서 싼술적이라는 것을 보일 것이다.)
 \begin{enumerate}
@@ -2075,7 +2072,7 @@ $$ z = x \, \mathrm{imp} \, y \lor z = \mathrm{neg} \left( x \right) \lor \mathr
 $$ \mathrm{Seq} \left( x \right) \land \left( \forall y \in x \right) \left[ \mathrm{f}_0 \left( y \right) \lor \left( \exists z , w \prec_x y \right) R_2 \left( z , w , y \right) \right]$$
 \item[{11.}] $\mathrm{fm} \left( x \right)$ -- $E_x$가 논리식이다:
 $$ \exists y \left( \mathrm{Seqf} \left( y \right) \land x \in y \right) $$
-\item[{12.}] $\mathrm{A} \left( x \right)$ -- $E_x$가 P.E.의 공리이다: 밑의 노트 참고.
+\item[{12.}] $A \left( x \right)$ -- $E_x$가 P.E.의 공리이다: 밑의 노트 참고.
 \item[{13.}] $\mathrm{M.P.} \left( x , y , z \right)$ -- $E_z$가 $E_x$와 $E_y$로부터 규칙 1(Modus Ponens)에 의하여 얻어질 수 있다:
 $$ y = x \, \mathrm{imp} \, z $$
 \item[{14.}] $\mathrm{Der} \left( x , y , z \right)$ -- $E_z$가 $E_x$와 $E_y$로부터 규칙 1(Modus Ponens)에 의하여 얻어질 수 있거나 $E_x$로부터 규칙 2(Generalization)에 의하여 얻어질 수 있다:
@@ -2086,5 +2083,10 @@ $$ \exists y \left( \mathrm{Pf} \left( y \right) \land x \in y \right) $$
 \item[{17.}] $R_E \left( x \right)$ -- $E_x$가 P.E.에서 반증 가능하다:
 $$ P_E \left( \mathrm {neg} \left( x \right) \right) $$
 \end{enumerate}
+
+\begin{context}[Note on the Axioms]
+$ A \left( x \right) $가 싼술적임을 보이기 위해서, 열아홉 개의 부분(각 공리꼴마다 하나씩)으로 나누자.
+$ n \le 7 $에 대하여, $ L_{n} \left( x \right) $
+\end{context}
 
 \end{document}
