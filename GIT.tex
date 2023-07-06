@@ -349,29 +349,29 @@ $A^{*}$은 대각 함수 $d$ 아래의 $A$의 역상이기 때문에 $d^{-1} \le
 
 \begin{context}[An Abstract Form of G\"odel's Theorem]
 $P$를 모든 증명 가능한 문장들의 괴델 수를 모은 집합이라고 하자.
-그리고, 각 $A \subseteq \mathbb{N}$마다 $\tilde{A}$를 $\mathbb{N} \setminus A$로 두자 --
-즉, $\tilde{A}$는 $A$의 여집합이다.
+그리고, 각 $A \subseteq \mathbb{N}$마다 $\widetilde{A}$를 $\mathbb{N} \setminus A$로 두자 --
+즉, $\widetilde{A}$는 $A$의 여집합이다.
 \end{context}
 
 \begin{context}[Theorem (GT)--After G\"odel with shades of Tarski]
-집합 $\tilde{P}^{*}$가 $\mathcal{L}$에서 표현될 수 있고 $\mathcal{L}$이 정확하다면,
+집합 $\widetilde{P}^{*}$가 $\mathcal{L}$에서 표현될 수 있고 $\mathcal{L}$이 정확하다면,
 $\mathcal{L}$에서 참이지만 증명 가능하지 않은 문장이 있다.
 \end{context}
 
 \begin{proof}
-$\mathcal{L}$이 정확하고 $\tilde{P}^{*}$가 $\mathcal{L}$에서 표현될 수 있다고 가정하자.
-그러면 $\mathcal{L}$에서 $\tilde{P}^{*}$를 표현하는 술어 $H$가 존재한다.
+$\mathcal{L}$이 정확하고 $\widetilde{P}^{*}$가 $\mathcal{L}$에서 표현될 수 있다고 가정하자.
+그러면 $\mathcal{L}$에서 $\widetilde{P}^{*}$를 표현하는 술어 $H$가 존재한다.
 이때 $h$를 $H$의 괴델 수라고 하고,
 $G$를 $H$의 대각화(즉, 문장 $ H \left( h \right) $)라고 하자.
 우리는 $G$가 참이지만 증명 가능하지 않음을 보일 것이다.
-$H$가 $\mathcal{L}$에서 $\tilde{P}^{*}$를 표현하므로,
-$$ H \left( n \right) \in \mathcal{T} \iff n \in \tilde{P}^{*} \qquad \mathrm{for} \quad \forall n \in \mathbb{N} $$이다.
+$H$가 $\mathcal{L}$에서 $\widetilde{P}^{*}$를 표현하므로,
+$$ H \left( n \right) \in \mathcal{T} \iff n \in \widetilde{P}^{*} \qquad \mathrm{for} \quad \forall n \in \mathbb{N} $$이다.
 이 명제가 임의의 $n$에 대하여 성립하므로,
 $n$이 $h$일 때도 성립한다.
 그러므로 $n$에 $h$를 대입하여 --
 이 부분의 논증은 \underline{대각화하기}(\textit{diagonalizing})라고 불린다 --
-$$ H \left( h \right) \in \mathcal{T} \iff h \in \tilde{P}^{*}$$를 얻는다.
-한편, $$h \in \tilde{P}^{*} \iff d \left( h \right) \in \tilde{P} \iff d \left( h \right) \notin P$$인데,
+$$ H \left( h \right) \in \mathcal{T} \iff h \in \widetilde{P}^{*}$$를 얻는다.
+한편, $$h \in \widetilde{P}^{*} \iff d \left( h \right) \in \widetilde{P} \iff d \left( h \right) \notin P$$인데,
 $H$의 괴델 수가 $h$이기 때문에 $d \left( h \right)$의 괴델 수가 $H \left( h \right)$이므로,
 $ H \left( h \right) \in \mathcal{T} \iff H \left( h \right) \notin \mathcal{P}$이다.
 그러므로,
@@ -385,18 +385,18 @@ $ H \left( h \right) \in \mathcal{T} \iff H \left( h \right) \notin \mathcal{P}$
 \end{proof}
 
 우리가 공부할 특정 체계 $\mathcal{L}$에 대하여,
-$\tilde{P}^{*}$가 $\mathcal{L}$에서 표현 될 수 있다는 전제 조건이 성립함을,
+$\widetilde{P}^{*}$가 $\mathcal{L}$에서 표현 될 수 있다는 전제 조건이 성립함을,
 다음 세 조건을 따로따로 검사함으로써, 입증할 것이다:
 \begin{itemize}
 \item[$G_1$:] 임의의 $A \subseteq \mathbb{N}$에 대하여, $A$가 $\mathcal{L}$에서 표현될 수 있으면 $A^{*}$도 $\mathcal{L}$에서 표현될 수 있다.
-\item[$G_2$:] 임의의 $A \subseteq \mathbb{N}$에 대하여, $A$가 $\mathcal{L}$에서 표현될 수 있으면 $\tilde{A}$도 $\mathcal{L}$에서 표현될 수 있다.
+\item[$G_2$:] 임의의 $A \subseteq \mathbb{N}$에 대하여, $A$가 $\mathcal{L}$에서 표현될 수 있으면 $\widetilde{A}$도 $\mathcal{L}$에서 표현될 수 있다.
 \item[$G_3$:] $P$가 $\mathcal{L}$에서 표현될 수 있다.
 \end{itemize}
 
 조건 $G_{1}$과 $G_{2}$가 성립하면,
 $\mathcal{L}$에서 표현될 수 있는 임의의 $A \subseteq \mathbb{N}$에 대하여 $A^{*}$도 $\mathcal{L}$에서 표현될 수 있다.
 그러므로 $P$가 $\mathcal{L}$에서 표현될 수 있으면,
-$\tilde{P}^{*}$도 $\mathcal{L}$에서 표현될 수 있다.
+$\widetilde{P}^{*}$도 $\mathcal{L}$에서 표현될 수 있다.
 
 우리는 $G_{1}$의 검증은 상대적으로 단순한 것으로 밝혀지고; $G_{2}$의 검증은 완전히 사소하지만; $G_{3}$의 증명은 극도로 정교하다고 밝혀지는 데 주목할 수 있다.
 
@@ -441,9 +441,9 @@ $H \left( h \right)$가 $A$에 대한 괴델 문장임을 알 수 있다.
 \end{proof}
 
 만일 보조정리 D를 먼저 증명했다면, 다음과 같은 신속한 증명을 얻었을 것이다:
-$\tilde{P}^{*}$가 이름을 가진다면, D의 (a)에 의하여, $\tilde{P}$에 대한 괴델 문장 $\mathfrak{G}$가 존재한다.
-$\tilde{P}$에 대한 괴델 문장은 자신이 참일 때 그리고 그럴 때에만 증명 가능하지 않은 문장 그 이상도 그 이하도 아니다.
-그러므로, 임의의 정확한 체계 $\mathcal{L}$에서, $\tilde{P}$에 대한 괴델 문장은 $\mathcal{L}$에서 참이지만 증명 가능하지 않은 문장이다.\footnote
+$\widetilde{P}^{*}$가 이름을 가진다면, D의 (a)에 의하여, $\widetilde{P}$에 대한 괴델 문장 $\mathfrak{G}$가 존재한다.
+$\widetilde{P}$에 대한 괴델 문장은 자신이 참일 때 그리고 그럴 때에만 증명 가능하지 않은 문장 그 이상도 그 이하도 아니다.
+그러므로, 임의의 정확한 체계 $\mathcal{L}$에서, $\widetilde{P}$에 대한 괴델 문장은 $\mathcal{L}$에서 참이지만 증명 가능하지 않은 문장이다.\footnote
 {
 그러한 문장은 $\mathcal{L}$에서의 자신의 증명 불가능성을 선언하는 문장으로 생각할 수 있다.
 }
@@ -456,28 +456,28 @@ $T$를 모든 참인 문장들의 괴델 수를 모은 집합이라고 하자.
 
 \begin{context}[Theorem (T) (After Tarski)]
 \begin{enumerate}
-\item 집합 $\tilde{T}^{*}$는 $\mathcal{L}$에서 이름을 가지지 않는다.
-\item 조건 $G_1$이 성립하면, $\tilde{T}$는 $\mathcal{L}$에서 이름을 가지지 않는다.
+\item 집합 $\widetilde{T}^{*}$는 $\mathcal{L}$에서 이름을 가지지 않는다.
+\item 조건 $G_1$이 성립하면, $\widetilde{T}$는 $\mathcal{L}$에서 이름을 가지지 않는다.
 \item 조건 $G_1$과 $G_2$가 성립하면, $T$는 $\mathcal{L}$에서 이름을 가지지 않는다.
 \end{enumerate}
 \end{context}
 
 \begin{proof}
-시작하기에 앞서, $\tilde{T}$에 대한 괴델 문장은 없다는 것에 주목하자 --
+시작하기에 앞서, $\widetilde{T}$에 대한 괴델 문장은 없다는 것에 주목하자 --
 왜냐하면, 그러한 문장은 자신의 괴델 수가 참인 문장의 괴델 수가 아닐 때 그리고 그럴 때에만 참인 문장이기 때문이다.
 \begin{enumerate}
-\item $\tilde{T}^{*}$가 $\mathcal{L}$에서 이름을 가진다면, 보조정리 D의 (a)에 의하여,
-$\tilde{T}$에 대한 괴델 문장이 존재하는데, 이는 방금 보인 바에 따르면 불가능하다.
-그러므로 $\tilde{T}^{*}$가 $\mathcal{L}$에서 이름을 가지지 않는다.
+\item $\widetilde{T}^{*}$가 $\mathcal{L}$에서 이름을 가진다면, 보조정리 D의 (a)에 의하여,
+$\widetilde{T}$에 대한 괴델 문장이 존재하는데, 이는 방금 보인 바에 따르면 불가능하다.
+그러므로 $\widetilde{T}^{*}$가 $\mathcal{L}$에서 이름을 가지지 않는다.
 
 \item 조건 $G_1$이 성립한다고 가정하자.
-그러면, $\tilde{T}$가 $\mathcal{L}$에서 이름을 가질 때,
-$\tilde{T}^{*}$도 $\mathcal{L}$에서 이름을 가지는데,
+그러면, $\widetilde{T}$가 $\mathcal{L}$에서 이름을 가질 때,
+$\widetilde{T}^{*}$도 $\mathcal{L}$에서 이름을 가지는데,
 이는 (1)을 위반한다.
 
 \item 조건 $G_2$ 역시 성립한다면,
 $T$가 $\mathcal{L}$에서 이름을 가질 때,
-$\tilde{T}$도 $\mathcal{L}$에서 이름을 가지는데,
+$\widetilde{T}$도 $\mathcal{L}$에서 이름을 가지는데,
 이는 (2)를 위반한다.
 \end{enumerate}
 \end{proof}
@@ -508,7 +508,7 @@ $G_1$과 $G_2$가 ``충분히 강력한''에 부합되기에 충분하다는 것
 그러므로 그는 참말쟁이이지만 아테네인이 아니다.
 
 아테네인들이 $\mathcal{L}$에서 참이면서 증명 가능한 문장들의 역할을 하는 것으로 간주하면,
-자신이 아테네인이 아니라고 주장하는 주민은 $\tilde{P}$에 대한 괴델 문장 $\mathfrak{G}$의 역할을 하는 셈인데,
+자신이 아테네인이 아니라고 주장하는 주민은 $\widetilde{P}$에 대한 괴델 문장 $\mathfrak{G}$의 역할을 하는 셈인데,
 이는 $\mathcal{L}$에서의 자신의 증명 불가능성을 선언하기 때문이다.\footnote
 {
 크레타인들은 당연히 $\mathcal{L}$의 반증 가능한 문장들의 역할을 하는데,
@@ -544,7 +544,7 @@ $G$는 참이므로 반증 역시 가능하지 않다 --
 그리고 즉시 다음 정리를 얻는다.
 
 \begin{context}[Theorem 1]
-$\mathcal{L}$이 정확하고 $\mathcal{L}$에서 $\tilde{P}^{*}$가 표현될 수 있으면,
+$\mathcal{L}$이 정확하고 $\mathcal{L}$에서 $\widetilde{P}^{*}$가 표현될 수 있으면,
 $\mathcal{L}$은 불완전하다.
 \end{context}
 
@@ -581,7 +581,7 @@ $K$가 $R^{*}$를 표현하기에, 보조정리 D의 (a)에 의하여,
 \end{proof}
 
 \begin{context}[Remarks]
-$\tilde{P}$에 대한 괴델 문장 $H \left( h \right)$가 ``나는 $\mathcal{L}$에서 증명 가능하지 않아''라고 말한다고 생각할 수 있는 것처럼,
+$\widetilde{P}$에 대한 괴델 문장 $H \left( h \right)$가 ``나는 $\mathcal{L}$에서 증명 가능하지 않아''라고 말한다고 생각할 수 있는 것처럼,
 $K \left( k \right)$는 ``나는 $\mathcal{L}$에서 반증 가능해''라고 말하는 것으로 생각할 수 있다.
 아테네인들과 크레타인들에 관한 비유로 돌아가자.
 자신이 아테네인이 아니라고 말하는 주민이 $H \left( h \right)$에 대응하는 것처럼,
@@ -652,7 +652,7 @@ $\mathcal{L}$은 불완전함을 보여라.\footnote
 
 \begin{context}[Exercise 6]
 임의의 $A \subseteq \mathbb{N}$에 대하여,
-$\tilde{A}^{*}$와 $\widetilde{A^{*}}$가 같은 집합일 필요가 있을까?
+$\widetilde{A}^{*}$와 $\widetilde{A^{*}}$가 같은 집합일 필요가 있을까?
 \end{context}
 
 \begin{context}[Exercise 7]
@@ -660,7 +660,7 @@ G\"odel의 증명의 온전히 구성적인 본질을 강조하기 위하여,
 $\mathcal{L}$이 다음 세 조건을 만족시키는 정확한 체계라고 하자.
 \begin{enumerate}
 \item 표현식 $E_{7}$는 $P$를 표현하는 술어이다.
-\item 임의의 $n \in \mathbb{N}$와 임의의 $A \subseteq \mathbb{N}$에 대하여, 표현식 $E_{n}$이 $A$를 표현하는 술어이면 표현식 $E_{3 n}$은 $\tilde{A}$를 표현하는 술어이다.
+\item 임의의 $n \in \mathbb{N}$와 임의의 $A \subseteq \mathbb{N}$에 대하여, 표현식 $E_{n}$이 $A$를 표현하는 술어이면 표현식 $E_{3 n}$은 $\widetilde{A}$를 표현하는 술어이다.
 \item 임의의 $n \in \mathbb{N}$와 임의의 $A \subseteq \mathbb{N}$에 대하여, 표현식 $E_{n}$이 $A$를 표현하는 술어이면 표현식 $E_{3 n + 1}$은 $A^{*}$를 표현하는 술어이다.
 \end{enumerate}
 
@@ -784,24 +784,24 @@ H \left( h \right) \in \mathcal{T}
 를 얻는데,
 이는 $H \left( h \right)$가 $A$에 대한 괴델 문장 중 하나라는 것을 의미한다.
 
-\item[{6.}] $A \subseteq \mathbb{N}$이 주어졌다고 하자.
-그러면, 임의의 $n \in \mathbb{N}$에 대하여
+\item[{6.}] $n \in d^{-1} \left[ A \right] \iff n \in A^{*} $임을 상기하며,
+$n \in \mathbb{N}$과 $A \subseteq \mathbb{N}$이 주어졌다고 하자. 그러면
 \begin{align*}
-n \in \tilde{A}^{*}
-& \iff n \in d^{-1} \left[ \tilde{A} \right] \\
-& \iff d \left( n \right) \in \tilde{A} \\
+n \in \widetilde{A}^{*}
+& \iff n \in d^{-1} \left[ \widetilde{A} \right] \\
+& \iff d \left( n \right) \in \widetilde{A} \\
 & \iff d \left( n \right) \notin A \\
 & \iff n \notin d^{-1} \left[ A \right] \\
 & \iff n \notin A^{*} \\
 & \iff n \in \widetilde{A^{*}}
 \end{align*}
-이므로, $\tilde{A}^{*} = \widetilde{A^{*}}$이어야 한다.
+이므로, 언제나 $$\widetilde{A}^{*} = \widetilde{A^{*}}$$이다.
 
 \item[{7.}]
 \begin{itemize}
 \item[(a)] 먼저, $\left( a , b \right) = \left( 64 , 64 \right)$가 한 해임을 보이겠다. 
 $64 = 3 \times \left( 3 \times \left( 7 \right) \right) + 1$이므로,
-$E_{64}$는 집합 $\tilde{P}^{*}$을 표현하는 술어이다.
+$E_{64}$는 집합 $\widetilde{P}^{*}$을 표현하는 술어이다.
 정리 GT에 의하여, $E_{64}$는 $\mathcal{L}$에서 참이지만 증명 가능하지 않다.
 그리고, $\left( a , b \right) = \left( 66 , 66 \right)$이 또다른 해임을 보이겠다.
 $66 = 3 \times \left( 3 \times \left( 7 \right) + 1 \right)$이므로,
@@ -822,13 +822,13 @@ E_{66} \left( 66 \right) \in \mathcal{T}
 \item[(b)] $n \geq 1$에 대하여, $a_{n} := 7 \times 9^{n} + 1$라고 하고 $b_{n} := 7 \times 9^{n} + 1$라고 하자.
 이제, 임의의 $n \geq 1$에 대하여, $E_{a_{n}} \left( b_{n} \right)$이 $\mathcal{L}$에서 참이지만 증명 가능하지 않다는 것을 보이겠다.
 $ n \geq 1 $을 임의로 잡자.
-그러면 술어 $E_{a_{n}}$은 집합 $\tilde{P}^{*}$를 표현한다.
+그러면 술어 $E_{a_{n}}$은 집합 $\widetilde{P}^{*}$를 표현한다.
 그러므로,
 \begin{align*}
 E_{a_{n}} \left( b_{n} \right) \in \mathcal{T}
-& \iff b_{n} \in \tilde{P}^{*} \\
-& \iff d \left( b_{n} \right) \in \tilde{P} \\
-& \iff \gnum \left( E_{a_{n}} \left( b_{n} \right) \right) \in \tilde{P} \\
+& \iff b_{n} \in \widetilde{P}^{*} \\
+& \iff d \left( b_{n} \right) \in \widetilde{P} \\
+& \iff \gnum \left( E_{a_{n}} \left( b_{n} \right) \right) \in \widetilde{P} \\
 & \iff \gnum \left( E_{a_{n}} \left( b_{n} \right) \right) \notin P \\
 & \iff E_{a_{n}} \left( b_{n} \right) \notin \mathcal{P}
 \end{align*}
@@ -1544,7 +1544,7 @@ $H \left( h \right)$가 $A^{*}$에 대한 괴델 문장이다.
 \end{context}
 
 \begin{context}[Tarski's Theorem]
-임의의 $A \subseteq \mathbb{N}$에 대하여 논리식 $F$가 $A$를 표현하면 $\lnot F$는 $\tilde{A}$를 표현하기 때문에,
+임의의 $A \subseteq \mathbb{N}$에 대하여 논리식 $F$가 $A$를 표현하면 $\lnot F$는 $\widetilde{A}$를 표현하기 때문에,
 모든 싼술적인 집합들의 모임은 명백히 여집합에 대하여 닫혀있다.
 따라서 $\mathcal{L}_{E}$에서는 1단원에서의 조건 $G_1$과 $G_2$이 모두 성립한다.
 그러므로, 1단원의 정리 T에 의하여 $\mathcal{L}_{E}$의 모든 참인 문장들의 괴델 수들의 집합 $T$는 $\mathcal{L}_{E}$에서 표현 가능하지 않다 --
@@ -1552,9 +1552,9 @@ $H \left( h \right)$가 $A^{*}$에 대한 괴델 문장이다.
 \end{context}
 
 $\mathcal{L}_{E}$의 특별한 경우에서 증명을 반복하자.
-$\tilde{T}$에 대한 괴델 문장은 그것이 참일 때 그리고 그럴 때에만 거짓이어야 하기 때문에 존재하지 않는다.
-그러나 $\tilde{T}$가 싼술적인 집합이었다면 정리 1에 의하여 그것에 대한 괴델 문장이 존재한다.
-그러므로 집합 $\tilde{T}$은 싼술적일 수 없고 $T$도 싼술적이지 않다.
+$\widetilde{T}$에 대한 괴델 문장은 그것이 참일 때 그리고 그럴 때에만 거짓이어야 하기 때문에 존재하지 않는다.
+그러나 $\widetilde{T}$가 싼술적인 집합이었다면 정리 1에 의하여 그것에 대한 괴델 문장이 존재한다.
+그러므로 집합 $\widetilde{T}$은 싼술적일 수 없고 $T$도 싼술적이지 않다.
 따라서 다음 정리를 얻는다.
 
 \begin{context}[Theorem 2--Tarski's Theorem]
@@ -1886,6 +1886,7 @@ P.E.의 추론 규칙은 표준적이며, 두 개로 이루어진다.
 \item[$Rule \; \mathit{1}$] [Modus Ponens]--$F$와 $F \to G$로부터 $G$를 추론한다.
 \item[$Rule \; \mathit{2}$] [Generalization]--$F$로부터 $\forall v_{i} F$를 추론한다.
 \end{itemize}
+
 P.E.에서의 \underline{증명}(\textit{proof})이란,
 각 원소들이
 \begin{enumerate}
@@ -1970,7 +1971,7 @@ $$ x_{1} *_{b} x_{2} *_{b} \cdots *_{b} x_{n} P_{b} y \iff \left( \exists z \le 
 {
 이것은 어떠한 혼란도 야기하지 않는다. $x$ 곱하기 $y$를 항상 $x \cdot y$로 적기 때문이다.
 }
-또한 $\lnot x P y$를 $x \tilde{P} y$로 적고, $$ x_1 *_{13} x_2 *_{13} \cdots *_{13} x_{n} P y $$를 $x_1 x_2 \cdots x_{n} P y$로 적을 것이다. 
+또한 $\lnot x P y$를 $x \widetilde{P} y$로 적고, $$ x_1 *_{13} x_2 *_{13} \cdots *_{13} x_{n} P y $$를 $x_1 x_2 \cdots x_{n} P y$로 적을 것이다. 
 
 \begin{context}[Finite Sequences]
 독자는 아마도 언어 $\mathcal{L}_{E}$에서 기호 ``$\sharp$''이 무엇을 하는지 궁금해 왔을 것이다.
@@ -1999,8 +2000,8 @@ $x \in y$일 때 그리고 그럴 때마다 $x$가 $x_1$, $\cdots$, $x_n$ 중에
 \begin{proof}
 증명은 다음과 같다:
 \begin{enumerate}
-\item $\mathrm{Seq} \left( x \right) \iff \delta B x \land \delta E x \land \delta \ne x \land \delta \delta \tilde{P} x \land \left( \forall y \le x \right) \left[ \delta 0 y P x \rightarrow \delta B y \right]$
-\item $x \in y \iff \mathrm{Seq} \left( y \right) \land \delta x \delta P y \land \delta \tilde{P} x$
+\item $\mathrm{Seq} \left( x \right) \iff \delta B x \land \delta E x \land \delta \ne x \land \delta \delta \widetilde{P} x \land \left( \forall y \le x \right) \left[ \delta 0 y P x \rightarrow \delta B y \right]$
+\item $x \in y \iff \mathrm{Seq} \left( y \right) \land \delta x \delta P y \land \delta \widetilde{P} x$
 \item $x \prec_{z} y \iff x \in z \land y \in z \land \left( \exists w \le z \right) \left[ w B z \land x \in w \land \lnot \left( y \in w \right) \right]$
 \end{enumerate}
 \end{proof}
@@ -2086,7 +2087,61 @@ $$ P_E \left( \mathrm {neg} \left( x \right) \right) $$
 
 \begin{context}[Note on the Axioms]
 $ A \left( x \right) $가 싼술적임을 보이기 위해서, 열아홉 개의 부분(각 공리꼴마다 하나씩)으로 나누자.
-$ n \le 7 $에 대하여, $ L_{n} \left( x \right) $
+각 $ n \le 7 $에 대하여, $ L_{n} \left( x \right) $를 $E_{x}$가 $L_{n}$의 공리꼴이라고 하고
+각 $n \le 12$에 대하여, $N_{n} \left( x \right) $를 공리꼴 $N_{n}$이라고 하자.
+이 열아홉 가지의 조건들이 싼술적인지 확인하는 것은 꽤나 균일하므로, 단순한 경우만을 살펴본다.
+
+먼저 $L_{1} \left( x \right)$를 고려하자. 
+$E_{x}$가 $L_{1}$의 공리일 때 그리고 그럴 때마다 논리식 $E_{y}$와 $E_{z}$가 존재하여
+$E_{x} \equiv \left( E_y \rightarrow \left( E_z \rightarrow E_y \right) \right)$이고,
+그러므로 $L_1\left( x \right)$은 다음 조건이다:
+$$ \left( \exists y \le x \right) \left( \exists z \le x \right) \left[ \mathrm{fm} \left( y \right) \land \mathrm{fm} \left( z \right) \land x = y \, \mathrm{imp} \, \left( z \, \mathrm{imp} \, y \right) \right] .$$
+조건 $L_2\left( x \right)$와 $L_{3}\left( x \right)$도 비슷하게 다룰 수 있다; 이를 독자에게 맡긴다.
+
+\textbf{Group II}에서는 $L_4 \left( x \right)$를 본보기 경우로 삼자.
+$\varphi \left( y , z ,w \right)$이 $$\forall E_y \left(\left(E_z \rightarrow E_y\right) \rightarrow \left(\forall E_y E_z \rightarrow \forall E_y E_w \right)\right)$$의 괴델 수라고 하면
+함수 $\varphi \left( x , y, z \right)$가 싼술적이라는 것은 쉽게 보일 수 있다.
+그러면 $L_4 \left( x \right)$는 (전부 $x$보다 작은) 수 $y$, $z$와 $w$가 존재하여
+$\mathrm{var} \left( y \right)$, $\mathrm{fm} \left( z \right)$, $\mathrm{fm} \left( w \right)$와 $x = \varphi \left( y , z , w \right)$일 때 그리고 그럴 때마다 성립한다.\footnote
+{
+독자는 원한다면 이것을 전부 기호로 써내려갈 수 있다.
+}
+우리는 \textbf{Group II}의 다른 경우들을 독자에게 넘긴다
+($L_6$에서 존재 양화사를 약식 표기형으로 썼다. 비약식 표기형으로 $L_6$는 공리꼴 $\lnot \forall v_i \lnot v_i = t$이다).
+
+\textbf{Group III}은 단순하다. 그 까닭은 공리꼴 $N_{1}$~$N_{11}$마다 오직 하나의 공리를 포함하기 때문에,
+각 $i \le 11$에 대하여, $N_i \left( x \right)$가 단순히 조건 $x = g_i$이기 때문이다 -- $g_i$는 공리 $N_i$의 괴델 수이다.
+
+\textbf{Group IV} (공리꼴 $N_{12}$)는 모든 귀납 공리들로 이루어져있다.
+$N_{12} \left( x \right)$가 싼술적 조건이라는 것을 보이기 위하여, 먼저 관계 $E_x$가 논리식이라는 것과
+먼저 $E_y$가 논리식 중 하나라는 것, $E_x \left[ v_1^{\prime} \right]$가 $x$와 $y$ 사이의 싼술적 관계라는 것을 검증한다.
+이것을 독자에게 맡긴다. 그러면 $N_{12} \left( x \right)$r가 싼술적이라는 것이 명백해진다.
+
+$A \left( x \right)$를 위 열아홉 개의 조건들의 선언(disjunction)으로 두자.
+그러면 조건 $L_1 \left( x \right) , \cdots , L_7 \left( x \right)$와
+$N_1 \left( x \right) , \cdots , N_{12} \left( x \right)$가 싼술적임을 보였으므로
+$A \left( x \right)$도 싼술적이다.
 \end{context}
 
+이것으로 P.E.의 문법의 산술화를 완성하면서 다음을 얻는다:
+
+\begin{context}[Proposition 3]
+위의 조건 (1)-(17)은 모두 싼술적이다.
+\end{context}
+
+\noindent \textbf{\S4. P.E.에 대한 괴델의 불완전성 정리}
+
+$P_E$를 P.E.의 증명 가능한 논리식들의 괴델 수들의 집합으로,
+$R_E$를 P.E.의 반증 가능한 논리식들의 괴델 수들의 집합으로 둔 바 있다.
+우리는 두 집합이 산술적임을 보였다.
+$P \left( v_1 \right)$와 $R \left( v_1 \right)$가 $\mathcal{L}_E$ 안에서
+각각 $P_E$와 $R_E$를 표현하는 논리식이라고 하자.
+그러면 논리식 $ \lnot P \left( v_1 \right) $이 $P_E$의 여집합 $\widetilde{P_E}$를 표현한다.
+이전 장의 정리 1에 대한 보조정리로부터,
+집합 $\widetilde{P_{E}}^{*}$을 표현하는 논리식 $H \left( v_1 \right)$을 찾을 수 있다.
+그러면, 2장의 정리 1의 증명에 따라,
+$H \left( v_1 \right)$의 대각화 $H \left[ \bar{h} \right]$은 집합 $\widetilde{P_E}$에 대한 괴델 문장이다.
+이 문장은 P.E. 안에서 증명 가능하지 않을 때 그리고 그럴 때에만 참이다.
+P.E.가 정확한 체계이기 때문에 $H \left[ \bar{h} \right]$은 반드시 참이지만 P.E.에서 증명 가능하지 않다.
+또한 $ \lnot H \left[ \bar{h} \right] $은 거짓이므로, 이 문장도 P.E.에서 증명 가능하지 않다.
 \end{document}
