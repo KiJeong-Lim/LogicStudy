@@ -12,6 +12,8 @@
 \usepackage{listings}
 \usepackage{setspace}
 \usepackage{enumitem}
+\usepackage{array,multirow}
+\usepackage[table]{xcolor}
 
 \title{``괴델의 불완전성 정리들'' 해설}
 \author{임기정}
@@ -943,13 +945,13 @@ $f \circ$, $f \! \circ \! \circ$, $f \! \circ \! \circ \circ$을 각각 이 세 
 
 논리항이 개체 변수를 포함하고 있지 않으면, 그것을 \underline{상항}(\textit{constant term})이라고 부르거나 \underline{닫혀 있다}(\textit{closed})고 한다.
 
-\underline{원자 논리식}(\textit{atomic formula})이란,
+\underline{원자논리식}(\textit{atomic formula})이란,
 $t_{1} = t_{2}$와 $t_{1} \leq t_{2}$ 중 한 형태의 표현식을 의미한다 --
 여기서 $t_{1}$과 $t_{2}$에는 임의의 논리항이 올 수 있다.
 
 모든 \underline{논리식}(\textit{formula})들의 집합은 다음 규칙에 의하여 귀납적으로 정의된다:
 \begin{enumerate}
-\item 모든 원자 논리식은 논리식이다.
+\item 모든 원자논리식은 논리식이다.
 \item $F$와 $G$가 논리식이라면, $\lnot F$과 $F \rightarrow G$ 그리고 $\forall v_{i} F$도 논리식이다 --
 여기서 $v_{i}$는 임의의 개체 변수이다.
 \end{enumerate}
@@ -992,7 +994,7 @@ $j \leq i$인 임의의 $j \in \mathbb{N}_{+}$에 대하여 $v_{j}$도 $F$에서
 논리식의 \underline{복잡도}(\textit{degree})란, 그 논리식에서 $\lnot$, $\rightarrow$, $\forall$이 나타나는 횟수이다.
 그러므로,
 \begin{enumerate}
-\item 원자 논리식의 복잡도는 $0$이다.
+\item 원자논리식의 복잡도는 $0$이다.
 \item 논리식 $F$의 복잡도가 $d_{1}$이고 논리식 $G$의 복잡도가 $d_{2}$이면,
 $\lnot F$의 복잡도는 $d_{1} + 1$이고;
 $\left( F \rightarrow G \right)$의 복잡도는 $d_{1} + d_{2} + 1$이고;
@@ -1002,7 +1004,7 @@ $\forall v_{i} F$의 복잡도는 $d_{1} + 1$이다 --
 
 다음의 수학적 귀납법에 익숙하다고 가정하겠다:
 주어진 성질이 모든 논리식에 대하여 성립함을 보이기 위하여
-모든 원자 논리식에 대하여 그 성질이 성립함과
+모든 원자논리식에 대하여 그 성질이 성립함과
 임의의 논리식 $F$에 대하여 $F$보다 낮은 복잡도의 모든 논리식들에 대하여 그 성질이 성립한다고 가정하고
 $F$에서도 성립함을 보이면 충분하다.
 \end{context}
@@ -1055,18 +1057,18 @@ $\left( c_{1} \mathop{\mathbf{E}} c_{2} \right)$은 $n_{1}$의 $n_{2}$ 제곱에
 \begin{itemize}
 \item[$T_{0}$:]
 \begin{enumerate}
-\item 상항 $c_{1}$과 $c_{2}$에 대하여, 원자 논리식인 문장 $c_{1} = c_{2}$는 $c_{1}$과 $c_{2}$가 같은 자연수에 대응할 때 그리고 그럴 때에만 참이다.
-\item 상항 $c_{1}$과 $c_{2}$에 대하여, 원자 논리식인 문장 $c_{1} \leq c_{2}$는 $c_{1}$이 대응하는 자연수가 $c_{2}$가 대응하는 자연수보다 작거나 같을 때 그리고 그럴 때에만 참이다.
+\item 상항 $c_{1}$과 $c_{2}$에 대하여, 원자논리식인 문장 $c_{1} = c_{2}$는 $c_{1}$과 $c_{2}$가 같은 자연수에 대응할 때 그리고 그럴 때에만 참이다.
+\item 상항 $c_{1}$과 $c_{2}$에 대하여, 원자논리식인 문장 $c_{1} \leq c_{2}$는 $c_{1}$이 대응하는 자연수가 $c_{2}$가 대응하는 자연수보다 작거나 같을 때 그리고 그럴 때에만 참이다.
 \end{enumerate}
 \item[$T_{1}$:] $\lnot X$ 꼴의 문장은 $X$가 참이 아닐 때 그리고 그럴 때에만 참이다.
 \item[$T_{2}$:] $X \rightarrow Y$는 $X$가 참이 아닌 경우 또는 $X$와 $Y$ 모두 참인 경우에 그리고 이 두 경우에만 참이다.
 \item[$T_{3}$:] $\forall v_{i} F$은 모든 자연수 $n$에 대하여 문장 $F \left[ v_{i} := \overline{n} \right]$이 참일 때 그리고 그럴 때에만 참이다.
 \end{itemize}
 
-조건 $T_{0}$는 노골적으로 원자 논리식인 문장이 참일 조건을 진술한다.
+조건 $T_{0}$는 노골적으로 원자논리식인 문장이 참일 조건을 진술한다.
 조건 $T_{1}$, $T_{2}$과 $T_{3}$은,
 더 낮은 복잡도의 문장들에 대한 진리를 이용하여,
-원자 논리식이 아닌 문장이 참일 조건을 기술한다.\footnote
+원자논리식이 아닌 문장이 참일 조건을 기술한다.\footnote
 {
 $T_{3}$에서 $F \left[ v_{i} := n \right] $의 복잡도가 $\forall v_{i} F$의 복잡도보다 낮은 것과
 $\forall v_{i} F$가 문장이므로 $F \left[ v_{i} := n \right]$도 문장임에 주목하여라.
@@ -1835,10 +1837,10 @@ $t$는 임의의 항이다.
 \item[$L_{4}$ :] $\left( \forall v_i \left( F \rightarrow G \right) \rightarrow \left( \forall v_i F \rightarrow \forall v_i G \right) \right)$
 \item[$L_{5}$ :] $\left( F \rightarrow \forall v_i F \right)$ (단, $v_i$는 $F$에서 자유롭게 나타나지 않아야 함)
 \item[$L_{6}$ :] $\exists v_i v_i = t$ (단, $v_i$는 $t$에 자유롭게 나타나지 않아아 함)
-\item[$L_{7}$ :] $\left( v_i = t \rightarrow \left( X_1 v_i X_2 \rightarrow X_1 t X_2 \right) \right)$ (단, $X_1$과 $X_2$는 $X_1 v_i X_2$가 원자 논리식이 되게 하는 임의의 표현식임)\footnote
+\item[$L_{7}$ :] $\left( v_i = t \rightarrow \left( X_1 v_i X_2 \rightarrow X_1 t X_2 \right) \right)$ (단, $X_1$과 $X_2$는 $X_1 v_i X_2$가 원자논리식이 되게 하는 임의의 표현식임)\footnote
 {
 이 공리꼴의 대안으로는 $\left( v_i = t \rightarrow \left( Y_1 \rightarrow Y_2 \right) \right)$가 있다.
-여기서 $Y_1$은 원자 논리식이고, $Y_2$는 $Y_1$에서 $v_i$의 나타남 중 아무거나 하나를 $t$로 교체하여 얻은 식이다.
+여기서 $Y_1$은 원자논리식이고, $Y_2$는 $Y_1$에서 $v_i$의 나타남 중 아무거나 하나를 $t$로 교체하여 얻은 식이다.
 }
 \end{enumerate}
 
@@ -1904,7 +1906,7 @@ $F$를 (P.E.에서) \underline{반증 가능}(\textit{refutable})하다고 한�
 \subsection{공리계의 산술화}
 \hspace{12pt}
 
-이제 P.E.의 모든 증명가능한 문장들의 괴델 수들을 모은 집합이 (바로 전 단원에서의 집합 $T$와 다르게) 산술적인 집합이라는 것을 증명하는 데 집중하겠다.
+이제 P.E.의 모든 증명 가능한 문장들의 괴델 수들을 모은 집합이 (바로 전 단원에서의 집합 $T$와 다르게) 산술적인 집합이라는 것을 증명하는 데 집중하겠다.
 
 \noindent \textbf{\S2. 예비 사항}
 
@@ -2028,7 +2030,7 @@ $R_f \left( X , Y , Z \right)$라고 정의하자.\footnote
 {
 우리는 $R_f$를 \textit{논리식에 대한 형성 관계}라고 부를 수 있을 것이다.
 }
-\textit{논리식}에 대한 형성 유한열을 각 $i \le n$에 대하여 $X_{i}$가 원자 논리식이거나 $j < i$와 $k < i$가 있어서 $R_f \left( X_{j} , X_{k} , X_{i} \right)$인 것으로 정의한다.
+\textit{논리식}에 대한 형성 유한열을 각 $i \le n$에 대하여 $X_{i}$가 원자논리식이거나 $j < i$와 $k < i$가 있어서 $R_f \left( X_{j} , X_{k} , X_{i} \right)$인 것으로 정의한다.
 그러면 표현식 $X$가 논리식일 때 그리고 그럴 때에만 $X$가 원소인 논리식에 대한 형성 유한열이 존재한다.
 \end{context}
 
@@ -2140,8 +2142,147 @@ $P \left( v_1 \right)$와 $R \left( v_1 \right)$가 $\mathcal{L}_E$ 안에서
 이전 장의 정리 1에 대한 보조정리로부터,
 집합 $\widetilde{P_{E}}^{*}$을 표현하는 논리식 $H \left( v_1 \right)$을 찾을 수 있다.
 그러면, 2장의 정리 1의 증명에 따라,
-$H \left( v_1 \right)$의 대각화 $H \left[ \bar{h} \right]$은 집합 $\widetilde{P_E}$에 대한 괴델 문장이다.
+$H \left( v_1 \right)$의 대각화 $H \left[ \overline{h} \right]$은 집합 $\widetilde{P_E}$에 대한 괴델 문장이다.
 이 문장은 P.E. 안에서 증명 가능하지 않을 때 그리고 그럴 때에만 참이다.
-P.E.가 정확한 체계이기 때문에 $H \left[ \bar{h} \right]$은 반드시 참이지만 P.E.에서 증명 가능하지 않다.
-또한 $ \lnot H \left[ \bar{h} \right] $은 거짓이므로, 이 문장도 P.E.에서 증명 가능하지 않다.
+P.E.가 정확한 체계이기 때문에 $H \left[ \overline{h} \right]$은 반드시 참이지만 P.E.에서 증명 가능하지 않다.
+또한 $ \lnot H \left[ \overline{h} \right] $은 거짓이므로, 이 문장도 P.E.에서 증명 가능하지 않다.
+
+한편, 1장의 쌍대성을 이용하여, 집합 $R_E$는 싼술적이므로, $R_E^*$ 또한 그렇고,
+$R_E^*$를 표현하는 논리식 $K \left( v_1 \right)$을 취할 수 있다.
+그러면 그것의 대각화 $K \left[ \overline{k} \right]$은 대각화하는 $R_E$에 대한 괴델 문장이 된다.
+따라서 이 문장은 참일 때 그리고 그럴 때에만 P.E.에서 \textit{반증 가능}하다.
+그러면 $K \left[ \overline{k} \right]$은 반드시 거짓이어야 하고 P.E.에서 반증가능하지 않아야 한다.
+따라서 그것의 부정 $\lnot K \left[ \overline{k} \right]$은 참이지만 P.E.에서 증명 가능하지 않다.
+따라서, ($H \left[ \overline{h} \right]$와 같이) $K \left[ \overline{k} \right]$는 P.E.에서 증명 가능하지도 반증 가능하지도 않다.
+이렇거나 저렇거나, 우리는 증명했다:
+
+\begin{context}[Theorem 1]
+공리계 P.E.는 불완전하다.
+\end{context}
+
+\begin{context}[Remarks]
+위의 불완전성 정리의 증명은 우리가 아는 것 중 가장 단순한 것이다.
+타르시키 진리집합을 사용했기 때문에 단순한 부분이 있었고(5장과 6장에서 진리 집합을 사용하지 않은 두 가지 불완전성 증명을 생각할 것이다);
+처음부터 지수 연산을 사용했기 때문에(다음 장에서 우리는 지수 연산을 사용하지 않은 더 엄격한 시스템을 고려할 것이다)
+그리고 등호를 포함한 일차논리의 Montague-Kalish 공리화를 채택했기 때문에 증명이 단순하게 됐다.
+더 표준적인 산술의 공리화에 대한 불완전성 증명을 얻기 위해서는,
+반드시 논리식 안의 변수의 자유나타남을 항으로 치환하는 연산을 산술화하여야 한다.
+밑의 연습문제는 더 표준적으로 형식화된 불완전성 정리의 증명의 중요한 단계를 나타낸다.
+\end{context}
+
+\begin{context}[Exercise 1]
+$\mathrm{Fr} \left( x , y \right)$를 ``$E_x$이 변수이고, $E_y$가 논리식이며, $E_x$는 $E_y$에서 최소한 한 번 자유롭게 나타난다''는 관계라고 하자.\footnote
+{
+힌트: 임의의 변수 $w$와 표현식 $X$에 대하여,
+$w$는 $X$에서 자유롭게 나타날 때 그리고 그럴 때마다
+표현식들의 유한열이 존재하여 $X$가 그 유한열의 원소이고 그 유한열의 각 원소 $Y$에 대하여,
+$Y$가 원자논리식이면서 $w$가 $Y$의 부분이거나,
+$Y$가 그 유한열의 어떤 앞의 원소 $Y_1$과 어떤 논리식 $F$(반드시 그 유한열의 원소일 필요는 없다)에 대하여 $Y = Y_1 \rightarrow F$ 또는 $Y = F \rightarrow Y_1$이거나,
+$Y$이 $w$와 다른 어떤 변수에 대한 그 유한열의 어떤 앞의 원소의 보편 양화이다.
+}
+\end{context}
+
+\begin{context}[Exercise 2]
+연습문제 1을 이용하여, 보여라:
+\begin{enumerate}
+\item \textit{문장}의 괴델 수들의 집합이 산술적이다;
+\item P.E.의 증명 가능한 \textit{문장}들의 괴델 수들의 집합이 산술적이다.\footnote
+{
+증명 가능한 \textit{논리식}들의 괴델 수의 집합보다는 오히려 이 집합으로 작업하는 것이 더 일반적이다.
+우리는 하지만 제 1 불완전성 정리의 증명을 얻을 때 최대한 단순하게 한다.
+}
+\end{enumerate}
+\end{context}
+
+\begin{context}[Exercise 3]
+임의의 $K_{11}$ 안의 수들의 순서쌍들의 유한열 $$\left( a_1 , b_1 \right) , \left( a_2 , b_2 \right) , \cdots , \left( a_n , b_n \right)$$이 주어졌을 때,
+유한열 번호 $\delta \delta a_1 \delta b_1 \delta\delta \cdots \delta \delta a_n \delta b_n \delta \delta$를 할당한다.
+$\mathrm{Seq}_2 \left( x \right)$를 $x$가 $K_{11}$ 안의 수들의 순서쌍들의 유한열이라는 조건이라고 하자.
+$ \left( x , y \right) \in z $를 $x$가 $K_{11}$ 안의 수들의 순서쌍들의 유한열이고
+$ \left( x , y \right) $가 그 유한열의 원소이라는 조건이라고 하자.
+$ \left( x_1 , y_1 \right) \prec_{z} \left( x_2 , y_2 \right) $를
+$z$가 $\left( x_1 , y_1 \right)$이 $\left( x_2 , y_2 \right)$보다
+먼저 나타나는 유한열의 유한열 번호라는 조건이라고 하자.
+이 세 조건이 싼술적임을 보여라.\footnote
+{
+이것은 다음 연습문제에서 중요하다.
+}
+\end{context}
+
+\begin{context}[Exercise 4]
+임의의 논리항 또는 논리식 $E$와 임의의 변수 $w$와 임의의 항 $t$에 대하여
+$E \left[ t \backslash w \right]$(가끔씩 $E \left[ w := t \right]$으로 쓰는)를 $E$에서
+$w$의 자유나타남을 $t$로 치환한 결과라고 하자. 다음 조건들이 성립함에 주목해라.
+\begin{enumerate}
+\item $E$가 숫자 또는 $w$와 다른 변수일 때 $E \left[ w \backslash t \right] = E$이지만,
+$E = w$이면 $E \left[ w \backslash t \right] = t$이다. 즉, $w \left[ w \backslash t \right] = t$.
+\item $E$가 $r + s$, $r \times s$, $r \, \mathbf{E} \, s$ 또는 $r^{\prime}$이면
+$E \left[ w \backslash t \right]$는 각각 $r \left[ w \backslash t \right] + s \left[ w \backslash t \right]$,
+$r \left[ w \backslash t \right] \times s \left[ w \backslash t \right]$, $ r \left[ w \backslash t \right] \, \mathbf{E} \, s \left[ w \backslash t \right]$ 또는 $r \left[ w \backslash t \right]^{\prime}$이다.
+\item $E$가 원자논리식 $r = s$ 또는 $r \le s$이면
+$E \left[ w \backslash t \right]$는 각각 $ r \left[ w \backslash t \right] = s \left[ w \backslash t \right] $ 또는 $ r \left[ w \backslash t \right] \le s \left[ w \backslash t \right] $이다.
+\item $E$가 논리식 $F \rightarrow G$ 또는 $\lnot F$이면,
+$E \left[ w \backslash t \right]$는 각각
+$F \left[ w \backslash t \right] \rightarrow G \left[ w \backslash t \right]$ 또는
+$\lnot \left[ w \backslash t \right]$이다.
+\item $E$가 논리식 $\forall v F$이면( 여기서 $v$는 $w$와 다른 변수이다 ),
+$E \left[ w \backslash t \right] = \forall v F \left[ w \backslash t \right]$이다.
+그러나 $E$가 $\forall w F$이면 $E \left[ w \backslash t \right] = E$이다. 
+\end{enumerate}
+이제 $\mathrm{Sub} \left( E , w , t , F \right)$를 ``$E$가 논리항이거나 논리식이고 $w$는 변수이고 $t$는 논리항인데 $F = E\left[ w \backslash t \right]$이다''라는 관계로 두자.
+$\mathrm{sub} \left( x_1, x_2, x_3, x_4 \right)$를 $\mathrm{Sub} \left( E_{x_1} , E_{x_2} , E_{x_3} , E_{x_4} \right)$라는 (자연수 사이의) 관계라고 하자.
+\begin{itemize}
+\item[(a)] 위의 사실 (1)-(5)을 이용하여, $\mathrm{Sub} \left( E_1, w, t, E_2 \right)$가 성립할 때 그리고 그럴 때마다
+다음 성질을 가지는 순서쌍의 유한열이 존재한다:
+$\left( E_1, E_2 \right)$가 이 유한열에 속하고,
+$\triangle \triangle \triangle$하거나 임의의 원소 $\left( X_1, X_2 \right)$에 대하여
+더 빠른 원소 $\left( Y_1 , Y_2 \right)$와 $\left( Z_1 , Z_2 \right)$가 존재하여 $\square \square \square$한다.
+두 빈칸을 올바르게 채워넣어라.
+\item[(b)] (a)와 연습문제 3을 이용하여 관계 $\mathrm{sub} \left( x_1 , x_2 , x_3 , x_4 \right)$가 싼술적임을 보여라.
+\end{itemize}
+\end{context}
+
+\begin{context}[Exercise 5]
+임의의 변수 $w$, $w_1$과 임의의 논리식 $F$에 대하여,
+$w$가 최소한 한 번 자유롭게 나타나는 논리식 $G$가 존재하여
+$\forall w_1 G$가 $F$의 부분일 때
+$w$는 $F$에서 $w_1$에게 \textit{묶여있다}고 한다.
+$w$가 $t$에 나타나는 어떠한 변수 $w_1$에 대해서도 $F$에서 묶여있지 않을 때
+논리항 $t$는 $F$에서 $w$에 대하여 \textit{치환 가능}하다고 한다.
+$M \left( x , y , z \right)$를 관계 ``$E_x$가 $E_z$에서 $E_z$에 대하여 치환 가능하다''라는 관계라고 하자.
+이 관계가 싼술적임을 보여라.
+\end{context}
+
+\begin{context}[Exercise 6]
+$\mathrm{P.E.}^{\prime}$를 공리계 P.E.에서 \textbf{Group II}를 $\mathbf{Group II}^{\prime}$로 바꾼 공리계라고 하자. \\
+$\mathbf{Group II}^{\prime}$는 다음과 같다:
+\begin{enumerate}
+\item [$L_4^{\prime}$]: $L_4$와 동일
+\item [$L_5^{\prime}$]: $\forall w \left( F \rightarrow F \left[ w \backslash t \right] \right)$,
+이때 $t$는 $F$에서 $w$에 대하여 치환 가능해야 한다.
+\item [$L_6^{\prime}$]:
+\arrayrulecolor{white}
+\begin{tabular}{|l|l|} \hline
+(a) & $ v_1 = v_1 $ \\ \hline
+(b) & $ \left( v_1 = v_2 \rightarrow \left( v_3 = v_4 \rightarrow \left( v_1 + v_3 \right) = \left( v_2 + v_4 \right) \right) \right)$ \\ \hline
+(c) & $ \left( v_1 = v_2 \rightarrow \left( v_3 = v_4 \rightarrow \left( v_1 \times v_3 \right) = \left( v_2 \times v_4 \right) \right) \right)$ \\ \hline
+(d) & $ \left( v_1 = v_2 \rightarrow \left( v_3 = v_4 \rightarrow \left( v_1 \mathbf{E} v_3 \right) = \left( v_2 \, \mathbf{E} \, v_4 \right) \right) \right)$ \\ \hline
+(e) & $ \left( v_1 = v_2 \rightarrow \left( v_3 = v_4 \rightarrow v_1^{\prime} = v_2^{\prime} \right) \right) $ \\ \hline
+(f) & $ \left( v_1 = v_2 \rightarrow \left( v_3 = v_4 \rightarrow \left( v_1 = v_3 \rightarrow v_2 = v_4 \right) \right) \right) $ \\ \hline
+(g) & $ \left( v_1 = v_2 \rightarrow \left( v_3 = v_4 \rightarrow \left( v_1 \le v_3 \rightarrow v_2 = v_4 \right) \right) \right) $ \\ \hline
+\end{tabular}
+\end{enumerate}
+
+공리꼴 $L_5^{\prime}$이 무한히 많은 공리들을 가지고 있음에 주목하자.
+($w$은 아무 변수이고, $F$, $F_1$ 그리고 $F_2$는 아무 논리식이다)
+
+$\mathrm{P.E.}^{\prime}$의 증명가능한 논리식들의 집합은 P.E.의 증명 가능한 논리식들의 집합과 똑같다 --
+이는 (\textbf{Group I}와 \textbf{Group II}의 일차논리 형식화가 \textbf{Group I}와 $\mathbf{Group II}^{\prime}$의 일차논리 형식화와 동등하다는) Montague-Kalish의 결과[1965]에 대하여 따라온다.
+하지만 $\mathrm{P.E.}^{\prime}$에서의 증명은 P.E.에서의 증명과 같지 않다.
+$\mathrm{Pf}^{\prime} \left( x \right)$를 ``$x$가 $\mathrm{P.E.}^{\prime}$에서의 증명의 괴델 수이다''는 조건이라고 하자.
+
+연습문제 4와 5를 이용하여, $L_5^{\prime}$이 싼술적임을 보여라.
+그러면 술어 $\mathrm{Pf}^{\prime} \left( x \right)$는 싼술적임을 보이는 것은 쉽고
+따라서 $\mathrm{P.E.}^{\prime}$는 불완전함을 보이는 것도 그러하다.
+\end{context}
 \end{document}
