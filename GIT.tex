@@ -2215,22 +2215,22 @@ $z$가 $\left( x_1 , y_1 \right)$이 $\left( x_2 , y_2 \right)$보다
 $E \left[ t \backslash w \right]$(가끔씩 $E \left[ w := t \right]$으로 쓰는)를 $E$에서
 $w$의 자유나타남을 $t$로 치환한 결과라고 하자. 다음 조건들이 성립함에 주목해라.
 \begin{enumerate}
-\item $E$가 숫자 또는 $w$와 다른 변수일 때 $E \left[ w \backslash t \right] = E$이지만,
-$E = w$이면 $E \left[ w \backslash t \right] = t$이다. 즉, $w \left[ w \backslash t \right] = t$.
+\item $E$가 숫자 또는 $w$와 다른 변수일 때 $E \left[ t \backslash w \right] = E$이지만,
+$E = w$이면 $E \left[ t \backslash w \right] = t$이다. 즉, $w \left[ t \backslash w \right] = t$.
 \item $E$가 $r + s$, $r \times s$, $r \, \mathbf{E} \, s$ 또는 $r^{\prime}$이면
-$E \left[ w \backslash t \right]$는 각각 $r \left[ w \backslash t \right] + s \left[ w \backslash t \right]$,
-$r \left[ w \backslash t \right] \times s \left[ w \backslash t \right]$, $ r \left[ w \backslash t \right] \, \mathbf{E} \, s \left[ w \backslash t \right]$ 또는 $r \left[ w \backslash t \right]^{\prime}$이다.
+$E \left[ t \backslash w \right]$는 각각 $r \left[ t \backslash w \right] + s \left[ t \backslash w \right]$,
+$r \left[ t \backslash w \right] \times s \left[ t \backslash w \right]$, $ r \left[ t \backslash w \right] \, \mathbf{E} \, s \left[ t \backslash w \right]$ 또는 $r \left[ t \backslash w \right]^{\prime}$이다.
 \item $E$가 원자논리식 $r = s$ 또는 $r \le s$이면
-$E \left[ w \backslash t \right]$는 각각 $ r \left[ w \backslash t \right] = s \left[ w \backslash t \right] $ 또는 $ r \left[ w \backslash t \right] \le s \left[ w \backslash t \right] $이다.
+$E \left[ t \backslash w \right]$는 각각 $ r \left[ t \backslash w \right] = s \left[ t \backslash w \right] $ 또는 $ r \left[ t \backslash w \right] \le s \left[ t \backslash w \right] $이다.
 \item $E$가 논리식 $F \rightarrow G$ 또는 $\lnot F$이면,
-$E \left[ w \backslash t \right]$는 각각
-$F \left[ w \backslash t \right] \rightarrow G \left[ w \backslash t \right]$ 또는
-$\lnot \left[ w \backslash t \right]$이다.
+$E \left[ t \backslash w \right]$는 각각
+$F \left[ t \backslash w \right] \rightarrow G \left[ t \backslash w \right]$ 또는
+$\lnot \left[ t \backslash w \right]$이다.
 \item $E$가 논리식 $\forall v F$이면( 여기서 $v$는 $w$와 다른 변수이다 ),
-$E \left[ w \backslash t \right] = \forall v F \left[ w \backslash t \right]$이다.
-그러나 $E$가 $\forall w F$이면 $E \left[ w \backslash t \right] = E$이다. 
+$E \left[ t \backslash w \right] = \forall v F \left[ t \backslash w \right]$이다.
+그러나 $E$가 $\forall w F$이면 $E \left[ t \backslash w \right] = E$이다. 
 \end{enumerate}
-이제 $\mathrm{Sub} \left( E , w , t , F \right)$를 ``$E$가 논리항이거나 논리식이고 $w$는 변수이고 $t$는 논리항인데 $F = E\left[ w \backslash t \right]$이다''라는 관계로 두자.
+이제 $\mathrm{Sub} \left( E , w , t , F \right)$를 ``$E$가 논리항이거나 논리식이고 $w$는 변수이고 $t$는 논리항인데 $F = E\left[ t \backslash w \right]$이다''라는 관계로 두자.
 $\mathrm{sub} \left( x_1, x_2, x_3, x_4 \right)$를 $\mathrm{Sub} \left( E_{x_1} , E_{x_2} , E_{x_3} , E_{x_4} \right)$라는 (자연수 사이의) 관계라고 하자.
 \begin{itemize}
 \item[(a)] 위의 사실 (1)-(5)을 이용하여, $\mathrm{Sub} \left( E_1, w, t, E_2 \right)$가 성립할 때 그리고 그럴 때마다
@@ -2259,7 +2259,7 @@ $\mathrm{P.E.}^{\prime}$를 공리계 P.E.에서 \textbf{Group II}를 $\mathbf{G
 $\mathbf{Group II}^{\prime}$는 다음과 같다:
 \begin{enumerate}
 \item [$L_4^{\prime}$]: $L_4$와 동일
-\item [$L_5^{\prime}$]: $\forall w \left( F \rightarrow F \left[ w \backslash t \right] \right)$,
+\item [$L_5^{\prime}$]: $\forall w \left( F \rightarrow F \left[ t \backslash w \right] \right)$,
 이때 $t$는 $F$에서 $w$에 대하여 치환 가능해야 한다.
 \item [$L_6^{\prime}$]:
 \arrayrulecolor{white}
