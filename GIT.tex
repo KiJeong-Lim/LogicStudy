@@ -22,8 +22,7 @@
 { \mathfrak{g} }
 
 \newenvironment{context}[1][]
-{ \noindent \textbf{{#1}.}
-}
+{ \noindent \textbf{{#1}.} }
 { \hfill $ \dashv $ }
 
 \newcommand{\coqstyle}
@@ -836,7 +835,7 @@ E_{a_{n}} \left( b_{n} \right) \in \mathcal{T}
 \end{align*}
 인데, $\mathcal{L}$의 정확성에 의하여,
 $E_{a_{n}} \left( b_{n} \right)$은 $\mathcal{L}$에서 참이지만 증명 가능하지 않아야 한다.
-그런데 $ n \mapsto \left( a_{n} , b_{n} \right) : \mathbb{N}_{+} \to \mathbb{N} \times \mathbb{N} $은 정의역이 $\mathbb{N}_{+}$인 단사 함수이므로,
+그런데 $ n \mapsto \left( a_{n} , b_{n} \right) : \mathbb{N}_{>0} \to \mathbb{N} \times \mathbb{N} $은 정의역이 $\mathbb{N}_{>0}$인 단사 함수이므로,
 $E_{a} \left( b \right)$가 $\mathcal{L}$에서 참이지만 증명 가능하지 않다는 것을 보장할 수 있는,
 $a \in \mathbb{N}$와 $b \in \mathbb{N}$의 순서쌍 $\left( a , b \right)$은 무한히 많음을 알 수 있다.
 
@@ -965,7 +964,7 @@ $v_{i}$를 개체 변수라고 하자.
 논리식 $F$에 대하여, $\lnot F$에서의 $v_{i}$의 모든 자유 나타남들은 $F$의 그것과 같다.
 이때 $v_{i}$는 $\forall v_{i} F$에서 자유롭게 나타나지 않는다;
 $\forall v_{i} F$에서의 $v_{i}$의 모든 나타남들은 \underline{속박 나타남}(\textit{bound occurrence})이라고 불린다.
-$j \neq i$인 각 $j \in \mathbb{N}_{+}$마다 $\forall v_{j} F$에서의 $v_{i}$의 모든 자유 나타남들은 $F$의 그것과 같다.
+$j \neq i$인 각 $j \in \mathbb{N}_{>0}$마다 $\forall v_{j} F$에서의 $v_{i}$의 모든 자유 나타남들은 $F$의 그것과 같다.
 \end{context}
 
 \begin{context}[Sentences]
@@ -987,7 +986,7 @@ $j \neq i$인 각 $j \in \mathbb{N}_{+}$마다 $\forall v_{j} F$에서의 $v_{i}
 
 자유롭게 나타나는 개체 변수가 $v_{1}$, ..., $v_{n}$ 뿐인 논리식을 \underline{정규}(\textit{regular}) 논리식이라고 한다.
 그러므로, 정규 논리식 $F$에서 개체 변수 $v_{i}$가 자유롭게 나타난다면,
-$j \leq i$인 임의의 $j \in \mathbb{N}_{+}$에 대하여 $v_{j}$도 $F$에서 자유롭게 나타나는 개체 변수이다.
+$j \leq i$인 임의의 $j \in \mathbb{N}_{>0}$에 대하여 $v_{j}$도 $F$에서 자유롭게 나타나는 개체 변수이다.
 \end{context}
 
 \begin{context}[Degrees and Induction]
