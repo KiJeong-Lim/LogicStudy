@@ -80,7 +80,7 @@
 
 이 글에는 논리학자 Raymond M. Smullyan의 저서 ``G\"odel's Incompleteness Theorems''의 번역과 더불어 제 사견도 들어 있습니다.
 
-\textbf{감사의 인사.} 이 글은 장준영\footnote{https://github.com/Ailrun}님과 전한울\footnote{https://github.com/hanuljeon95}님의 도움을 받아 작성되었습니다.
+\textbf{감사의 인사.} 이 글은 장준영\footnote{https://ailrun.github.io}님과 전한울\footnote{https://github.com/hanuljeon95}님의 도움을 받아 작성되었습니다.
 
 \newpage
 
@@ -900,7 +900,7 @@ G\"odel의 불완전성 정리에 도달하는 것이 우리의 목표 중 하�
 
 \noindent \textbf{\S1. 구문론적 예비 사항}
 
-우리가 공부할 첫 번째 구체적인 언어는 덧셈과 곱셈 그리고 제곱을 기반으로 하는 1차 산술의 언어이다.\footnote
+우리가 공부할 첫 번째 구체적인 언어는 덧셈과 곱셈 그리고 거듭제곱을 기반으로 하는 1차 산술의 언어이다.\footnote
 {
 다음 수 함수와 이하의 관계도 넣을 것이지만, 이것들은 불필요하다.
 }
@@ -912,7 +912,7 @@ $$ 0 \quad ' \quad \left( \quad \right) \quad f \quad \circ \quad v \quad \lnot 
 각각 자연수 $0$, $1$, $2$, $3$, ...의 형식적인 이름으로서 \underline{숫자}(\textit{numeral})라고 불린다.
 악센트 기호는 \underline{프라임}(\textit{prime})이라고도 불리는데,
 다음 수 함수의 형식적인 이름이다.
-또한 덧셈과 곱셈 그리고 제곱 연산의 이름이 필요한데;
+또한 덧셈과 곱셈 그리고 거듭제곱 연산의 이름이 필요한데;
 $f \circ$, $f \! \circ \! \circ$, $f \! \circ \! \circ \circ$을 각각 이 세 함수의 이름이라 하자.
 그러나 $f \circ$을 ``$+$''로, $f \! \circ \! \circ$을 ``$\times$''로, $f \! \circ \! \circ \circ$을 ``$\mathop{\mathbf{E}}$''로 줄여서 표기하자.
 
@@ -1041,7 +1041,7 @@ $v_{i}$에는 임의의 개체 변수가 올 수 있다.
 \item 두 상항 $c_{1}$과 $c_{2}$가 각각 $n_{1}$과 $n_{2}$에 대응할 때,
 $\left( c_{1} + c_{2} \right)$는 $n_{1}$과 $n_{2}$의 합에 대응하고;
 $\left( c_{1} \times c_{2} \right)$는 $n_{1}$과 $n_{2}$의 곱에 대응하고;
-$\left( c_{1} \mathop{\mathbf{E}} c_{2} \right)$은 $n_{1}$의 $n_{2}$ 제곱에 대응한다.
+$\left( c_{1} \mathop{\mathbf{E}} c_{2} \right)$은 $n_{1}$의 $n_{2}$제곱에 대응한다.
 \end{enumerate}
 
 한 예로, 상항 $\left( \left( 0''' + 0' \right) \times \left( 0'' \mathop{\mathbf{E}} 0''' \right) \right) '$는
@@ -1126,7 +1126,7 @@ $F$는 문장 $F \left[ v_{i_{1}} := \overline{n_{1}} , \cdots , v_{i_{k}} := \o
 
 집합이나 관계가 어떤 $\mathcal{L}_{E}$의 논리식에 의하여 표현될 때 그것을 \underline{싼술적}(\textit{Arithmetic})이라고 한다.
 그리고 집합이나 관계가 $\mathbf{E}$를 포함하지 않는 어떤 $\mathcal{L}_{E}$의 논리식에 의하여 표현될 때 그것을 \underline{산술적}(\textit{arithmetic})이라고 한다.
-비형식적으로, 싼술적인 집합과 관계는 1차 논리에서 덧셈과 곱셈 그리고 제곱에 의하여 정의될 수 있다는 특성을 가지고 있다;
+비형식적으로, 싼술적인 집합과 관계는 1차 논리에서 덧셈과 곱셈 그리고 거듭제곱에 의하여 정의될 수 있다는 특성을 가지고 있다;
 그리고 산술적인 집합과 관계는 1차 논리에서 덧셈과 곱셈에만 의하여 정의될 수 있다는 특성을 가지고 있다.\footnote
 {
 관계 $\leq$를 넣지 않은 이유는 다음과 같다:
@@ -1797,7 +1797,7 @@ Y \in \mathcal{T}
 
 \newpage
 
-\section{제곱 연산이 있는 페아노 산술의 불완전성}
+\section{거듭제곱 연산이 있는 페아노 산술의 불완전성}
 \hspace{12pt}
 
 \subsection{P.E. 공리계}
@@ -1805,7 +1805,7 @@ Y \in \mathcal{T}
 
 \noindent \textbf{\S1. P.E. 공리계}
 
-이제 \underline{제곱 연산이 있는 페아노 산술}(\textit{Peano Arithmetic with Exponentiation})이라고 불리는 공리계로 넘어갈 것인데,
+이제 \underline{거듭제곱 연산이 있는 페아노 산술}(\textit{Peano Arithmetic with Exponentiation})이라고 불리는 공리계로 넘어갈 것인데,
 이 형식 체계를 약어로 ``P.E.''라고 부를 것이다.
 \underline{공리}(\textit{axiom})라고 불리는, 정확한 특정 논리식들을 잡고;
 이미 증명된 [정확한 논리식]들로부터 새로운 [정확한 논리식]을 증명할 수 있게 하는 두 \underline{추론 규칙}(\textit{inference rule})을 제공한다.
