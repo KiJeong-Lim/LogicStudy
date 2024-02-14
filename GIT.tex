@@ -78,7 +78,7 @@
 \setstretch{1.5}
 \maketitle
 
-이 글에는 논리학자 Raymond M. Smullyan의 저서 ``G\"odel's Incompleteness Theorems''의 번역과 더불어 제 사견도 들어 있습니다.
+이 글은 논리학자 Raymond M. Smullyan의 저서 ``G\"odel's Incompleteness Theorems''의 번역입니다.
 
 \textbf{감사의 인사.} 이 글은 장준영\footnote{https://ailrun.github.io}님과 전한울\footnote{https://hanuljeon95.github.io/}님의 도움을 받아 작성되었습니다.
 
@@ -1226,7 +1226,7 @@ $b \geq 2$를 잡자.
 \item ($x$와 $y$ 사이의 관계로서의) 관계 $b^{\mathrm{len}_{b} \left( x \right)} = y$는,
 우리가 주목했듯이, 조건 $$ \left( x = 0 \land y = b \right) \lor \left( x \neq 0 \land s \left( x , y \right) \right) $$과 동등하다 --
 여기서, $s \left( x , y \right)$는 ``$y$가 $x$보다 큰 거듭제곱 중 가장 작다''는 관계이다.
-이것은 싼술적인데, 왜냐하면 $$\left( \mathrm{Pow}_{b} \left( y \right) \land x < y \right) \land \left( \forall z \in \mathbb{N} \right) \left[ \left( \mathrm{Pow}_{b} \left( z \right) \land x < z \right) \rightarrow y \leq z \right]$$일 때 그리고 그럴 때에만 $s \left( x , y \right)$가 성립하기 때문이다.
+이것은 싼술적인데, 왜냐하면 $$\left( \mathrm{Pow}_{b} \left( y \right) \land x < y \right) \land \left( \forall z \in \mathbb{N} \right) \left[ \left( \mathrm{Pow}_{b} \left( z \right) \land x < z \right) \rightarrow y \leq z \right]$$일 때 그리고 그럴 때에만 $\mathrm{s} \left( x , y \right)$가 성립하기 때문이다.
 \item 최종적으로, 관계 $x \times b^{\mathrm{len}_{b} \left( y \right)} + y = z$(즉, $x *_{b} y = z$)는 다음 조건과 같다:
 $$ \left( \exists w \in \mathbb{N} \right) \left[ b^{\mathrm{len}_{b} \left( y \right)} = w \land x \times w + y = z \right] . $$
 따라서, 관계 $x *_{b} y = z$는 싼술적이다.
@@ -2008,7 +2008,7 @@ $x \in y$일 때 그리고 그럴 때마다 $x$가 $x_1$, $\cdots$, $x_n$ 중에
 \end{proof}
 
 이제부터 $ \left( \forall x \in y \right) \varphi $를 $$ \forall x \left( x \in y \rightarrow \varphi \right) $$로 줄여쓰고,
-$ \left( \exists x , y \prec_{w} z \right) \varphi$를 $$ \exists x \exists y \left( x \prec_{w} w \land y \prec_{w} z \land \varphi \right) $$로 줄여쓰자.
+$ \left( \exists x , y \prec_{w} z \right) \varphi$를 $$ \exists x \exists y \left( x \prec_{w} z \land y \prec_{w} z \land \varphi \right) $$로 줄여쓰자.
 
 \begin{context}[Formation Sequences]
 이전 장에서 \textit{논리항}과 \textit{논리식}의 정의는 귀납적이었다;
@@ -2047,7 +2047,7 @@ $P_E \left( x \right)$($E_x$가 P.E.의 증명 가능한 논리식이다)와 $R_
 다음 장에서만 관계가 있을 목적을 이루기 위하여, 독자들은 $\left( \forall x \le y \right)$ 꼴만의 보편양화사를 도입할 것임에 주목해야 한다 -- 여기서 $y$는 숫자이거나 변수이다. (그러한 양화사는 \underline{제한된}(\textit{bounded}) 보편양화사라고 한다.)
 
 임의의 숫자 $x$와 $y$에 대하여, 우리는 $\left( E_{x} \rightarrow E_{y} \right)$, $\lnot E_{x}$, $\left( E_{x} \times E_{y} \right)$, $\left( E_{x} \mathrm{\mathbf{E}} E_{y} \right)$, $E^{\prime}$와 $E_{x} = E_{y}$와 $E_{x} \le E_{y}$의 괴델 수를
-각각 $x \, \mathrm{imp} \, y$, $\mathrm{neg} \left( x \right)$, $x \, \mathrm{pl} \, y$, $x \, \mathrm{tim} \, y$, $x \, \mathrm{exp} \, y$, $s \left( x \right)$, $x \, \mathrm{id} \, y$와 $x \, \mathrm{le} \, y$로 언급하자.
+각각 $x \, \mathrm{imp} \, y$, $\mathrm{neg} \left( x \right)$, $x \, \mathrm{pl} \, y$, $x \, \mathrm{tim} \, y$, $x \, \mathrm{exp} \, y$, $\mathrm{s} \left( x \right)$, $x \, \mathrm{id} \, y$와 $x \, \mathrm{le} \, y$로 언급하자.
 당연히, 이 여덟 개의 함수는 모두 싼술적이다. (예로, $x \, \mathrm{imp} \, y = 2 * x * 8 * y * 3$이고 $\mathrm{neg} \left( x \right) = 7 * x$이다.)
 
 이제 앞서 말했던 조건들을 나열하자. (각각 그 아래에서 싼술적이라는 것을 보일 것이다.)
@@ -2057,13 +2057,13 @@ $$ \left( \forall y \le x \right) \left[ y P x \rightarrow 5 P y \right] $$
 \item[{2.}] $\mathrm{Var} \left( x \right)$ -- $E_x$가 개체변수이다:
 $$ \left( \exists y \le x \right) \left[ \mathrm{Sb} \left( y \right) \land x = 2 * 6 * y * 3 \right] $$
 \item[{3.}] $\mathrm{Num} \left( x \right)$ -- $E_x$가 숫자이다:
-$$ \mathrm{Pow}\left( x \right) $$
+$$ \mathrm{Pow}_{13}\left( x \right) $$
 \item[{4.}] $R_1 \left( x , y , z \right)$ -- 관계 $R_t \left( E_x , E_y , E_z \right)$가 성립한다:
-$$ z = x \, \mathrm{pl} \, y \lor z = x \, \mathrm{tim} \, y \lor z = x \, \mathrm{exp} \, y \lor z = s \left( x \right) $$
+$$ z = x \, \mathrm{pl} \, y \lor z = x \, \mathrm{tim} \, y \lor z = x \, \mathrm{exp} \, y \lor z = \mathrm{s} \left( x \right)$$
 \item[{5.}] $\mathrm{Seqt} \left( x \right)$ -- $E_{x}$가 논리항들의 형성 유한열이다:
 $$ \mathrm{Seq} \left( x \right) \land \left( \forall y \in x \right) \left[ \mathrm{Var} \left( y \right) \lor \mathrm{Num} \left( y \right) \lor \left( \exists z , w \prec_x y \right) R_1 \left( z , w , y \right) \right] $$
 \item[{6.}] $\mathrm{tm} \left( x \right)$ -- $E_{x}$가 논리항이다:
-$$ \exists y \left( \mathrm{Seqt} \left( t \right) \land x \in y \right) $$
+$$ \exists y \left( \mathrm{Seqt} \left( y \right) \land x \in y \right) $$
 \item[{7.}] $\mathrm{f}_0 \left( x \right)$ -- $E_{x}$가 원자논리식이다:
 $$ \left( \exists y \le x \right) \left( \exists z \le x \right) \left[ \mathrm{tm}\left( y \right) \land \mathrm{tm}\left( y \right) \land \left( x = y \, \mathrm{id} \, z \lor x = y \, \mathrm {le} \, z \right) \right] $$
 \item[{8.}] $\mathrm{Gen} \left( x , y \right)$ -- 어떤 변수 $w$에 대하여 $E_y = \forall w E_x $이다:
@@ -2078,6 +2078,7 @@ $$ \exists y \left( \mathrm{Seqf} \left( y \right) \land x \in y \right) $$
 \item[{13.}] $\mathrm{M.P.} \left( x , y , z \right)$ -- $E_z$가 $E_x$와 $E_y$로부터 규칙 1(Modus Ponens)에 의하여 얻어질 수 있다:
 $$ y = x \, \mathrm{imp} \, z $$
 \item[{14.}] $\mathrm{Der} \left( x , y , z \right)$ -- $E_z$가 $E_x$와 $E_y$로부터 규칙 1(Modus Ponens)에 의하여 얻어질 수 있거나 $E_x$로부터 규칙 2(Generalization)에 의하여 얻어질 수 있다:
+$$\mathrm{M.P.} \left( x , y , z \right) \lor \mathrm{Gen} \left( x , z \right)$$
 \item[{15.}] $\mathrm{Pf} \left( x \right)$ -- $E_x$가 P.E.의 증명이다:
 $$ \mathrm{Seq} \left( x \right) \land \left( \forall y \in x \right) \left[ A \left( y \right) \lor \left( \exists z , w \prec_x y \right) \mathrm{Der} \left( z , w , y \right) \right] $$
 \item[{16.}] $P_E \left( x \right)$ -- $E_x$가 P.E.에서 증명 가능하다:
@@ -2185,8 +2186,8 @@ $Y$이 $w$와 다른 어떤 변수에 대한 그 유한열의 어떤 앞의 원�
 \begin{context}[Exercise 2]
 연습문제 1을 이용하여, 보여라:
 \begin{enumerate}
-\item \textit{문장}의 괴델 수들의 집합이 싼술적이다;
-\item P.E.의 증명 가능한 \textit{문장}들의 괴델 수들의 집합이 싼술적이다.\footnote
+\item[(a)] \textit{문장}의 괴델 수들의 집합이 싼술적이다;
+\item[(b)] P.E.의 증명 가능한 \textit{문장}들의 괴델 수들의 집합이 싼술적이다.\footnote
 {
 증명 가능한 \textit{논리식}들의 괴델 수의 집합보다는 오히려 이 집합으로 작업하는 것이 더 일반적이다.
 우리는 하지만 제 1 불완전성 정리의 증명을 얻을 때 최대한 단순하게 한다.
@@ -2284,6 +2285,26 @@ $\mathrm{Pf}^{\prime} \left( x \right)$를 ``$x$가 $\mathrm{P.E.}^{\prime}$에�
 연습문제 4와 5를 이용하여, $L_5^{\prime}$이 싼술적임을 보여라.
 그러면 술어 $\mathrm{Pf}^{\prime} \left( x \right)$는 싼술적임을 보이는 것은 쉽고
 따라서 $\mathrm{P.E.}^{\prime}$는 불완전함을 보이는 것도 그러하다.
+\end{context}
+
+\begin{context}[Solutions]
+\begin{enumerate}
+\item $\mathrm{Fr} \left( w , x \right)$--
+변수 $E_w$가 원자논리식 $E_x$에 적어도 한 번 나타난다:
+$$\exists a \left( \mathrm{Seq} \left( a \right) \land x \in a \land \left( \forall y \in a \right) \left( \left( \mathrm{f}_0 \left( y \right) \land w P y \right) \lor \left( \exists z \right) \left( z \prec_a y \land R_2^{\prime} \left( x , y \right) \right) \right) \right)$$
+여기서
+\begin{align*}
+\mathrm{tmp}_1 \left( x , y \right) & :\iff y = \mathrm{neg} \left( x \right) ; \\
+\mathrm{tmp}_2 \left( x , y \right) & :\iff \exists z \left( \mathrm{fm} \left( z \right) \land \left( z = x \, \mathrm{imp} \, y \lor z = y \, \mathrm{imp} x \right) \right) ; \\
+\mathrm{tmp}_3 \left( x , y \right) & :\iff \exists z \left( \mathrm{Var} \left( z \right) \land z \ne w \land z \le y \land y = 9 * z * x \right) ; \\
+R_2^{\prime} \left( x , y \right) & :\iff \mathrm{tmp}_1 \left( x , y \right) \lor \mathrm{tmp}_2 \left( x , y \right) \lor \mathrm{tmp}_3 \left( x , y \right) .
+\end{align*}
+\item
+\begin{enumerate}
+\item [(a)] $E_x$가 문장일 때 그리고 그럴 때에만 $$\mathrm{fm} \left( x \right) \land \forall w \left( \mathrm{Var} \left( w \right) \rightarrow \lnot \mathrm{Fr} \left( w , x \right) \right)$$이다.
+\item [(b)] $E_x$가 증명 가능한 문장일 때 그리고 그럴 때에만 $$P_E \left( x \right) \land \forall w \left( \mathrm{Var} \left( w \right) \rightarrow \lnot \mathrm{Fr} \left( w , x \right) \right)$$이다.
+\end{enumerate}
+\end{enumerate}
 \end{context}
 
 \end{document}
