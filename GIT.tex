@@ -773,8 +773,8 @@ $d^{-1} \left[ A \right]$가 $\mathcal{L}$에서 표현될 수 있다고 하자.
 그러면 어떤 술어 $H$가 존재하여 $$ \left( \forall n \in \mathbb{N} \right) \left[ H \left( n \right) \in \mathcal{T} \leftrightarrow n \in d^{-1} \left[ A \right] \right]$$이 성립한다.
 이제, $h := \gnum \left( H \right)$에 대하여, $H \left( h \right)$가 $A$에 대한 괴델 문장이라는 것을 보일 것이다.
 먼저, $h = \gnum \left( H \right)$이므로,
-대각 함수의 제약 조건 $$ \left( \forall E \in \mathcal{E} \right) \left( \forall e \in \mathbb{N} \right) \left[ g \left( E \right) = e \rightarrow g \left( E \left( e \right) \right) = d \left( e \right) \right] $$로부터,
-$ g \left( H \left( h \right) \right) = d \left( h \right) $를 얻는다.
+대각 함수의 제약 조건 $$ \left( \forall E \in \mathcal{E} \right) \left( \forall e \in \mathbb{N} \right) \left[ \gnum \left( E \right) = e \rightarrow \gnum \left( E \left( e \right) \right) = d \left( e \right) \right] $$로부터,
+$ \gnum \left( H \left( h \right) \right) = d \left( h \right) $를 얻는다.
 그러면,
 \begin{align*}
 H \left( h \right) \in \mathcal{T}
@@ -1162,9 +1162,9 @@ $\leq$는 덧셈만으로 표현될 수 있다.
 \begin{context}[Exercise 4]
 \begin{enumerate}
 \item[(a)] 임의의 두 함수 $f : \mathbb{N} \to \mathbb{N}$과 $g : \mathbb{N} \to \mathbb{N}$가 싼술적일 때
-함수 $x \mapsto f \left( g \left( x \right) \right)$도 싼술적이다.
+함수 $x \mapsto f \left( \gnum \left( x \right) \right)$도 싼술적이다.
 \item[(b)] 임의의 두 함수 $f : \mathbb{N} \to \mathbb{N}$과 $g : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$가 싼술적일 때
-세 함수 $ \left( x , y \right) \mapsto g \left( f \left( x \right) , y \right) $와 $ \left( x , y \right) \mapsto g \left( x , f \left( y \right) \right) $ 그리고 $ \left( x , y \right) \mapsto f \left( g \left( x , y \right) \right) $ 모두 싼술적이다.
+세 함수 $ \left( x , y \right) \mapsto \gnum \left( f \left( x \right) , y \right) $와 $ \left( x , y \right) \mapsto \gnum \left( x , f \left( y \right) \right) $ 그리고 $ \left( x , y \right) \mapsto f \left( \gnum \left( x , y \right) \right) $ 모두 싼술적이다.
 \end{enumerate}
 
 위의 두 명제가 모두 참임을 보여라.
@@ -1587,7 +1587,7 @@ $\widetilde{T}$에 대한 괴델 문장은 그것이 참일 때 그리고 그럴
 
 \begin{context}[Exercise 8]
 \textbf{[어려움 주의!]} 임의의 $A \subseteq \mathbb{N}$과 임의의 $B \subseteq \mathbb{N}$에 대하여,
-$A$와 $B$ 모두 싼술적이면 어떤 두 문장 $X$와 $Y$가 존재하여 $X \in \mathcal{T} \leftrightarrow g \left( Y \right) \in A$와 $Y \in \mathcal{T} \leftrightarrow g \left( X \right) \in B$가 성립함을 보여라.
+$A$와 $B$ 모두 싼술적이면 어떤 두 문장 $X$와 $Y$가 존재하여 $X \in \mathcal{T} \leftrightarrow \gnum \left( Y \right) \in A$와 $Y \in \mathcal{T} \leftrightarrow \gnum \left( X \right) \in B$가 성립함을 보여라.
 이것은 \underline{상호 참조}(\textit{cross-reference})의 한 예로 생각될 수 있다;
 $X$를 $Y$의 괴델 수가 $A$에 속한다고 선언하는 문장으로 생각할 수 있고,
 $Y$를 $X$의 괴델 수가 $B$에 속한다고 선언하는 문장으로 생각할 수 있다.
@@ -1996,19 +1996,19 @@ $x \in y$일 때 그리고 그럴 때마다 $x$가 $x_1$, $\cdots$, $x_n$ 중에
 } $ x \prec_{z} y$를 $z$가, $x$와 $y$가 원소이되 $x$의 첫 번째 나타남이 $y$의 첫 번째 나타남보다 빠른, 유한열의 유한열 번호이다는 관계라고 하자.
 
 \begin{context}[Proposition 2]
-관계 $\mathrm{Seq} \left( y \right)$, $x \in y$와 $x \prec_{z} y$는 모두 싼술적이다.
+관계 $\mathrm{Seq} \left( x \right)$, $x \in y$와 $x \prec_{z} y$는 모두 싼술적이다.
 \end{context}
 \begin{proof}
 증명은 다음과 같다:
 \begin{enumerate}
-\item $\mathrm{Seq} \left( x \right) \iff \delta B x \land \delta E x \land \delta \ne x \land \delta \delta \widetilde{P} x \land \left( \forall y \le x \right) \left[ \delta 0 y P x \rightarrow \delta B y \right]$
+\item $\mathrm{Seq} \left( x \right) \iff \delta B x \land \delta E x \land \delta \ne x \land \delta \delta \widetilde{P} x \land \left( \forall y \le x \right) \left[ \delta y P x \rightarrow \delta B y \right]$
 \item $x \in y \iff \mathrm{Seq} \left( y \right) \land \delta x \delta P y \land \delta \widetilde{P} x$
 \item $x \prec_{z} y \iff x \in z \land y \in z \land \left( \exists w \le z \right) \left[ w B z \land x \in w \land \lnot \left( y \in w \right) \right]$
 \end{enumerate}
 \end{proof}
 
-이제부터 $ \left( \forall x \in y \right) \varphi $를 $$ \forall x \left( x \in y \rightarrow \varphi \right) $$로 줄여쓰고,
-$ \left( \exists x , y \prec_{w} z \right) \varphi$를 $$ \exists x \exists y \left( x \prec_{w} z \land y \prec_{w} z \land \varphi \right) $$로 줄여쓰자.
+이제부터 $ \forall x \left( x \in y \rightarrow \varphi \right) $를 $$ \left( \forall x \in y \right) \varphi $$ 줄여쓰고,
+$ \left( \exists x \right) \left( \exists y \right) \left( x \prec_{w} z \land y \prec_{w} z \land \varphi \right) $를 $$\left( \exists x , y \prec_{w} z \right) \varphi$$로 줄여쓰자.
 
 \begin{context}[Formation Sequences]
 이전 장에서 \textit{논리항}과 \textit{논리식}의 정의는 귀납적이었다;
@@ -2294,16 +2294,17 @@ $\mathrm{Pf}^{\prime} \left( x \right)$를 ``$x$가 $\mathrm{P.E.}^{\prime}$에�
 $$ \exists a \left( \mathrm{Seq} \left( a \right) \land x \in a \land \left( \forall y \in a \right) \left[ \left( \mathrm{f}_0 \left( y \right) \land w P y \right) \lor \left( \exists z \right) \left( z \prec_a y \land R_2^{\prime} \left( z , y \right) \right) \right] \right) . $$
 여기서
 \begin{align*}
-\mathrm{tmp}_1 \left( x , y \right) & :\iff y = \mathrm{neg} \left( x \right) ; \\
-\mathrm{tmp}_2 \left( x , y \right) & :\iff \left( \exists z \right) \left( \mathrm{fm} \left( z \right) \land \left( y = x \, \mathrm{imp} \, z \lor y = z \, \mathrm{imp} \, x \right) \right) ; \\
-\mathrm{tmp}_3 \left( x , y \right) & :\iff \left( \exists z \right) \left( \mathrm{Var} \left( z \right) \land z \ne w \land z \le y \land y = 9 * z * x \right) ; \\
-R_2^{\prime} \left( x , y \right) & :\iff \mathrm{tmp}_1 \left( x , y \right) \lor \mathrm{tmp}_2 \left( x , y \right) \lor \mathrm{tmp}_3 \left( x , y \right) .
+\mathrm{tmp}_1 \left( x , y \right) & : \iff y = \mathrm{neg} \left( x \right) ; \\
+\mathrm{tmp}_2 \left( x , y \right) & : \iff \left( \exists z \right) \left( \mathrm{fm} \left( z \right) \land \left( y = x \, \mathrm{imp} \, z \lor y = z \, \mathrm{imp} \, x \right) \right) ; \\
+\mathrm{tmp}_3 \left( x , y \right) & : \iff \left( \exists z \right) \left( \mathrm{Var} \left( z \right) \land z \ne w \land z \le y \land y = 9 * z * x \right) ; \\
+R_2^{\prime} \left( x , y \right) & : \iff \mathrm{tmp}_1 \left( x , y \right) \lor \mathrm{tmp}_2 \left( x , y \right) \lor \mathrm{tmp}_3 \left( x , y \right) .
 \end{align*}
 \item
 \begin{enumerate}
 \item [(a)] $E_x$가 문장일 때 그리고 그럴 때에만 $$\mathrm{fm} \left( x \right) \land \forall w \left( \mathrm{Var} \left( w \right) \rightarrow \lnot \mathrm{Fr} \left( w , x \right) \right)$$이다.
 \item [(b)] $E_x$가 증명 가능한 문장일 때 그리고 그럴 때에만 $$P_E \left( x \right) \land \forall w \left( \mathrm{Var} \left( w \right) \rightarrow \lnot \mathrm{Fr} \left( w , x \right) \right)$$이다.
 \end{enumerate}
+\item give\_up. Abort.
 \end{enumerate}
 \end{context}
 
