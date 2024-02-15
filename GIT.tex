@@ -2291,12 +2291,12 @@ $\mathrm{Pf}^{\prime} \left( x \right)$를 ``$x$가 $\mathrm{P.E.}^{\prime}$에�
 \begin{enumerate}
 \item $\mathrm{Fr} \left( w , x \right)$--
 변수 $E_w$가 원자논리식 $E_x$에 적어도 한 번 나타난다:
-$$\exists a \left( \mathrm{Seq} \left( a \right) \land x \in a \land \left( \forall y \in a \right) \left( \left( \mathrm{f}_0 \left( y \right) \land w P y \right) \lor \left( \exists z \right) \left( z \prec_a y \land R_2^{\prime} \left( x , y \right) \right) \right) \right)$$
+$$\exists a \left( \mathrm{Seq} \left( a \right) \land x \in a \land \left( \forall y \in a \right) \left( \left( \mathrm{f}_0 \left( y \right) \land w P y \right) \lor \left( \exists z \right) \left( z \prec_a y \land R_2^{\prime} \left( z , y \right) \right) \right) \right) . $$
 여기서
 \begin{align*}
 \mathrm{tmp}_1 \left( x , y \right) & :\iff y = \mathrm{neg} \left( x \right) ; \\
-\mathrm{tmp}_2 \left( x , y \right) & :\iff \exists z \left( \mathrm{fm} \left( z \right) \land \left( z = x \, \mathrm{imp} \, y \lor z = y \, \mathrm{imp} x \right) \right) ; \\
-\mathrm{tmp}_3 \left( x , y \right) & :\iff \exists z \left( \mathrm{Var} \left( z \right) \land z \ne w \land z \le y \land y = 9 * z * x \right) ; \\
+\mathrm{tmp}_2 \left( x , y \right) & :\iff \left( \exists z \right) \left( \mathrm{fm} \left( z \right) \land \left( y = x \, \mathrm{imp} \, z \lor y = z \, \mathrm{imp} \, x \right) \right) ; \\
+\mathrm{tmp}_3 \left( x , y \right) & :\iff \left( \exists z \right) \left( \mathrm{Var} \left( z \right) \land z \ne w \land z \le y \land y = 9 * z * x \right) ; \\
 R_2^{\prime} \left( x , y \right) & :\iff \mathrm{tmp}_1 \left( x , y \right) \lor \mathrm{tmp}_2 \left( x , y \right) \lor \mathrm{tmp}_3 \left( x , y \right) .
 \end{align*}
 \item
