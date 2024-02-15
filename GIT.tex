@@ -1984,14 +1984,14 @@ $n$-튜플 $\left( X_{1} , \cdots , X_{n} \right)$의 형식적 대응이고,
 그것의 괴델 수를 \underline{유한열}(\textit{sequence}) 번호라고 부를 것이다.
 \end{context}
 
-다르게 설명해보자면, $K_{11}$을 $\delta$ (13진법의 $12$)가 자연수 $n$(의 13진법 표현)에 나타나지 않는 $n$들의 집합이라고 하자.
-기호 ``$\sharp$''가 나타나지 않는 모든 표현식들의 괴델 수는 $K_{11}$의 원소들(이것은 숫자, 변수, 항, 논리식 같은 \textit{의미있는} 표현식들을 포함한다)이다.
-임의의 $K_{11}$ 안의 수들로 된 유한열 $\left( a_{1} , \cdots , a_{n} \right)$에게 수 $\delta a_1 \delta a_2 \delta \cdots \delta a_n \delta$를 할당하고,
+다르게 설명해보자면, $\mathbb{K}_{11}$을 $\delta$ (13진법의 $12$)가 자연수 $n$(의 13진법 표현)에 나타나지 않는 $n$들의 집합이라고 하자.
+기호 ``$\sharp$''가 나타나지 않는 모든 표현식들의 괴델 수는 $\mathbb{K}_{11}$의 원소들(이것은 숫자, 변수, 항, 논리식 같은 \textit{의미있는} 표현식들을 포함한다)이다.
+임의의 $\mathbb{K}_{11}$ 안의 수들로 된 유한열 $\left( a_{1} , \cdots , a_{n} \right)$에게 수 $\delta a_1 \delta a_2 \delta \cdots \delta a_n \delta$를 할당하고,
 이 수를 유한열 $\left( a_{1} , \cdots , a_{n} \right)$의 \underline{유한열 번호}(\textit{sequence number})라고 부를 것이다.
 $ \mathrm{Seq} \left( x \right) $를 $x$가 어떤 유한열의 유한열 번호이다는 성질이라고 하자.
 $ x \in y $를 $x$가 원소인 어떤 유한열의 유한열 번호가 $y$이다는 관계라고 하자.\footnote
 {
-그러므로, 임의의 수 $x_{1}, \cdots, x_{n} \in K_{11}$에 대하여, $y = \delta x_1 \delta \cdots \delta x_{n} \delta$이면,
+그러므로, 임의의 수 $x_{1}, \cdots, x_{n} \in \mathbb{K}_{11}$에 대하여, $y = \delta x_1 \delta \cdots \delta x_{n} \delta$이면,
 $x \in y$일 때 그리고 그럴 때마다 $x$가 $x_1$, $\cdots$, $x_n$ 중에 하나이다.
 } $ x \prec_{z} y$를 $z$가, $x$와 $y$가 원소이되 $x$의 첫 번째 나타남이 $y$의 첫 번째 나타남보다 빠른, 유한열의 유한열 번호이다는 관계라고 하자.
 
@@ -2001,7 +2001,7 @@ $x \in y$일 때 그리고 그럴 때마다 $x$가 $x_1$, $\cdots$, $x_n$ 중에
 \begin{proof}
 증명은 다음과 같다:
 \begin{enumerate}
-\item $\mathrm{Seq} \left( x \right) \iff \delta B x \land \delta E x \land \delta \ne x \land \delta \delta \widetilde{P} x \land \left( \forall y \le x \right) \left[ \delta y P x \rightarrow \delta B y \right]$
+\item $\mathrm{Seq} \left( x \right) \iff \delta B x \land \delta E x \land \delta \ne x \land \delta \delta \widetilde{P} x \land \left( \forall y \le x \right) \left[ \delta y P x \rightarrow \lnot \left( \delta B y \right) \right]$
 \item $x \in y \iff \mathrm{Seq} \left( y \right) \land \delta x \delta P y \land \delta \widetilde{P} x$
 \item $x \prec_{z} y \iff x \in z \land y \in z \land \left( \exists w \le z \right) \left[ w B z \land x \in w \land \lnot \left( y \in w \right) \right]$
 \end{enumerate}
@@ -2196,10 +2196,10 @@ $Y$이 $w$와 다른 어떤 변수에 대한 그 유한열의 어떤 앞의 원�
 \end{context}
 
 \begin{context}[Exercise 3]
-임의의 $K_{11}$ 안의 수들의 순서쌍들의 유한열 $$\left( a_1 , b_1 \right) , \left( a_2 , b_2 \right) , \cdots , \left( a_n , b_n \right)$$이 주어졌을 때,
+임의의 $\mathbb{K}_{11}$ 안의 수들의 순서쌍들의 유한열 $$\left( a_1 , b_1 \right) , \left( a_2 , b_2 \right) , \cdots , \left( a_n , b_n \right)$$이 주어졌을 때,
 유한열 번호 $\delta \delta a_1 \delta b_1 \delta\delta \cdots \delta \delta a_n \delta b_n \delta \delta$를 할당한다.
-$\mathrm{Seq}_2 \left( x \right)$를 $x$가 $K_{11}$ 안의 수들의 순서쌍들의 유한열이라는 조건이라고 하자.
-$ \left( x , y \right) \in z $를 $x$가 $K_{11}$ 안의 수들의 순서쌍들의 유한열이고
+$\mathrm{Seq}_2 \left( x \right)$를 $x$가 $\mathbb{K}_{11}$ 안의 수들의 순서쌍들의 유한열이라는 조건이라고 하자.
+$ \left( x , y \right) \in z $를 $x$가 $\mathbb{K}_{11}$ 안의 수들의 순서쌍들의 유한열이고
 $ \left( x , y \right) $가 그 유한열의 원소이라는 조건이라고 하자.
 $ \left( x_1 , y_1 \right) \prec_{z} \left( x_2 , y_2 \right) $를
 $z$가 $\left( x_1 , y_1 \right)$이 $\left( x_2 , y_2 \right)$보다
