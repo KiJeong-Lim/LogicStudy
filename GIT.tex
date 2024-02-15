@@ -2065,7 +2065,7 @@ $$ \mathrm{Seq} \left( x \right) \land \left( \forall y \in x \right) \left[ \ma
 \item[{6.}] $\mathrm{tm} \left( x \right)$ -- $E_{x}$가 논리항이다:
 $$ \exists y \left( \mathrm{Seqt} \left( y \right) \land x \in y \right) $$
 \item[{7.}] $\mathrm{f}_0 \left( x \right)$ -- $E_{x}$가 원자논리식이다:
-$$ \left( \exists y \le x \right) \left( \exists z \le x \right) \left[ \mathrm{tm}\left( y \right) \land \mathrm{tm}\left( y \right) \land \left( x = y \, \mathrm{id} \, z \lor x = y \, \mathrm {le} \, z \right) \right] $$
+$$ \left( \exists y \le x \right) \left( \exists z \le x \right) \left[ \mathrm{tm}\left( y \right) \land \mathrm{tm}\left( z \right) \land \left( x = y \, \mathrm{id} \, z \lor x = y \, \mathrm {le} \, z \right) \right] $$
 \item[{8.}] $\mathrm{Gen} \left( x , y \right)$ -- 어떤 변수 $w$에 대하여 $E_y = \forall w E_x $이다:
 $$ \left( \exists z \le y \right) \left[ \mathrm{Var} \left( z \right) \land y = 9 * z * x \right] $$
 \item[{9.}] $R_2 \left( x , y , z \right)$ -- 관계 $R_f \left( E_x , E_y , E_z \right)$가 성립한다:
