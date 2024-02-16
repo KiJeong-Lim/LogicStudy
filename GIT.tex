@@ -80,7 +80,7 @@
 
 이 글은 논리학자 Raymond M. Smullyan의 저서 ``G\"odel's Incompleteness Theorems''의 번역입니다.
 
-\textbf{감사의 인사.} 이 글은 장준영\footnote{https://ailrun.github.io}님과 전한울\footnote{https://hanuljeon95.github.io/}님의 도움을 받아 작성되었습니다.
+\textbf{감사의 인사.} 이 글은 장준영\footnote{https://ailrun.github.io}님, 전한울\footnote{https://hanuljeon95.github.io/}님과 노치효님\footnote{https://choram.github.io/}의 도움을 받아 작성되었습니다.
 
 \newpage
 
@@ -2001,7 +2001,7 @@ $x \in y$일 때 그리고 그럴 때마다 $x$가 $x_1$, $\cdots$, $x_n$ 중에
 \begin{proof}
 증명은 다음과 같다:
 \begin{enumerate}
-\item $\mathrm{Seq} \left( x \right) \iff \delta B x \land \delta E x \land \delta \ne x \land \delta \delta \widetilde{P} x \land \left( \forall y \le x \right) \left[ \delta y P x \rightarrow \lnot \left( \delta B y \right) \right]$
+\item $\mathrm{Seq} \left( x \right) \iff \delta B x \land \delta E x \land \delta \ne x \land \delta \delta \widetilde{P} x \land \left( \forall y \le x \right) \left[ \delta 0 y P x \rightarrow \left( \delta B y \right) \right]$
 \item $x \in y \iff \mathrm{Seq} \left( y \right) \land \delta x \delta P y \land \delta \widetilde{P} x$
 \item $x \prec_{z} y \iff x \in z \land y \in z \land \left( \exists w \le z \right) \left[ w B z \land x \in w \land \lnot \left( y \in w \right) \right]$
 \end{enumerate}
@@ -2304,7 +2304,14 @@ R_2^{\prime} \left( x , y \right) & : \iff \mathrm{tmp}_1 \left( x , y \right) \
 \item [(a)] $E_x$가 문장일 때 그리고 그럴 때에만 $$\mathrm{fm} \left( x \right) \land \forall w \left( \mathrm{Var} \left( w \right) \rightarrow \lnot \mathrm{Fr} \left( w , x \right) \right)$$이다.
 \item [(b)] $E_x$가 증명 가능한 문장일 때 그리고 그럴 때에만 $$P_E \left( x \right) \land \forall w \left( \mathrm{Var} \left( w \right) \rightarrow \lnot \mathrm{Fr} \left( w , x \right) \right)$$이다.
 \end{enumerate}
-\item give\_up. Abort.
+\item 다음과 같이 두면 된다.
+\begin{enumerate}
+\item $\mathrm{tmp}_4 \left( x \right) : \equiv \delta \ne x \land \delta \delta \ne x \land \delta \delta \delta \ne x \land \left( \forall y \le x \right) \left[ \delta 0 P y \rightarrow \delta B y \right]$라고 하면,
+$$ \mathrm{Seq}_2 \left( x \right) : \iff \delta \delta B y \land \delta \delta E x \land \left( \forall y \le x \right) \left[ \delta \delta \delta y P x \rightarrow \lnot \left( \delta B y \right) \right] \land \mathrm{tmp}_4 \left( x \right) . $$
+\item $ \left( x , y \right) \in z : \iff \mathrm{Seq}_2 \left( z \right) \land \delta x \delta y \delta P z \land \lnot \left( \delta P x \right) \land \lnot \left( \delta P y \right) . $
+\item $\mathrm{tmp}_5 \left( x_1 , x_2 , y_1 , y_2 \right) : \equiv \left( \exists w \le z \right) \left[ w B z \land \left( x_1 , y_1 \right) \in w \land \lnot \left( \left( x_2 , y_2 \right) \in w \right) \right] $라고 하면,
+$$ \left( x_1 , y_1 \right) \prec_z \left( x_2 , y_2 \right) : \iff \left( x_1 , y_1 \right) \in z \land \left( x_2 , y_2 \right) \in z \land \mathrm{tmp}_5 \left( x_1 , x_2 , y_1 , y_2 , z \right) . $$
+\end{enumerate}
 \end{enumerate}
 \end{context}
 
