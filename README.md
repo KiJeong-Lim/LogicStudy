@@ -6,4 +6,4 @@
 
 - `Goedel's Incompleteness Theorems` written by Raymond M. Smullyan
 
-- Thanks to `Junyoung Jang` and `Hanul Jeon`
+- Thanks to `Junyoung Jang`, `Hanul Jeon`, and `Chihyo Roh`.
