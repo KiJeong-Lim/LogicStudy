@@ -98,12 +98,12 @@ $$\infer{\Gamma^{\prime} \left[ \eta \right] \vdash \varphi \left[ \eta \right]}
 \begin{align*}
 & \Gamma^{\prime} \left[ \eta \right] \vdash \left( \forall x \varphi \right) \left[ \eta \right] \\
 & \impliedby \Gamma^{\prime} \left[ \eta \right] \vdash \forall x \left( \varphi \left[ \eta \right] \right) \\
-& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; y \right] \vdash \forall x \left( \varphi \left[ z := \eta \left( y \right) ; \eta \right] \right) \\
-& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; y \right] \vdash \varphi \left[ z := \eta \left( y \right) ; \eta \right] \left[ x := z \right] \\
-& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; y \right] \vdash \varphi \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \left[ x := z \right] \\
-& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; y \right] \vdash \varphi \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \left[ x := y \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \right] \\
-& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; y \right] \vdash \varphi \left[ x := y \right] \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \\
-& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ y := z ; z := \eta \left( y \right) ; y \right] \vdash \varphi \left[ x := y \right] \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \\
+& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; \eta \right] \vdash \forall x \left( \varphi \left[ z := \eta \left( y \right) ; \eta \right] \right) \\
+& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; \eta \right] \vdash \varphi \left[ z := \eta \left( y \right) ; \eta \right] \left[ x := z \right] \\
+& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; \eta \right] \vdash \varphi \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \left[ x := z \right] \\
+& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; \eta \right] \vdash \varphi \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \left[ x := y \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \right] \\
+& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; \eta \right] \vdash \varphi \left[ x := y \right] \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \\
+& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \vdash \varphi \left[ x := y \right] \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \\
 & \impliedby
 \begin{cases}
 \Gamma \subseteq \Gamma^{\prime} \left[ y := z \right] , \\
