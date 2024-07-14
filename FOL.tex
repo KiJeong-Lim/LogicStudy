@@ -83,7 +83,7 @@
 
 \section{Generalized Weakening}
 
-Let $\eta$ be a variable renaming. Then,
+Let $\eta$ be a variable renaming -- that is, a function which maps variables to variables. Then,
 $$\infer{\Gamma^{\prime} \left[ \eta \right] \vdash \varphi \left[ \eta \right]}{\Gamma \subseteq \Gamma^{\prime} & \qquad & \Gamma \vdash \varphi}$$
 
 \subsection[]{$\forall$-case}
@@ -95,7 +95,7 @@ $$\infer{\Gamma^{\prime} \left[ \eta \right] \vdash \varphi \left[ \eta \right]}
 \item [(4)] $\Gamma \subseteq \Gamma^{\prime}$
 \item [(G)] $\Gamma^{\prime} \left[ \eta \right] \vdash \left( \forall x \varphi \right) \left[ \eta \right]$
 \end{enumerate}
-\begin{proof} Let $z$ be a fresh individual variable. Since $\Gamma \left[ y := z \right] \subseteq \Gamma^{\prime} \left[ y := z \right]$,
+\begin{proof} Let $z$ be a fresh variable. Since $\Gamma \left[ y := z \right] \subseteq \Gamma^{\prime} \left[ y := z \right]$,
 \begin{align*}
 & \Gamma^{\prime} \left[ \eta \right] \vdash \left( \forall x \varphi \right) \left[ \eta \right] \\
 & \impliedby \Gamma^{\prime} \left[ \eta \right] \vdash \forall x \left( \varphi \left[ \eta \right] \right) \\
