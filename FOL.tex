@@ -1,0 +1,110 @@
+\documentclass[12pt]{paper}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{color}
+\usepackage[bottom]{footmisc}
+\usepackage[a4paper, left=20mm, right=20mm, top=20mm, bottom=20mm]{geometry}
+\usepackage{graphicx}
+\usepackage{kotex}
+\usepackage{listings}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{array,multirow}
+\usepackage{hyperref}
+\usepackage[table]{xcolor}
+
+\newcommand{\gnum}
+{ \mathfrak{g} }
+
+\newenvironment{context}[1][]
+{ \noindent \textbf{{#1}.} }
+{ \hfill $ \dashv $ }
+
+\newcommand{\coqstyle}
+{ \lstset
+  { basicstyle = \footnotesize\ttfamily
+  , breakatwhitespace = false
+  , breaklines = true
+  , frame = single
+  , keywordstyle = \color{blue}
+  , morekeywords =
+    { as
+    , Defined
+    , Definition
+    , else
+    , end
+    , Example
+    , Export
+    , Fixpoint
+    , forall
+    , From
+    , fun
+    , if
+    , in
+    , Import
+    , Inductive
+    , Lemma
+    , let
+    , Ltac
+    , match
+    , Proof
+    , Prop
+    , Qed
+    , Require
+    , return
+    , Set
+    , struct
+    , then
+    , Theorem
+    , Type
+    , with
+    }
+  , tabsize = 2
+  }
+}
+
+\lstnewenvironment{coqcode}[1][]
+{ \setstretch{1.0}
+  \coqstyle
+  \lstset{#1}
+}
+{ \setstretch{1.5} }
+
+\title{일차논리}
+\author{임기정}
+
+\begin{document}
+
+\maketitle
+
+\section{Weakening}
+
+\begin{enumerate}
+\item [(1)] $y \notin \mathrm{FV} \left( \Gamma \right)$
+\item [(2)] $y \notin \mathrm{FV} \left( \left( \forall x \right) \varphi \right)$
+\item [(3)] $\Gamma \vdash \varphi \left[ x := y \right]$
+\item [(4)] $\Gamma \subseteq \Gamma^{\prime}$
+\item [(G)] $\Gamma^{\prime} \left[ \eta \right] \vdash \left( \forall x \varphi \right) \left[ \eta \right]$
+\end{enumerate}
+\begin{proof} Since $\Gamma \left[ y := z \right] \subseteq \Gamma^{\prime} \left[ y := z \right]$,
+\begin{align*}
+& \Gamma^{\prime} \left[ \eta \right] \vdash \left( \forall x \varphi \right) \left[ \eta \right] \\
+& \impliedby \Gamma^{\prime} \left[ \eta \right] \vdash \forall x \left( \varphi \left[ \eta \right] \right) \\
+& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; y \right] \vdash \forall x \left( \varphi \left[ z := \eta \left( y \right) ; \eta \right] \right) \\
+& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; y \right] \vdash \varphi \left[ z := \eta \left( y \right) ; \eta \right] \left[ x := z \right] \\
+& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; y \right] \vdash \varphi \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \left[ x := z \right] \\
+& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; y \right] \vdash \varphi \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \left[ x := y \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \right] \\
+& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; y \right] \vdash \varphi \left[ x := y \right] \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \\
+& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ y := z ; z := \eta \left( y \right) ; y \right] \vdash \varphi \left[ x := y \right] \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \\
+& \impliedby
+\begin{cases}
+\Gamma \subseteq \Gamma^{\prime} \left[ y := z \right] , \\
+\Gamma \vdash \varphi \left[ x := y \right] .
+\end{cases}
+\end{align*}
+\end{proof}
+
+\end{document}
