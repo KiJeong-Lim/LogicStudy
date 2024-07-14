@@ -9,6 +9,7 @@
 \usepackage[a4paper, left=20mm, right=20mm, top=20mm, bottom=20mm]{geometry}
 \usepackage{graphicx}
 \usepackage{kotex}
+\usepackage{proof}
 \usepackage{listings}
 \usepackage{setspace}
 \usepackage{enumitem}
@@ -73,14 +74,18 @@
 }
 { \setstretch{1.5} }
 
-\title{일차논리}
+\title{일차논리 메타정리}
 \author{임기정}
 
 \begin{document}
 
 \maketitle
 
-\section{Weakening}
+\section{Generalized Weakening}
+
+$$\infer{\Gamma^{\prime} \left[ \eta \right] \vdash \varphi \left[ \eta \right]}{\Gamma \subseteq \Gamma^{\prime} & \qquad & \Gamma \vdash \varphi}$$
+
+\subsection[]{$\forall$-case}
 
 \begin{enumerate}
 \item [(1)] $y \notin \mathrm{FV} \left( \Gamma \right)$
@@ -89,7 +94,7 @@
 \item [(4)] $\Gamma \subseteq \Gamma^{\prime}$
 \item [(G)] $\Gamma^{\prime} \left[ \eta \right] \vdash \left( \forall x \varphi \right) \left[ \eta \right]$
 \end{enumerate}
-\begin{proof} Since $\Gamma \left[ y := z \right] \subseteq \Gamma^{\prime} \left[ y := z \right]$,
+\begin{proof} Let $z$ be a fresh individual variable. Since $\Gamma \left[ y := z \right] \subseteq \Gamma^{\prime} \left[ y := z \right]$,
 \begin{align*}
 & \Gamma^{\prime} \left[ \eta \right] \vdash \left( \forall x \varphi \right) \left[ \eta \right] \\
 & \impliedby \Gamma^{\prime} \left[ \eta \right] \vdash \forall x \left( \varphi \left[ \eta \right] \right) \\
