@@ -132,7 +132,21 @@ Consider $\varphi \left[ x := x ; \eta \right] \left[ x := z \right]$.
 & \equiv \varphi \left[ x := y \right] \left[ x := z ; y := z ; z := \eta \left( y \right) ; \eta \right] \\
 & \equiv \varphi \left[ x := y \right] \left[ y := z ; z := \eta \left( y \right) ; \eta \right]
 \end{align*}
-Did I make a mistake?
+Did I make a mistake? To check it out, let
+\begin{enumerate}
+\item [(a)] $ \varphi : \equiv \varphi \left( x , u \right)$ with $ u \not\equiv x $;
+\item [(b)] $ y \equiv x \lor \left( y \not\equiv x \land y \not\equiv u \right) $ -- i.e., $ y \notin \mathrm{FV} \left( \forall x \varphi \right) $;
+\item [(c)] $\eta$ be a variable renaming -- i.e., $ \eta \in \mathbb{L} \left( \mathbb{V} \times \mathbb{V} \right) $; and
+\item [(d)] $z$ be a fresh -- i.e., $z \not\equiv x \land z \not\equiv y \land z \not\equiv u \land z \notin \mathrm{Dom} \left( \eta \right) \cup \mathrm{Cod} \left( \eta \right)$.
+\end{enumerate}
+Then, the L.H.S. is
+\begin{align*}
+\varphi \left[ x := x ; \eta \right] \left[ x := z \right]
+& \equiv \varphi \left( x , u \right) \left[ x := x ; \eta \right] \left[ x := z \right] \\
+& \equiv \varphi \left( x , \eta \left( u \right) \right) \left[ x := z \right] \\
+& \equiv \varphi \left( z , \left( \eta \left( u \right) \right) \left[ x := z \right] \right) .
+\end{align*}
+On the other hand, the R.H.S. is $\varphi \left( z , \eta \left( u \right) \right) \equiv \varphi \left[ x := z ; \eta \right]$.
 \end{context}
 
 \end{document}
