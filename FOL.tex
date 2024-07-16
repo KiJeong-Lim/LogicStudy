@@ -5,6 +5,7 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{color}
+\usepackage{stmaryrd}
 \usepackage[bottom]{footmisc}
 \usepackage[a4paper, left=20mm, right=20mm, top=20mm, bottom=20mm]{geometry}
 \usepackage{graphicx}
@@ -91,7 +92,7 @@ $$\infer{\Gamma^{\prime} \left[ \eta \right] \vdash \varphi \left[ \eta \right]}
 \begin{enumerate}
 \item [(1)] $y \notin \mathrm{FV} \left( \Gamma \right)$
 \item [(2)] $y \notin \mathrm{FV} \left( \left( \forall x \right) \varphi \right)$
-\item [(3)] $\Gamma \vdash \varphi \left[ x := y \right]$
+\item [(3)] $\Gamma \vdash \varphi \llbracket x := y \rrbracket$
 \item [(4)] $\Gamma \subseteq \Gamma^{\prime}$
 \item [(G)] $\Gamma^{\prime} \left[ \eta \right] \vdash \left( \forall x \varphi \right) \left[ \eta \right]$
 \end{enumerate}
@@ -101,36 +102,36 @@ $$\infer{\Gamma^{\prime} \left[ \eta \right] \vdash \varphi \left[ \eta \right]}
 & \impliedby \Gamma^{\prime} \left[ \eta \right] \vdash \forall x \left( \varphi \left[ \eta \right] \right) \\
 & \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; \eta \right] \vdash \forall x \left( \varphi \left[ \eta \right] \right) \\
 & \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; \eta \right] \vdash \forall x \left( \varphi \left[ z := \eta \left( y \right) ; \eta \right] \right) \\
-& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; \eta \right] \vdash \varphi \left[ z := \eta \left( y \right) ; \eta \right] \left[ x := z \right] \\
-& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; \eta \right] \vdash \varphi \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \left[ x := z \right] \\
-& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; \eta \right] \vdash \varphi \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \left[ x := y \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \right] \\
-& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; \eta \right] \vdash \varphi \left[ x := y \right] \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \\
-& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \vdash \varphi \left[ x := y \right] \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \\
+& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; \eta \right] \vdash \varphi \left[ z := \eta \left( y \right) ; \eta \right] \llbracket x := z \rrbracket \\
+& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; \eta \right] \vdash \varphi \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \llbracket x := z \rrbracket \\
+& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; \eta \right] \vdash \varphi \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \llbracket x := y \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \rrbracket \\
+& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ z := \eta \left( y \right) ; \eta \right] \vdash \varphi \llbracket x := y \rrbracket \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \\
+& \impliedby \Gamma^{\prime} \left[ y := z \right] \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \vdash \varphi \llbracket x := y \rrbracket \left[ y := z ; z := \eta \left( y \right) ; \eta \right] \\
 & \impliedby
 \begin{cases}
 \Gamma \subseteq \Gamma^{\prime} \left[ y := z \right] , \\
-\Gamma \vdash \varphi \left[ x := y \right] .
+\Gamma \vdash \varphi \llbracket x := y \rrbracket .
 \end{cases}
 \end{align*}
 \end{proof}
 
 \begin{context}[Discussion 1]
-Does it hold $\varphi \left[ x := x ; \eta \right] \left[ x := z \right] \equiv \varphi \left[ x := y \right] \left[ y := z ; z := \eta \left( y \right) ; \eta \right]$? \newline
-I think it does... -- 2024/07/15 09:46 
+Does it hold $\varphi \left[ x := x ; \eta \right] \llbracket x := z \rrbracket \equiv \varphi \llbracket x := y \rrbracket \left[ y := z ; z := \eta \left( y \right) ; \eta \right]$? \newline
+I hope so... -- 2024/07/15 09:46 
 \end{context}
 
 \newpage
 
 \begin{context}[Discussion 2]
-Consider $\varphi \left[ x := x ; \eta \right] \left[ x := z \right]$.
+Consider $\varphi \left[ x := x ; \eta \right] \llbracket x := z \rrbracket$.
 \begin{align*}
-& \varphi \left[ x := x ; \eta \right] \left[ x := z \right] \\
-& \equiv \varphi \left[ x := x ; z := \eta \left( y \right) ; \eta \right] \left[ x := z \right] \\
-& \equiv \varphi \left[ x := z ; z := \left( y \right) ; \eta \right] \left[ x := z \right] \\
-& \equiv \varphi \left[ x := z ; y := z ; z := \eta \left( y \right) ; \eta \right] \left[ x := z \right] \\
-& \equiv \varphi \left[ x := z ; y := z ; z := \eta \left( y \right) ; \eta \right] \left[ x := y \left[ x := z ; y := z ; z := \eta \left( y \right) ; \eta \right] \right] \\
-& \equiv \varphi \left[ x := y \right] \left[ x := z ; y := z ; z := \eta \left( y \right) ; \eta \right] \\
-& \equiv \varphi \left[ x := y \right] \left[ y := z ; z := \eta \left( y \right) ; \eta \right]
+& \varphi \left[ x := x ; \eta \right] \llbracket x := z \rrbracket \\
+& \equiv \varphi \left[ x := x ; z := \eta \left( y \right) ; \eta \right] \llbracket x := z \rrbracket \\
+& \equiv \varphi \left[ x := z ; z := \left( y \right) ; \eta \right] \llbracket x := z \rrbracket \\
+& \equiv \varphi \left[ x := z ; y := z ; z := \eta \left( y \right) ; \eta \right] \llbracket x := z \rrbracket \\
+& \equiv \varphi \left[ x := z ; y := z ; z := \eta \left( y \right) ; \eta \right] \llbracket x := y \left[ x := z ; y := z ; z := \eta \left( y \right) ; \eta \right] \rrbracket \\
+& \equiv \varphi \llbracket x := y \rrbracket \left[ x := z ; y := z ; z := \eta \left( y \right) ; \eta \right] \\
+& \equiv \varphi \llbracket x := y \rrbracket \left[ y := z ; z := \eta \left( y \right) ; \eta \right]
 \end{align*}
 Did I make a mistake? To check it out, let
 \begin{enumerate}
