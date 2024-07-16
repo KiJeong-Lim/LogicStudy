@@ -127,7 +127,7 @@ Consider $\varphi \left[ x := x ; \eta \right] \llbracket x := z \rrbracket$.
 \begin{align*}
 & \varphi \left[ x := x ; \eta \right] \llbracket x := z \rrbracket \\
 & \equiv \varphi \left[ x := x ; z := \eta \left( y \right) ; \eta \right] \llbracket x := z \rrbracket \\
-& \equiv \varphi \left[ x := z ; z := \left( y \right) ; \eta \right] \llbracket x := z \rrbracket \\
+& \equiv \varphi \left[ x := z ; z := \eta \left( y \right) ; \eta \right] \llbracket x := z \rrbracket \\
 & \equiv \varphi \left[ x := z ; y := z ; z := \eta \left( y \right) ; \eta \right] \llbracket x := z \rrbracket \\
 & \equiv \varphi \left[ x := z ; y := z ; z := \eta \left( y \right) ; \eta \right] \llbracket x := y \left[ x := z ; y := z ; z := \eta \left( y \right) ; \eta \right] \rrbracket \\
 & \equiv \varphi \llbracket x := y \rrbracket \left[ x := z ; y := z ; z := \eta \left( y \right) ; \eta \right] \\
