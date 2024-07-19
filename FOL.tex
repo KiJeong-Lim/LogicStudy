@@ -142,10 +142,10 @@ Did I make a mistake? To check it out, let
 \end{enumerate}
 Then, the L.H.S. is
 \begin{align*}
-\varphi \left[ x := x ; \eta \right] \left[ x := z \right]
-& \equiv \varphi \left( x , u \right) \left[ x := x ; \eta \right] \left[ x := z \right] \\
-& \equiv \varphi \left( x , \eta \left( u \right) \right) \left[ x := z \right] \\
-& \equiv \varphi \left( z , \left( \eta \left( u \right) \right) \left[ x := z \right] \right) .
+\varphi \left[ x := x ; \eta \right] \llbracket x := z \rrbracket
+& \equiv \varphi \left( x , u \right) \left[ x := x ; \eta \right] \llbracket x := z \rrbracket \\
+& \equiv \varphi \left( x , \eta \left( u \right) \right) \llbracket x := z \rrbracket \\
+& \equiv \varphi \left( z , \left( \eta \left( u \right) \right) \llbracket x := z \rrbracket \right) .
 \end{align*}
 On the other hand, the R.H.S. is $\varphi \left( z , \eta \left( u \right) \right) \equiv \varphi \left[ x := z ; \eta \right]$.
 \end{context}
