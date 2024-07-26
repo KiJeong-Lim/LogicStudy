@@ -139,11 +139,11 @@ Record folSignature : Type :=
 \end{enumerate}
 Coq으로는 다음과 같이 형식화할 수 있다.
 \begin{coqcode}
-Definition ivar : Set := nat. (* The set of individual variables *)
+Definition ivar : Set := nat. (* The set of all individual variables *)
 
 Context {Sigma : folSignature}.
 
-Inductive trm : Set := (* The set of first-order terms *)
+Inductive trm : Set := (* The set of all first-order terms *)
   | IVar_trm (x : ivar) : trm
   | Cnst_trm (c : Sigma.(constant_symbols)) : trm
   | FApp_trm (f : Sigma.(function_symbols)) (ts : trms (L.(function_arities) f)) : trm
@@ -151,7 +151,7 @@ with trms : arity -> Set :=
   | O_trms : trms 0
   | S_trms (n : arity) (t : trm) (ts : trms n) : trms (S n).
 
-Inductive frm : Set := (* The set of first-order formulae *)
+Inductive frm : Set := (* The set of all first-order formulae *)
   | Atm_frm (R : Sigma.(relation_symbols)) (ts : trms (L.(relation_arities) R)) : frm
   | Eqn_frm (t1 : trm) (t2 : trm) : frm
   | Neg_frm (p1 : frm) : frm
@@ -166,7 +166,7 @@ Abstract syntax tree로 정의하면, 유일읽음성 정리는 사람이 숨을
 따라서 형식화하지 않는다.
 \end{context}
 
-\begin{context}[Depth]
+\par \noindent $\bullet$
 논리항과 논리식에 대한 \underline{깊이}(\textit{depth})를 정의해 두면, 써먹을 데가 꽤 있다.
 \begin{coqcode}
 Fixpoint trm_depth (t : trm) : nat :=
@@ -189,7 +189,6 @@ Fixpoint frm_depth (p : frm) : nat :=
   | All_frm y p1 => 1 + frm_depth p1
   end.
 \end{coqcode}
-\end{context}
 
 \begin{context}[Enumerability Theorem]
 \begin{enumerate}
