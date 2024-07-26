@@ -87,16 +87,19 @@
 
 \maketitle
 
-\section{구문론(syntax)}
+\section{구문론}
 
-\subsection{시그니처(signature)}
+먼저, 1차 논리의 \underline{구문론}(\textit{syntax})에 대해서 형식화한다.
+논리항, 논리식, 자유 변수, 문장, 치환 등의 개념을 정의한다.
+
+\subsection{시그니처}
 
 $\mathcal{F}, \mathcal{R}, \mathcal{C}$를
 각각 함수 기호들의 집합, 관계 기호들의 집합, 상수 기호들의 집합이라고 하자.
 $$n_\mathcal{F} : \mathcal{F} \to \mathbb{N} \quad \mathrm{and} \quad n_\mathcal{R} : \mathcal{R} \to \mathbb{N}$$
 이 각각 함수 기호들의 arity와 관계 기호들의 arity에 대한 함수일 때, 순서쌍
-$$ \Sigma := \left\langle \mathcal{F}, \mathcal{R}, \mathcal{C}, n_\mathcal{F} , n_\mathcal{R} \right\rangle $$
-를 \underline{시그니처}라고 한다.
+$$ \Sigma = \left\langle \mathcal{F}, \mathcal{R}, \mathcal{C}, n_\mathcal{F} , n_\mathcal{R} \right\rangle $$
+를 \underline{시그니처}(\textit{signature})라고 한다.
 Coq으로는 다음과 같이 형식화할 수 있다.
 \begin{coqcode}
 Section FOL_SYNTAX.
@@ -115,17 +118,17 @@ Record folSignature : Type :=
 
 \newpage
 
-\subsection[short]{논리항(term)과 논리식(formula)}
+\subsection[short]{논리항과 논리식}
 
 시그니처 $$\Sigma = \left\langle \mathcal{F}, \mathcal{R}, \mathcal{C}, n_\mathcal{F} , n_\mathcal{R} \right\rangle$$가 주어졌다고 하자.
-\underline{논리항}은 다음과 같이 정의된다.
+\underline{논리항}(\textit{term})은 다음과 같이 정의된다.
 \begin{enumerate}
 \item [(1)] (개체변수) $x \in \mathbb{N}$이면 $x$는 논리항이다.
 \item [(2)] (상수) $c \in \mathcal{C}$이면 $c$는 논리항이다.
 \item [(3)] (함수 적용) $f \in \mathcal{F}$일 때 $n := n_\mathcal{F} \left( f \right)$라 하면, 논리항 $t_1, \cdots , t_n$에 대하여 $f \left( t_1 , \cdots , t_n \right)$ 또한 논리항이다.
 \item [($\ast$)] 단, 규칙 (1), (2), (3)만을 유한 번만 적용하여 얻을 수 있어야 한다.
 \end{enumerate}
-한편, \underline{논리식}은 다음과 같이 정의된다.
+한편, \underline{논리식}(\textit{formula})은 다음과 같이 정의된다.
 \begin{enumerate}
 \item [(1)] (원자논리식) $R \in \mathcal{R}$일 때 $n := n_\mathcal{R} \left( R \right)$라 하면, 논리항 $t_1, \cdots , t_n$에 대하여 $R \left( t_1 , \cdots , t_n \right)$는 논리식이다.
 \item [(2)] (등식) 논리항 $t_1$, $t_2$에 대하여 $t_1 \doteq t_2$는 논리식이다. 
@@ -143,7 +146,7 @@ Context {Sigma : folSignature}.
 Inductive trm : Set := (* The set of first-order terms *)
   | IVar_trm (x : ivar) : trm
   | Cnst_trm (c : Sigma.(constant_symbols)) : trm
-  | Fapp_trm (f : Sigma.(function_symbols)) (ts : trms (L.(function_arities) f)) : trm
+  | FApp_trm (f : Sigma.(function_symbols)) (ts : trms (L.(function_arities) f)) : trm
 with trms : arity -> Set :=
   | O_trms : trms 0
   | S_trms (n : arity) (t : trm) (ts : trms n) : trms (S n).
@@ -159,16 +162,33 @@ Inductive frm : Set := (* The set of first-order formulae *)
 \newpage
 
 \begin{context}[Unique Readability Theorem]
-임의의 well-formed formula는 그 구조가 유일하게 결정된다.
-\begin{proof}
-Inductive type의 data constructor로 형식화했기 때문에 성립한다.
-\end{proof}
-\noindent Abstract syntax tree로 정의하면 유일읽음성 정리는 사람이 숨을 쉬듯이 당연하게 성립한다.
+Abstract syntax tree로 정의하면, 유일읽음성 정리는 사람이 숨을 쉬듯이 당연하게 성립한다.
 따라서 형식화하지 않는다.
 \end{context}
 
 \begin{context}[Depth]
 논리항과 논리식에 대한 \underline{깊이}(\textit{depth})를 정의해 두면, 써먹을 데가 꽤 있다.
+\begin{coqcode}
+Fixpoint trm_depth (t : trm) : nat :=
+  match t with
+  | IVar_trm x => 0
+  | Cnst_trm c => 1
+  | FApp_trm f ts => 1 + trms_depth ts
+with trms_depth {n : arity} (ts : trms n) : nat :=
+  match ts with
+  | O_trms => 0
+  | S_trms _ t ts => 1 + max (trm_depth t) (trms_depth ts)
+  end.
+
+Fixpoint frm_depth (p : frm) : nat :=
+  match p with
+  | Atm_frm R ts => 0
+  | Eqn_frm t1 t2 => 0
+  | Neg_frm p1 => 1 + frm_depth p1
+  | Imp_frm p1 p2 => 1 + max (frm_depth p1) (frm_depth p2)
+  | All_frm y p1 => 1 + frm_depth p1
+  end.
+\end{coqcode}
 \end{context}
 
 \begin{context}[Enumerability Theorem]
