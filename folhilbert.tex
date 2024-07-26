@@ -90,7 +90,14 @@
 \section{구문론}
 
 먼저, 1차 논리의 \underline{구문론}(\textit{syntax})에 대해서 형식화한다.
-논리항, 논리식, 자유 변수, 문장, 치환 등의 개념을 정의한다.
+\begin{itemize}
+\item 논리항
+\item 논리식
+\item 자유 변수
+\item 문장
+\item 치환
+\end{itemize}
+등의 개념을 정의할 것이다.
 
 \subsection{시그니처}
 
@@ -159,12 +166,12 @@ Inductive frm : Set := (* The set of all first-order formulae *)
   | All_frm (y : ivar) (p1 : frm) : frm.
 \end{coqcode}
 
-\newpage
-
 \begin{context}[Unique Readability Theorem]
 Abstract syntax tree로 정의하면, 유일읽음성 정리는 사람이 숨을 쉬듯이 당연하게 성립한다.
 따라서 형식화하지 않는다.
 \end{context}
+  
+\newpage
 
 \par \noindent $\bullet$
 논리항과 논리식에 대한 \underline{깊이}(\textit{depth})를 정의해 두면, 써먹을 데가 꽤 있다.
