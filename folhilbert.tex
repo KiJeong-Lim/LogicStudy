@@ -118,29 +118,29 @@ Record folSignature : Type :=
 \subsection[short]{논리항(term)과 논리식(formula)}
 
 시그니처 $$\Sigma = \left\langle \mathcal{F}, \mathcal{R}, \mathcal{C}, n_\mathcal{F} , n_\mathcal{R} \right\rangle$$가 주어졌다고 하자.
-논리항은 다음과 같이 정의된다.
+\underline{논리항}은 다음과 같이 정의된다.
 \begin{enumerate}
 \item [(1)] (개체변수) $x \in \mathbb{N}$이면 $x$는 논리항이다.
 \item [(2)] (상수) $c \in \mathcal{C}$이면 $c$는 논리항이다.
 \item [(3)] (함수 적용) $f \in \mathcal{F}$일 때 $n := n_\mathcal{F} \left( f \right)$라 하면, 논리항 $t_1, \cdots , t_n$에 대하여 $f \left( t_1 , \cdots , t_n \right)$ 또한 논리항이다.
 \item [($\ast$)] 단, 규칙 (1), (2), (3)만을 유한 번만 적용하여 얻을 수 있어야 한다.
 \end{enumerate}
-한편, 논리식은 다음과 같이 정의된다.
+한편, \underline{논리식}은 다음과 같이 정의된다.
 \begin{enumerate}
 \item [(1)] (원자논리식) $R \in \mathcal{R}$일 때 $n := n_\mathcal{R} \left( R \right)$라 하면, 논리항 $t_1, \cdots , t_n$에 대하여 $R \left( t_1 , \cdots , t_n \right)$는 논리식이다.
 \item [(2)] (등식) 논리항 $t_1$, $t_2$에 대하여 $t_1 \doteq t_2$는 논리식이다. 
 \item [(3)] (부정) 논리식 $\varphi_1$에 대하여 $\dot\lnot \varphi_1$도 논리식이다.
-\item [(4)] (함축) 논리식 $\varphi_1$, $\varphi_2$에 대하여 $\varphi_1 \dot\to \varphi_2$ 또한 논리식이다.
-\item [(5)] (보편양화) 개체변수 $y \in \mathbb{N}$와 논리식 $\varphi_1$에 대하여 $\dot\forall y \varphi_1$도 논리식이다.
+\item [(4)] (함의) 논리식 $\varphi_1$, $\varphi_2$에 대하여 $\varphi_1 \dot\to \varphi_2$ 또한 논리식이다.
+\item [(5)] (보편 양화) $y \in \mathbb{N}$일 때 논리식 $\varphi_1$에 대하여 $\dot\forall y \varphi_1$도 논리식이다.
 \item [($\ast$)] 단, 규칙 (1), (2), (3), (4), (5)만을 유한 번만 적용하여 얻을 수 있어야 한다.
 \end{enumerate}
 Coq으로는 다음과 같이 형식화할 수 있다.
 \begin{coqcode}
-Definition ivar : Set := nat.
+Definition ivar : Set := nat. (* The set of individual variables *)
 
 Context {Sigma : folSignature}.
 
-Inductive trm : Set :=
+Inductive trm : Set := (* The set of first-order terms *)
   | IVar_trm (x : ivar) : trm
   | Cnst_trm (c : Sigma.(constant_symbols)) : trm
   | Fapp_trm (f : Sigma.(function_symbols)) (ts : trms (L.(function_arities) f)) : trm
@@ -148,12 +148,34 @@ with trms : arity -> Set :=
   | O_trms : trms 0
   | S_trms (n : arity) (t : trm) (ts : trms n) : trms (S n).
 
-Inductive frm : Set :=
+Inductive frm : Set := (* The set of first-order formulae *)
   | Atm_frm (R : Sigma.(relation_symbols)) (ts : trms (L.(relation_arities) R)) : frm
   | Eqn_frm (t1 : trm) (t2 : trm) : frm
   | Neg_frm (p1 : frm) : frm
   | Imp_frm (p1 : frm) (p2 : frm) : frm
   | All_frm (y : ivar) (p1 : frm) : frm.
 \end{coqcode}
+
+\newpage
+
+\begin{context}[Unique Readability Theorem]
+임의의 well-formed formula는 그 구조가 유일하게 결정된다.
+\begin{proof}
+Inductive type의 data constructor로 형식화했기 때문에 성립한다.
+\end{proof}
+\noindent Abstract syntax tree로 정의하면 유일읽음성 정리는 사람이 숨을 쉬듯이 당연하게 성립한다.
+따라서 형식화하지 않는다.
+\end{context}
+
+\begin{context}[Depth]
+논리항과 논리식에 대한 \underline{깊이}(\textit{depth})를 정의해 두면, 써먹을 데가 꽤 있다.
+\end{context}
+
+\begin{context}[Enumerability Theorem]
+\begin{enumerate}
+\item $\mathcal{F}$와 $\mathcal{C}$가 열거가능한 집합이면, 모든 논리항을 열거할 수 있다.
+\item $\mathcal{F}$, $\mathcal{C}$와 $\mathcal{R}$이 열거가능한 집합이면, 모든 논리식을 열거할 수 있다.
+\end{enumerate}
+\end{context}
 
 \end{document}
