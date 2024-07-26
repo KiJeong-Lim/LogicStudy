@@ -1,0 +1,159 @@
+\documentclass[12pt]{paper}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{color}
+\usepackage{stmaryrd}
+\usepackage[bottom]{footmisc}
+\usepackage[a4paper, left=20mm, right=20mm, top=20mm, bottom=20mm]{geometry}
+\usepackage{graphicx}
+\usepackage{kotex}
+\usepackage{proof}
+\usepackage{listings}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{array,multirow}
+\usepackage{hyperref}
+\usepackage[table]{xcolor}
+
+\newcommand{\gnum}
+{ \mathfrak{g} }
+
+\newenvironment{context}[1][]
+{ \noindent \textbf{{#1}.} }
+{ \hfill $ \dashv $ }
+
+\newcommand{\coqstyle}
+{ \lstset
+  { basicstyle = \footnotesize\ttfamily
+  , breakatwhitespace = false
+  , breaklines = true
+  , frame = single
+  , keywordstyle = \color{blue}
+  , morekeywords =
+    { as
+    , Context
+    , Defined
+    , Definition
+    , else
+    , End
+    , end
+    , Example
+    , Export
+    , Fixpoint
+    , forall
+    , From
+    , fun
+    , if
+    , in
+    , Import
+    , Inductive
+    , Lemma
+    , Let
+    , let
+    , Ltac
+    , match
+    , Proof
+    , Prop
+    , Qed
+    , Record
+    , Require
+    , return
+    , Section
+    , Set
+    , struct
+    , then
+    , Theorem
+    , Type
+    , with
+    }
+  , tabsize = 2
+  }
+}
+
+\lstnewenvironment{coqcode}[1][]
+{ \setstretch{1.0}
+  \coqstyle
+  \lstset{#1}
+}
+{ \setstretch{1.5} }
+
+\title{힐베르트식의 일차논리 형식화}
+\author{임기정}
+
+\begin{document}
+
+\maketitle
+
+\section{구문론(syntax)}
+
+\subsection{시그니처(signature)}
+
+$\mathcal{F}, \mathcal{R}, \mathcal{C}$를
+각각 함수 기호들의 집합, 관계 기호들의 집합, 상수 기호들의 집합이라고 하자.
+$$n_\mathcal{F} : \mathcal{F} \to \mathbb{N} \quad \mathrm{and} \quad n_\mathcal{R} : \mathcal{R} \to \mathbb{N}$$
+이 각각 함수 기호들의 arity와 관계 기호들의 arity에 대한 함수일 때, 순서쌍
+$$ \Sigma := \left\langle \mathcal{F}, \mathcal{R}, \mathcal{C}, n_\mathcal{F} , n_\mathcal{R} \right\rangle $$
+를 \underline{시그니처}라고 한다.
+Coq으로는 다음과 같이 형식화할 수 있다.
+\begin{coqcode}
+Section FOL_SYNTAX.
+
+Let arity := nat.
+    
+#[projections(primitive)]
+Record folSignature : Type :=
+  { function_symbols : Set
+  ; relation_symbols : Set
+  ; constant_symbols : Set
+  ; function_arities : function_symbols -> arity
+  ; relation_arities : relation_symbols -> arity
+  }.
+\end{coqcode}
+
+\newpage
+
+\subsection[short]{논리항(term)과 논리식(formula)}
+
+시그니처 $$\Sigma = \left\langle \mathcal{F}, \mathcal{R}, \mathcal{C}, n_\mathcal{F} , n_\mathcal{R} \right\rangle$$가 주어졌다고 하자.
+논리항은 다음과 같이 정의된다.
+\begin{enumerate}
+\item [(1)] (개체변수) $x \in \mathbb{N}$이면 $x$는 논리항이다.
+\item [(2)] (상수) $c \in \mathcal{C}$이면 $c$는 논리항이다.
+\item [(3)] (함수 적용) $f \in \mathcal{F}$일 때 $n := n_\mathcal{F} \left( f \right)$라 하면, 논리항 $t_1, \cdots , t_n$에 대하여 $f \left( t_1 , \cdots , t_n \right)$ 또한 논리항이다.
+\item [($\ast$)] 단, 규칙 (1), (2), (3)만을 유한 번만 적용하여 얻을 수 있어야 한다.
+\end{enumerate}
+한편, 논리식은 다음과 같이 정의된다.
+\begin{enumerate}
+\item [(1)] (원자논리식) $R \in \mathcal{R}$일 때 $n := n_\mathcal{R} \left( R \right)$라 하면, 논리항 $t_1, \cdots , t_n$에 대하여 $R \left( t_1 , \cdots , t_n \right)$는 논리식이다.
+\item [(2)] (등식) 논리항 $t_1$, $t_2$에 대하여 $t_1 \doteq t_2$는 논리식이다. 
+\item [(3)] (부정) 논리식 $\varphi_1$에 대하여 $\dot\lnot \varphi_1$도 논리식이다.
+\item [(4)] (함축) 논리식 $\varphi_1$, $\varphi_2$에 대하여 $\varphi_1 \dot\to \varphi_2$ 또한 논리식이다.
+\item [(5)] (보편양화) 개체변수 $y \in \mathbb{N}$와 논리식 $\varphi_1$에 대하여 $\dot\forall y \varphi_1$도 논리식이다.
+\item [($\ast$)] 단, 규칙 (1), (2), (3), (4), (5)만을 유한 번만 적용하여 얻을 수 있어야 한다.
+\end{enumerate}
+Coq으로는 다음과 같이 형식화할 수 있다.
+\begin{coqcode}
+Definition ivar : Set := nat.
+
+Context {Sigma : folSignature}.
+
+Inductive trm : Set :=
+  | IVar_trm (x : ivar) : trm
+  | Cnst_trm (c : Sigma.(constant_symbols)) : trm
+  | Fapp_trm (f : Sigma.(function_symbols)) (ts : trms (L.(function_arities) f)) : trm
+with trms : arity -> Set :=
+  | O_trms : trms 0
+  | S_trms (n : arity) (t : trm) (ts : trms n) : trms (S n).
+
+Inductive frm : Set :=
+  | Atm_frm (R : Sigma.(relation_symbols)) (ts : trms (L.(relation_arities) R)) : frm
+  | Eqn_frm (t1 : trm) (t2 : trm) : frm
+  | Neg_frm (p1 : frm) : frm
+  | Imp_frm (p1 : frm) (p2 : frm) : frm
+  | All_frm (y : ivar) (p1 : frm) : frm.
+\end{coqcode}
+
+\end{document}
